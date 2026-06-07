@@ -1,0 +1,26 @@
+export const QUERY_KEYS = {
+  dashboardStats: ["dashboard", "stats"],
+  dashboardRecentActivity: ["dashboard", "recent-activity"],
+  users: (page: number, search: string, filter: string) => ["users", { page, search, filter }],
+  userDetail: (userId: string) => ["users", "detail", userId],
+  userQuizHistory: (userId: string) => ["users", "quiz-history", userId],
+  userPurchases: (userId: string) => ["users", "purchases", userId],
+  years: ["curriculum", "years"],
+  modules: (yearId: string | null) => ["curriculum", "modules", yearId],
+  subjects: (moduleId: string | null) => ["curriculum", "subjects", moduleId],
+  lectures: (subjectId: string | null) => ["curriculum", "lectures", subjectId],
+  questions: (filters: Record<string, string | null>, page: number, search: string) => ["questions", { filters, page, search }],
+  questionsByLecture: (lectureId: string | null) => ["questions", "by-lecture", lectureId],
+  purchases: (page: number, status: string, fromDate: string, toDate: string, searchSessionId: string) => [
+    "purchases",
+    { page, status, fromDate, toDate, searchSessionId },
+  ],
+  purchasesSummary: (fromDate: string, toDate: string, searchSessionId: string) => [
+    "purchases",
+    "summary",
+    { fromDate, toDate, searchSessionId },
+  ],
+  feedback: (page: number, status: string) => ["feedback", { page, status }],
+  feedbackUnreadCount: ["feedback", "unread-count"],
+  analytics: (days: number) => ["analytics", { days }],
+} as const;
