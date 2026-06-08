@@ -45,8 +45,8 @@ export const MetricCard: React.FC<MetricCardProps> = ({
             {title}
           </span>
           {icon && (
-            <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center shrink-0", selectedColorStyle)}>
-              {React.cloneElement(icon as React.ReactElement, { className: "h-4 w-4" })}
+            <div className={cn("h-8 w-8 rounded-lg flex items-center justify-center shrink-0 [&_svg]:h-4 [&_svg]:w-4", selectedColorStyle)}>
+              {icon}
             </div>
           )}
         </div>

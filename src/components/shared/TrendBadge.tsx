@@ -9,7 +9,6 @@ interface TrendBadgeProps {
 
 export const TrendBadge: React.FC<TrendBadgeProps> = ({ value, className }) => {
   const isPositive = value > 0;
-  const isNegative = value < 0;
 
   if (value === 0) return null;
 

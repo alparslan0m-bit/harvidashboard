@@ -130,7 +130,7 @@ export interface UserWithDetails {
   created_at: string;
   profile: Profile | null;
   stats: UserStats | null;
-  app_metadata?: Record<string, any>;
+  app_metadata?: Record<string, unknown>;
 }
 
 export interface PurchaseWithDetails extends Purchase {

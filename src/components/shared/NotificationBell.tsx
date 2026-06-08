@@ -4,7 +4,6 @@ import { Bell, MessageSquare, AlertCircle, Check } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabaseAdmin } from "../../lib/supabaseAdmin";
 import { useNavigate } from "react-router";
-import { cn } from "../../lib/utils";
 
 export const NotificationBell: React.FC = () => {
   const navigate = useNavigate();

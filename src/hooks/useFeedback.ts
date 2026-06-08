@@ -1,34 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabaseAdmin } from "../lib/supabaseAdmin";
 import { QUERY_KEYS } from "../lib/queryKeys";
+import { PAGE_SIZE, STALE_TIMES } from "../lib/constants";
+import { getErrorMessage } from "../lib/errors";
+import { listAllAuthUsers } from "../services/authService";
 import { toast } from "sonner";
-import type { FeedbackWithUser } from "../types/database";
+import type { FeedbackListItem, FeedbackPageData } from "../types/api";
+import type { FeedbackStatus } from "../lib/constants";
 
 export function useFeedback(page: number, status: string) {
-  const pageSize = 25;
-
   const feedbackQuery = useQuery({
     queryKey: QUERY_KEYS.feedback(page, status),
-    queryFn: async () => {
+    queryFn: async (): Promise<FeedbackPageData> => {
       try {
-        const from = (page - 1) * pageSize;
-        const to = from + pageSize - 1;
+        const from = (page - 1) * PAGE_SIZE;
+        const to = from + PAGE_SIZE - 1;
 
-        // 1. Get auth users list first (consolidated batch)
-        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.listUsers({
-          page: 1,
-          perPage: 10000,
-        });
-        if (authError) {
-          throw new Error(`[Feedback.listUsers] ${authError.message}`);
-        }
-        const authUsers = authData?.users || [];
-        const authMap = new Map<string, typeof authUsers[0]>();
-        authUsers.forEach((u) => {
-          authMap.set(u.id, u);
-        });
-
-        // 2. Base query
+        const authUsers = await listAllAuthUsers("Feedback");
+        const authMap = new Map(authUsers.map((u) => [u.id, u]));
         let query = supabaseAdmin
           .from("feedback")
           .select("*", { count: "exact" });
@@ -46,11 +35,13 @@ export function useFeedback(page: number, status: string) {
           throw new Error(`[Feedback.feedbackQuery] ${feedbackError.message}`);
         }
 
-        const resolvedFeedback: any[] = [];
+        const resolvedFeedback: FeedbackListItem[] = [];
         if (data && data.length > 0) {
-          const userIds = Array.from(new Set(data.map((f: any) => f.user_id).filter(Boolean))) as string[];
-          
-          let profiles: any[] = [];
+          const userIds = Array.from(
+            new Set(data.map((f) => f.user_id).filter(Boolean)),
+          ) as string[];
+
+          let profiles: { id: string; full_name: string | null }[] = [];
           if (userIds.length > 0) {
             const { data: profileData, error: profileError } = await supabaseAdmin
               .from("profiles")
@@ -62,13 +53,13 @@ export function useFeedback(page: number, status: string) {
             profiles = profileData || [];
           }
 
-          data.forEach((f: any) => {
-            const profile = profiles.find((p: any) => p.id === f.user_id) || null;
+          data.forEach((f) => {
+            const profile = profiles.find((p) => p.id === f.user_id) || null;
             const authUser = f.user_id ? authMap.get(f.user_id) : null;
             resolvedFeedback.push({
               ...f,
               profiles: profile,
-              status: f.status as any,
+              status: f.status as FeedbackStatus,
               userEmail: authUser?.email || "Anonymous Student",
             });
           });
@@ -77,13 +68,13 @@ export function useFeedback(page: number, status: string) {
         return {
           feedbackList: resolvedFeedback,
           totalCount: count || 0,
-          totalPages: Math.ceil((count || 0) / pageSize),
+          totalPages: Math.ceil((count || 0) / PAGE_SIZE),
         };
-      } catch (err: any) {
-        throw new Error(err.message || "Failed to load feedback logs");
+      } catch (err: unknown) {
+        throw new Error(getErrorMessage(err, "Failed to load feedback logs"));
       }
     },
-    staleTime: 10 * 1000, // feedback list stale after 10s
+    staleTime: STALE_TIMES.feedback,
   });
 
   const unreadCountQuery = useQuery({
@@ -98,7 +89,7 @@ export function useFeedback(page: number, status: string) {
       }
       return count || 0;
     },
-    staleTime: 10 * 1000, // unread count stale after 10s
+    staleTime: STALE_TIMES.feedback,
   });
 
   return {
