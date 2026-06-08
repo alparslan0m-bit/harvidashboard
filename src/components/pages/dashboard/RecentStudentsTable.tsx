@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { RecentStudent } from "../../../hooks/useDashboard";
 import { formatDate } from "../../../lib/utils";
-import { EmptyState } from "../../shared/EmptyState";
+import { DataTable } from "../../shared/DataTable";
+import { SectionCard } from "../../shared/SectionCard";
+import { Link } from "react-router";
+import type { ColumnDef } from "@tanstack/react-table";
 
 interface RecentStudentsTableProps {
   students: RecentStudent[];
@@ -10,78 +13,86 @@ interface RecentStudentsTableProps {
 export const RecentStudentsTable: React.FC<RecentStudentsTableProps> = ({
   students,
 }) => {
-  return (
-    <div className="rounded-3xl border border-border bg-card shadow-sm flex flex-col h-[400px]">
-      <div className="p-6 border-b border-border/50">
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">
-          Recent Students
-        </h2>
-        <p className="text-xs text-muted-foreground">
-          Latest registrations and recent performance
-        </p>
-      </div>
-
-      <div className="flex-1 overflow-auto min-h-0">
-        {students.length === 0 ? (
-          <div className="h-full flex items-center justify-center p-6">
-            <EmptyState
-              icon="Users"
-              title="No students yet"
-              description="New student registration logs are empty."
-            />
+  const columns = useMemo<ColumnDef<RecentStudent>[]>(
+    () => [
+      {
+        id: "student",
+        header: "Student",
+        cell: ({ row }) => (
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <span className="font-semibold text-foreground text-xs truncate">
+              {row.original.full_name || "Anonymous User"}
+            </span>
+            <span className="text-muted-foreground text-[10px] select-all truncate">
+              {row.original.email}
+            </span>
           </div>
-        ) : (
-          <table className="min-w-full divide-y divide-border/50 text-sm">
-            <thead className="bg-muted/50 text-muted-foreground uppercase tracking-[0.18em] text-[11px] font-semibold sticky top-0 border-b border-border/50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left">
-                  Student
-                </th>
-                <th scope="col" className="px-6 py-3 text-left">
-                  Quizzes
-                </th>
-                <th scope="col" className="px-6 py-3 text-left">
-                  Avg Score
-                </th>
-                <th scope="col" className="px-6 py-3 text-left">
-                  Joined
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {students.map((student) => (
-                <tr
-                  key={student.id}
-                  className="hover:bg-muted/20 transition-colors"
-                >
-                  <td className="px-6 py-3.5">
-                    <div className="flex flex-col gap-1">
-                      <span className="font-semibold text-foreground text-sm">
-                        {student.full_name}
-                      </span>
-                      <span className="text-muted-foreground text-[11px] select-all">
-                        {student.email}
-                      </span>
-                    </div>
-                  </td>
-                  <td className="px-6 py-3.5 text-foreground">
-                    {student.total_quizzes}
-                  </td>
-                  <td className="px-6 py-3.5">
-                    <span className="font-medium text-foreground">
-                      {student.average_score}%
-                    </span>
-                  </td>
-                  <td className="px-6 py-3.5 text-muted-foreground">
-                    {formatDate(student.joined_date)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+        ),
+      },
+      {
+        accessorKey: "total_quizzes",
+        header: "Quizzes",
+        cell: ({ row }) => (
+          <span className="text-foreground font-medium">
+            {row.original.total_quizzes}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "average_score",
+        header: "Avg Score",
+        cell: ({ row }) => (
+          <span className="font-semibold text-foreground">
+            {row.original.average_score}%
+          </span>
+        ),
+      },
+      {
+        accessorKey: "joined_date",
+        header: "Joined",
+        cell: ({ row }) => (
+          <span className="text-muted-foreground">
+            {formatDate(row.original.joined_date)}
+          </span>
+        ),
+      },
+    ],
+    []
+  );
+
+  const actions = (
+    <Link
+      to="/users"
+      className="text-[11px] font-semibold text-foreground hover:underline transition-all"
+    >
+      View All
+    </Link>
+  );
+
+  // Take only top 5 rows as per spec
+  const visibleStudents = useMemo(() => students.slice(0, 5), [students]);
+
+  return (
+    <SectionCard
+      title="Recent Students"
+      description="Latest registrations and recent performance"
+      actions={actions}
+      className="p-0 border border-border/60 bg-card overflow-hidden shadow-xs flex flex-col h-auto"
+    >
+      <div className="px-5 pt-3">
+        <DataTable
+          columns={columns}
+          data={visibleStudents}
+          pageCount={0}
+          currentPage={1}
+          onPageChange={() => {}}
+          emptyStateTitle="No recent students"
+          emptyStateDescription="New student registration records are currently empty."
+          emptyStateIcon="Users"
+        />
       </div>
-    </div>
+    </SectionCard>
   );
 };
+
 export default RecentStudentsTable;

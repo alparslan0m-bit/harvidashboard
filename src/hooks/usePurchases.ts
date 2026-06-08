@@ -19,7 +19,21 @@ export function usePurchases(
         const from = (page - 1) * pageSize;
         const to = from + pageSize - 1;
 
-        // Base query joining modules, subjects
+        // 1. Get auth users list first (consolidated batch)
+        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.listUsers({
+          page: 1,
+          perPage: 10000,
+        });
+        if (authError) {
+          throw new Error(`[Purchases.listUsers] ${authError.message}`);
+        }
+        const authUsers = authData?.users || [];
+        const authMap = new Map<string, typeof authUsers[0]>();
+        authUsers.forEach((u) => {
+          authMap.set(u.id, u);
+        });
+
+        // 2. Base query joining modules, subjects
         let query = supabaseAdmin
           .from("purchases")
           .select("*, modules(name), subjects(name)", { count: "exact" });
@@ -42,39 +56,32 @@ export function usePurchases(
           query = query.ilike("payment_session_id", `%${searchSessionId}%`);
         }
 
-        const { data, count, error } = await query
+        const { data, count, error: purchasesError } = await query
           .order("created_at", { ascending: false })
           .range(from, to);
 
-        if (error) throw error;
+        if (purchasesError) {
+          throw new Error(`[Purchases.purchasesQuery] ${purchasesError.message}`);
+        }
 
-        // Resolve auth details (emails) and profiles for the page
         const purchasesWithDetails: any[] = [];
         if (data && data.length > 0) {
           const userIds = Array.from(new Set(data.map(p => p.user_id).filter(Boolean)));
           
           let profiles: any[] = [];
           if (userIds.length > 0) {
-            const { data: profileData } = await supabaseAdmin
+            const { data: profileData, error: profileError } = await supabaseAdmin
               .from("profiles")
               .select("id, full_name")
               .in("id", userIds);
+            if (profileError) {
+              throw new Error(`[Purchases.profilesQuery] ${profileError.message}`);
+            }
             profiles = profileData || [];
           }
 
-          const authUsers = await Promise.all(
-            data.map(async (p) => {
-              try {
-                const { data: userData } = await supabaseAdmin.auth.admin.getUserById(p.user_id);
-                return userData?.user || null;
-              } catch {
-                return null;
-              }
-            })
-          );
-
-          data.forEach((p, idx) => {
-            const authUser = authUsers[idx];
+          data.forEach((p) => {
+            const authUser = authMap.get(p.user_id);
             const profile = profiles.find(pr => pr.id === p.user_id) || null;
             purchasesWithDetails.push({
               ...p,
@@ -105,6 +112,7 @@ export function usePurchases(
         throw new Error(err.message || "Failed to load transactions ledger");
       }
     },
+    staleTime: 10 * 1000, // purchases cache stale after 10s
   });
 
   return {
@@ -122,13 +130,14 @@ export function usePurchasesSummary(fromDate: string, toDate: string, searchSess
       try {
         let query = supabaseAdmin.from("purchases").select("amount_cents, status");
 
-        // Apply filters in sync with table
         if (fromDate) query = query.gte("created_at", `${fromDate}T00:00:00Z`);
         if (toDate) query = query.lte("created_at", `${toDate}T23:59:59Z`);
         if (searchSessionId.trim()) query = query.ilike("payment_session_id", `%${searchSessionId}%`);
 
         const { data, error } = await query;
-        if (error) throw error;
+        if (error) {
+          throw new Error(`[Purchases.summaryQuery] ${error.message}`);
+        }
 
         let activeRevenue = 0;
         let refundedRevenue = 0;
@@ -150,6 +159,7 @@ export function usePurchasesSummary(fromDate: string, toDate: string, searchSess
         throw new Error(err.message || "Failed to fetch sales summary");
       }
     },
+    staleTime: 10 * 1000, // summary stale after 10s
   });
 
   return {
@@ -169,16 +179,52 @@ export function usePurchaseMutations() {
         .eq("id", purchaseId)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+        throw new Error(error.message);
+      }
       return data;
+    },
+    // Optimistic Update: Spec requirement non-negotiable
+    onMutate: async (purchaseId) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["purchases"] });
+
+      // Snapshot the previous query states
+      const previousQueries = queryClient.getQueriesData({ queryKey: ["purchases"] });
+
+      // Optimistically update
+      queryClient.setQueriesData({ queryKey: ["purchases"] }, (old: any) => {
+        if (!old) return old;
+        // Update list query
+        if (old.purchases) {
+          return {
+            ...old,
+            purchases: old.purchases.map((p: any) =>
+              p.id === purchaseId ? { ...p, status: "refunded" } : p
+            ),
+          };
+        }
+        return old;
+      });
+
+      return { previousQueries };
+    },
+    onError: (err: any, _variables, context) => {
+      // Rollback to previous values
+      if (context?.previousQueries) {
+        context.previousQueries.forEach(([queryKey, value]) => {
+          queryClient.setQueryData(queryKey, value);
+        });
+      }
+      toast.error(err.message || "Failed to refund transaction");
     },
     onSuccess: () => {
       toast.success("Transaction refunded successfully");
+    },
+    onSettled: () => {
+      // Re-sync with actual DB state
       queryClient.invalidateQueries({ queryKey: ["purchases"] });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
-    },
-    onError: (err: any) => {
-      toast.error(err.message || "Failed to refund transaction");
     },
   });
 

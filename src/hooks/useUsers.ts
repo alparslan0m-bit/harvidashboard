@@ -14,53 +14,68 @@ export function useUsers(page: number, search: string, filter: string) {
         const from = (page - 1) * pageSize;
         const to = from + pageSize - 1;
 
-        // Base query for profiles & user_stats
+        // 1. Get auth users list first (consolidated batch)
+        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.listUsers({
+          page: 1,
+          perPage: 10000,
+        });
+        if (authError) {
+          throw new Error(`[Users.listUsers] ${authError.message}`);
+        }
+        const authUsers = authData?.users || [];
+        const authMap = new Map<string, typeof authUsers[0]>();
+        authUsers.forEach((u) => {
+          authMap.set(u.id, u);
+        });
+
+        // 2. Base query for profiles
         let query = supabaseAdmin
           .from("profiles")
           .select("id, full_name, avatar_url, updated_at", { count: "exact" });
 
         // Apply filters
         if (filter === "active_streak") {
-          // active streak is streak > 0
-          const { data: streakUsers } = await supabaseAdmin
+          const { data: streakUsers, error: streakError } = await supabaseAdmin
             .from("user_stats")
             .select("user_id")
             .gt("current_streak", 0);
+          if (streakError) {
+            throw new Error(`[Users.activeStreakFilter] ${streakError.message}`);
+          }
           const ids = (streakUsers || []).map((u: any) => u.user_id);
           query = query.in("id", ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"]);
         } else if (filter === "has_purchases") {
-          // purchases count > 0
-          const { data: purchasedUsers } = await supabaseAdmin
+          const { data: purchasedUsers, error: purchaseFilterError } = await supabaseAdmin
             .from("purchases")
             .select("user_id")
             .eq("status", "active");
+          if (purchaseFilterError) {
+            throw new Error(`[Users.hasPurchasesFilter] ${purchaseFilterError.message}`);
+          }
           const ids = Array.from(new Set((purchasedUsers || []).map((u: any) => u.user_id)));
           query = query.in("id", ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"]);
         } else if (filter === "inactive_30_days") {
-          // no quiz in 30 days
           const thirtyDaysAgo = new Date();
           thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
           const dateStr = thirtyDaysAgo.toISOString().split("T")[0];
           
-          const { data: inactiveUsers } = await supabaseAdmin
+          const { data: inactiveUsers, error: inactiveError } = await supabaseAdmin
             .from("user_stats")
             .select("user_id")
             .or(`last_quiz_date.lt.${dateStr},last_quiz_date.is.null`);
+          if (inactiveError) {
+            throw new Error(`[Users.inactiveFilter] ${inactiveError.message}`);
+          }
           
           const ids = (inactiveUsers || []).map((u: any) => u.user_id);
           query = query.in("id", ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"]);
         }
 
-        // Apply search by full name
+        // Apply search by full name or email (via authMap lookup)
         if (search) {
-          // Search full_name or match by email
-          // Since email is in auth.users, we can first query auth users matching the search email
-          const { data: authSearchData } = await supabaseAdmin.auth.admin.listUsers({
-            perPage: 100,
-          });
-          const matchingAuthIds = (authSearchData?.users || [])
-            .filter((u: any) => u.email?.toLowerCase().includes(search.toLowerCase()))
-            .map((u: any) => u.id);
+          const matchingAuthIds = authUsers
+            .filter((u) => u.email?.toLowerCase().includes(search.toLowerCase()))
+            .map((u) => u.id);
 
           if (matchingAuthIds.length > 0) {
             query = query.or(`full_name.ilike.%${search}%,id.in.(${matchingAuthIds.join(",")})`);
@@ -69,45 +84,39 @@ export function useUsers(page: number, search: string, filter: string) {
           }
         }
 
-        const { data: profiles, count, error } = await query
+        const { data: profiles, count, error: profilesError } = await query
           .order("updated_at", { ascending: false })
           .range(from, to);
 
-        if (error) throw error;
+        if (profilesError) {
+          throw new Error(`[Users.profilesQuery] ${profilesError.message}`);
+        }
 
-        // Resolve auth details (emails & created_at) and user_stats
         const usersWithDetails: UserWithDetails[] = [];
         if (profiles && profiles.length > 0) {
           const profileIds = profiles.map((p: any) => p.id);
 
           // Fetch user stats
-          const { data: statsData } = await supabaseAdmin
+          const { data: statsData, error: statsError } = await supabaseAdmin
             .from("user_stats")
             .select("*")
             .in("user_id", profileIds);
+          if (statsError) {
+            throw new Error(`[Users.statsQuery] ${statsError.message}`);
+          }
 
           const statsMap: Record<string, any> = {};
           (statsData || []).forEach((s: any) => {
             statsMap[s.user_id] = s;
           });
 
-          const authUsers = await Promise.all(
-            profiles.map(async (p: any) => {
-              try {
-                const { data } = await supabaseAdmin.auth.admin.getUserById(p.id);
-                return data?.user || null;
-              } catch {
-                return null;
-              }
-            })
-          );
-
-          profiles.forEach((p, idx) => {
-            const authUser = authUsers[idx];
+          profiles.forEach((p) => {
+            const authUser = authMap.get(p.id);
             usersWithDetails.push({
               id: p.id,
               email: authUser?.email || "N/A",
               created_at: authUser?.created_at || p.updated_at || "",
+              app_metadata: authUser?.app_metadata || {},
               profile: {
                 id: p.id,
                 full_name: p.full_name,
@@ -128,6 +137,7 @@ export function useUsers(page: number, search: string, filter: string) {
         throw new Error(err.message || "Failed to fetch users");
       }
     },
+    staleTime: 10 * 1000, // users cache stale after 10s
   });
 
   return {
@@ -144,23 +154,32 @@ export function useUserDetail(userId: string | null) {
     queryFn: async (): Promise<UserWithDetails | null> => {
       if (!userId) return null;
       
-      const { data: profile } = await supabaseAdmin
+      const { data: profile, error: profileError } = await supabaseAdmin
         .from("profiles")
         .select("id, full_name, avatar_url, updated_at")
         .eq("id", userId)
         .single();
+      if (profileError) {
+        throw new Error(`[Users.userDetailProfile] ${profileError.message}`);
+      }
 
       let stats = null;
       if (profile) {
-        const { data: statsData } = await supabaseAdmin
+        const { data: statsData, error: statsError } = await supabaseAdmin
           .from("user_stats")
           .select("*")
           .eq("user_id", userId)
           .maybeSingle();
+        if (statsError) {
+          throw new Error(`[Users.userDetailStats] ${statsError.message}`);
+        }
         stats = statsData;
       }
 
-      const { data: authData } = await supabaseAdmin.auth.admin.getUserById(userId);
+      const { data: authData, error: authError } = await supabaseAdmin.auth.admin.getUserById(userId);
+      if (authError) {
+        throw new Error(`[Users.userDetailAuth] ${authError.message}`);
+      }
       const authUser = authData?.user;
 
       if (!profile && !authUser) return null;
@@ -169,6 +188,7 @@ export function useUserDetail(userId: string | null) {
         id: userId,
         email: authUser?.email || "N/A",
         created_at: authUser?.created_at || "",
+        app_metadata: authUser?.app_metadata || {},
         profile: profile
           ? {
               id: profile.id,
@@ -181,6 +201,7 @@ export function useUserDetail(userId: string | null) {
       };
     },
     enabled: !!userId,
+    staleTime: 10 * 1000,
   });
 
   const quizHistoryQuery = useQuery({
@@ -194,7 +215,9 @@ export function useUserDetail(userId: string | null) {
         .order("created_at", { ascending: false })
         .limit(20);
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(`[Users.userQuizHistory] ${error.message}`);
+      }
       return (data || []).map((row: any) => ({
         id: row.id,
         user_id: row.user_id,
@@ -207,6 +230,7 @@ export function useUserDetail(userId: string | null) {
       }));
     },
     enabled: !!userId,
+    staleTime: 10 * 1000,
   });
 
   const purchasesQuery = useQuery({
@@ -219,7 +243,9 @@ export function useUserDetail(userId: string | null) {
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(`[Users.userPurchases] ${error.message}`);
+      }
       return (data || []).map((row: any) => ({
         id: row.id,
         user_id: row.user_id,
@@ -238,6 +264,7 @@ export function useUserDetail(userId: string | null) {
       }));
     },
     enabled: !!userId,
+    staleTime: 10 * 1000,
   });
 
   return {
@@ -255,10 +282,12 @@ export function useUserMutations() {
     mutationFn: async (userId: string) => {
       const { data, error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
         app_metadata: { role: "admin" },
-        user_metadata: { role: "admin" }, // Sync both places
+        user_metadata: { role: "admin" },
       });
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(error.message);
+      }
       return data.user;
     },
     onSuccess: (_, userId) => {
@@ -274,7 +303,9 @@ export function useUserMutations() {
   const deleteUserMutation = useMutation({
     mutationFn: async (userId: string) => {
       const { error } = await supabaseAdmin.auth.admin.deleteUser(userId);
-      if (error) throw error;
+      if (error) {
+        throw new Error(error.message);
+      }
     },
     onSuccess: () => {
       toast.success("User deleted successfully");

@@ -4,6 +4,8 @@ import ModulesPanel from "../components/pages/curriculum/ModulesPanel";
 import SubjectsPanel from "../components/pages/curriculum/SubjectsPanel";
 import LectureQuestionsPanel from "../components/pages/curriculum/LectureQuestionsPanel";
 
+import { useCurriculum, useModules } from "../hooks/useCurriculum";
+
 export const Curriculum: React.FC = () => {
   const [selectedYearId, setSelectedYearId] = useState<string | null>(null);
   const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
@@ -12,6 +14,13 @@ export const Curriculum: React.FC = () => {
   const [selectedLectureId, setSelectedLectureId] = useState<string | null>(null);
   const [selectedLectureName, setSelectedLectureName] = useState("");
   const [isLectureQuestionsOpen, setIsLectureQuestionsOpen] = useState(false);
+
+  // Derive names for breadcrumbs from query caches
+  const { years } = useCurriculum();
+  const { modules } = useModules(selectedYearId);
+
+  const selectedYear = years.find((y) => y.id === selectedYearId);
+  const selectedModule = modules.find((m) => m.id === selectedModuleId);
 
   const handleSelectYear = (id: string | null) => {
     setSelectedYearId(id);
@@ -29,10 +38,10 @@ export const Curriculum: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="select-none">
-        <h2 className="text-sm font-medium text-muted-foreground">Curriculum Hierarchy Tree</h2>
-        <p className="text-xs text-muted-foreground">Manage your educational structural layers</p>
+    <div className="space-y-5">
+      <div className="select-none border-b pb-4 mb-4">
+        <h2 className="text-sm font-semibold tracking-tight text-foreground">Curriculum Hierarchy Tree</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">Manage your educational structural layers</p>
       </div>
 
       {/* Main 3-Column Layout */}
@@ -45,7 +54,12 @@ export const Curriculum: React.FC = () => {
           onSelectModule={handleSelectModule}
         />
         
-        <SubjectsPanel selectedModuleId={selectedModuleId} onSelectLecture={handleSelectLecture} />
+        <SubjectsPanel
+          selectedModuleId={selectedModuleId}
+          selectedYearName={selectedYear?.name}
+          selectedModuleName={selectedModule?.name}
+          onSelectLecture={handleSelectLecture}
+        />
       </div>
 
       {/* Lecture questions slide-over drawer */}

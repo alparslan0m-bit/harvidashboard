@@ -98,7 +98,9 @@ export function useQuestions(
           .order("created_at", { ascending: false })
           .range(from, to);
 
-        if (error) throw error;
+        if (error) {
+          throw new Error(`[Questions.questionsQuery] ${error.message}`);
+        }
 
         return {
           questions: (data || []).map((row: any) => ({
@@ -123,6 +125,7 @@ export function useQuestions(
         throw new Error(err.message || "Failed to fetch question bank");
       }
     },
+    staleTime: 30 * 1000, // questions stale after 30s
   });
 
   return {

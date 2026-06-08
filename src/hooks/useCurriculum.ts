@@ -17,7 +17,9 @@ export function useCurriculum() {
         .select("*")
         .order("name", { ascending: true }); // Base years order, let's also order by order_index in js if present
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(`[Curriculum.yearsQuery] ${error.message}`);
+      }
       
       // Sort in memory by order_index if it exists in data
       const sorted = (data || []).map((row: any) => ({
@@ -27,6 +29,7 @@ export function useCurriculum() {
       
       return sorted.sort((a, b) => (a.order_index || 0) - (b.order_index || 0));
     },
+    staleTime: 5 * 60 * 1000, // curriculum data cache stale after 5m
   });
 
   const createYearMutation = useMutation({
@@ -132,10 +135,13 @@ export function useModules(yearId: string | null) {
         .eq("year_id", yearId)
         .order("order_index", { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(`[Curriculum.modulesQuery] ${error.message}`);
+      }
       return data || [];
     },
     enabled: !!yearId,
+    staleTime: 5 * 60 * 1000, // 5m staleTime
   });
 
   const createModuleMutation = useMutation({
@@ -251,7 +257,9 @@ export function useSubjectsAndLectures(moduleId: string | null) {
         .eq("module_id", moduleId)
         .order("order_index", { ascending: true });
 
-      if (sError) throw sError;
+      if (sError) {
+        throw new Error(`[Curriculum.subjectsQuery] ${sError.message}`);
+      }
 
       // Fetch lectures for all subjects
       const subjectIds = (subjectsData || []).map((s) => s.id);
@@ -263,7 +271,9 @@ export function useSubjectsAndLectures(moduleId: string | null) {
         .in("subject_id", subjectIds)
         .order("order_index", { ascending: true });
 
-      if (lError) throw lError;
+      if (lError) {
+        throw new Error(`[Curriculum.lecturesQuery] ${lError.message}`);
+      }
 
       return (subjectsData || []).map((subj) => ({
         ...subj,
@@ -271,6 +281,7 @@ export function useSubjectsAndLectures(moduleId: string | null) {
       }));
     },
     enabled: !!moduleId,
+    staleTime: 5 * 60 * 1000, // 5m staleTime
   });
 
   const createSubjectMutation = useMutation({
@@ -468,7 +479,9 @@ export function useLectureQuestions(lectureId: string | null) {
         .eq("lecture_id", lectureId)
         .order("question_order", { ascending: true });
 
-      if (error) throw error;
+      if (error) {
+        throw new Error(`[Curriculum.lectureQuestionsQuery] ${error.message}`);
+      }
       
       return (data || []).map((row: any) => ({
         id: row.id,
@@ -486,6 +499,7 @@ export function useLectureQuestions(lectureId: string | null) {
       })) as Question[];
     },
     enabled: !!lectureId,
+    staleTime: 5 * 60 * 1000, // 5m staleTime
   });
 
   return {

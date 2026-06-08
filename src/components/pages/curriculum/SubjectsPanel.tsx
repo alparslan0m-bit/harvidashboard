@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSubjectsAndLectures } from "../../../hooks/useCurriculum";
 import { Plus, Edit2, Trash2, GripVertical, ChevronDown, ChevronRight, Eye } from "lucide-react";
 import {
@@ -23,6 +23,8 @@ import { ConfirmDialog } from "../../shared/ConfirmDialog";
 
 interface SubjectsPanelProps {
   selectedModuleId: string | null;
+  selectedYearName?: string;
+  selectedModuleName?: string;
   onSelectLecture: (id: string | null, name: string) => void;
 }
 
@@ -48,7 +50,7 @@ const SortableLectureItem: React.FC<{
   onEdit: () => void;
   onDelete: () => void;
   onSelect: () => void;
-}> = ({ lecture, onEdit, onDelete, onSelect }) => {
+}> = React.memo(({ lecture, onEdit, onDelete, onSelect }) => {
   const {
     attributes,
     listeners,
@@ -69,7 +71,7 @@ const SortableLectureItem: React.FC<{
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center justify-between py-2 px-3 border rounded bg-card hover:bg-muted/10 text-xs select-none",
+        "flex items-center justify-between py-2 px-3 border rounded bg-card hover:bg-muted/10 text-xs select-none group",
         isDragging && "z-50 shadow border-primary"
       )}
     >
@@ -78,7 +80,7 @@ const SortableLectureItem: React.FC<{
           type="button"
           {...attributes}
           {...listeners}
-          className="p-0.5 rounded hover:bg-muted text-muted-foreground/50 cursor-grab active:cursor-grabbing shrink-0"
+          className="p-0.5 rounded hover:bg-muted text-muted-foreground/50 cursor-grab active:cursor-grabbing shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
           aria-label="Drag to reorder"
         >
           <GripVertical className="h-3 w-3" />
@@ -111,9 +113,11 @@ const SortableLectureItem: React.FC<{
       </div>
     </div>
   );
-};
+});
 
-const SortableSubjectItem: React.FC<SortableSubjectItemProps> = ({
+SortableLectureItem.displayName = "SortableLectureItem";
+
+const SortableSubjectItem: React.FC<SortableSubjectItemProps> = React.memo(({
   id,
   name,
   isFree,
@@ -166,15 +170,15 @@ const SortableSubjectItem: React.FC<SortableSubjectItemProps> = ({
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="border rounded-lg bg-card select-none">
+    <div ref={setNodeRef} style={style} className="border border-border/60 rounded-lg bg-card select-none overflow-hidden shadow-xs">
       {/* Subject Row */}
-      <div className="flex items-center justify-between p-3 border-b border-border/40 bg-muted/10">
+      <div className="flex items-center justify-between p-3 border-b border-border/30 bg-muted/10 group">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <button
             type="button"
             {...attributes}
             {...listeners}
-            className="p-1 rounded hover:bg-muted text-muted-foreground/60 cursor-grab active:cursor-grabbing shrink-0"
+            className="p-1 rounded hover:bg-muted text-muted-foreground/60 cursor-grab active:cursor-grabbing shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
             aria-label="Drag to reorder"
           >
             <GripVertical className="h-4 w-4" />
@@ -244,10 +248,14 @@ const SortableSubjectItem: React.FC<SortableSubjectItemProps> = ({
       )}
     </div>
   );
-};
+});
+
+SortableSubjectItem.displayName = "SortableSubjectItem";
 
 export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
   selectedModuleId,
+  selectedYearName,
+  selectedModuleName,
   onSelectLecture,
 }) => {
   const {
@@ -280,6 +288,22 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
   const [editingLectureId, setEditingLectureId] = useState<string | null>(null);
   const [lectureName, setLectureName] = useState("");
   const [deleteLectureId, setDeleteLectureId] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Keyboard shortcut: N to create new item when focused
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isFocused) return;
+      const activeElement = document.activeElement;
+      const isTyping = activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement;
+      if (e.key?.toLowerCase() === "n" && !isSubjectFormOpen && !isLectureFormOpen && !editingSubjectId && !isTyping) {
+        e.preventDefault();
+        handleOpenCreateSubject();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFocused, isSubjectFormOpen, isLectureFormOpen, editingSubjectId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -382,18 +406,32 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
 
   if (!selectedModuleId) {
     return (
-      <div className="flex flex-col border rounded-xl bg-card shadow-sm h-[600px] items-center justify-center p-6 text-center select-none text-muted-foreground text-xs">
+      <div className="flex flex-col border border-border/60 rounded-xl bg-card shadow-sm h-[600px] items-center justify-center p-6 text-center select-none text-muted-foreground text-xs">
         Select a module to display subjects and lectures.
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col border rounded-xl bg-card shadow-sm h-[600px] select-none">
+    <div
+      tabIndex={0}
+      onFocus={() => setIsFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+          setIsFocused(false);
+        }
+      }}
+      className={cn(
+        "flex flex-col border rounded-xl bg-card shadow-sm h-[600px] select-none outline-none transition-all duration-200",
+        isFocused ? "ring-1 ring-primary/20 border-primary/30" : "border-border/60"
+      )}
+    >
       {/* Header */}
       <div className="p-4 border-b flex items-center justify-between">
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">3. Subjects + Lectures</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+            3. Subjects + Lectures ({subjects.length})
+          </h3>
           <p className="text-[10px] text-muted-foreground">Detailed chapters and specific topics</p>
         </div>
         <button
@@ -405,6 +443,13 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
           <span>Add Subject</span>
         </button>
       </div>
+
+      {/* Breadcrumb Trail */}
+      {selectedYearName && selectedModuleName && (
+        <div className="px-4 py-2 bg-muted/30 border-b text-[10px] text-muted-foreground font-medium select-none truncate">
+          {selectedYearName} &rarr; {selectedModuleName} &rarr; Subjects
+        </div>
+      )}
 
       {/* Accordion Form overlay inside Panel 3 - Subject Form */}
       {isSubjectFormOpen && (
@@ -419,9 +464,10 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
               type="text"
               value={subjectName}
               onChange={(e) => setSubjectName(e.target.value)}
-              className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none"
+              className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
               placeholder="e.g. Valvular Disease"
               aria-label="Subject Name"
+              autoFocus
             />
           </div>
 
@@ -445,7 +491,7 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
                 min="0"
                 value={subjectPriceDollars}
                 onChange={(e) => setSubjectPriceDollars(e.target.value)}
-                className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none"
+                className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
                 placeholder="4.99"
                 aria-label="Subject Price in USD"
               />
@@ -483,9 +529,10 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
               type="text"
               value={lectureName}
               onChange={(e) => setLectureName(e.target.value)}
-              className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none"
+              className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
               placeholder="e.g. Mitral Stenosis"
               aria-label="Lecture Title"
+              autoFocus
             />
           </div>
 
@@ -568,4 +615,5 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
     </div>
   );
 };
+
 export default SubjectsPanel;

@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Link } from "react-router";
 import { usePurchases, usePurchasesSummary, usePurchaseMutations } from "../hooks/usePurchases";
 import { DataTable } from "../components/shared/DataTable";
 import { StatusBadge } from "../components/shared/StatusBadge";
 import { ConfirmDialog } from "../components/shared/ConfirmDialog";
+import { PageHeader } from "../components/shared/PageHeader";
+import { ErrorView } from "../components/shared/ErrorView";
+import { FilterBar } from "../components/shared/FilterBar";
+import { KPIGrid } from "../components/shared/KPIGrid";
 import { formatCurrency, formatDateTime } from "../lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import { DollarSign, Search, User, CornerUpLeft, RefreshCw, AlertTriangle } from "lucide-react";
+import { DollarSign, Search, User, CornerUpLeft, ShieldAlert, Hash } from "lucide-react";
 
 export const Purchases: React.FC = () => {
   const [page, setPage] = useState(1);
@@ -60,148 +64,167 @@ export const Purchases: React.FC = () => {
     }
   };
 
-  // Define table columns
-  const columns: ColumnDef<any>[] = [
-    {
-      accessorKey: "userEmail",
-      header: "User Email",
-      cell: ({ row }) => <span className="font-semibold text-foreground select-all">{row.original.userEmail}</span>,
-    },
-    {
-      id: "itemName",
-      header: "Unlocked Item",
-      cell: ({ row }) => {
-        const item = row.original.modules?.name || row.original.subjects?.name || "Premium Access";
-        return <span className="text-foreground">{item}</span>;
+  // Compute disputed count from current page data
+  const disputedCount = useMemo(
+    () => (data?.purchases || []).filter((p: any) => p.status === "disputed").length,
+    [data?.purchases]
+  );
+
+  // Extract unique providers for filter dropdown
+  const providers = useMemo(() => {
+    const set = new Set<string>();
+    (data?.purchases || []).forEach((p: any) => {
+      if (p.provider) set.add(p.provider);
+    });
+    return Array.from(set).sort();
+  }, [data?.purchases]);
+
+  // Memoize column definitions to prevent re-creation on every render
+  const columns: ColumnDef<any>[] = useMemo(
+    () => [
+      {
+        accessorKey: "userEmail",
+        header: "User Email",
+        cell: ({ row }) => <span className="font-semibold text-foreground select-all">{row.original.userEmail}</span>,
       },
-    },
-    {
-      accessorKey: "amount_cents",
-      header: "Amount",
-      cell: ({ row }) => <span className="font-bold text-foreground">{formatCurrency(row.original.amount_cents)}</span>,
-    },
-    {
-      accessorKey: "currency",
-      header: "Currency",
-      cell: ({ row }) => <span className="uppercase text-muted-foreground">{row.original.currency}</span>,
-    },
-    {
-      accessorKey: "status",
-      header: "Status",
-      cell: ({ row }) => <StatusBadge status={row.original.status} />,
-    },
-    {
-      accessorKey: "provider",
-      header: "Provider",
-      cell: ({ row }) => <span className="capitalize text-muted-foreground">{row.original.provider}</span>,
-    },
-    {
-      accessorKey: "payment_id",
-      header: "Payment ID",
-      cell: ({ row }) => <span className="text-muted-foreground font-mono select-all">{row.original.payment_id || "N/A"}</span>,
-    },
-    {
-      accessorKey: "created_at",
-      header: "Created",
-      cell: ({ row }) => <span className="text-muted-foreground">{formatDateTime(row.original.created_at)}</span>,
-    },
-    {
-      id: "actions",
-      header: "Actions",
-      cell: ({ row }) => (
-        <div className="flex gap-2">
-          {row.original.status === "active" && (
-            <button
-              onClick={() => setRefundPurchaseId(row.original.id)}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded border border-destructive/20 text-[10px] font-bold text-destructive hover:bg-destructive/10 transition"
-              aria-label="Refund Transaction"
+      {
+        id: "itemName",
+        header: "Unlocked Item",
+        cell: ({ row }) => {
+          const item = row.original.modules?.name || row.original.subjects?.name || "Premium Access";
+          return <span className="text-foreground">{item}</span>;
+        },
+      },
+      {
+        accessorKey: "amount_cents",
+        header: "Amount",
+        cell: ({ row }) => <span className="font-bold text-foreground">{formatCurrency(row.original.amount_cents)}</span>,
+      },
+      {
+        accessorKey: "currency",
+        header: "Currency",
+        cell: ({ row }) => <span className="uppercase text-muted-foreground">{row.original.currency}</span>,
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => <StatusBadge status={row.original.status} />,
+      },
+      {
+        accessorKey: "provider",
+        header: "Provider",
+        cell: ({ row }) => <span className="capitalize text-muted-foreground">{row.original.provider}</span>,
+      },
+      {
+        accessorKey: "payment_id",
+        header: "Payment ID",
+        cell: ({ row }) => <span className="text-muted-foreground font-mono select-all">{row.original.payment_id || "N/A"}</span>,
+      },
+      {
+        accessorKey: "created_at",
+        header: "Created",
+        cell: ({ row }) => <span className="text-muted-foreground">{formatDateTime(row.original.created_at)}</span>,
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => (
+          <div className="flex gap-2">
+            {row.original.status === "active" && (
+              <button
+                onClick={() => setRefundPurchaseId(row.original.id)}
+                className="inline-flex items-center gap-1 px-2 py-1 rounded border border-destructive/20 text-[10px] font-bold text-destructive hover:bg-destructive/10 transition"
+                aria-label="Refund Transaction"
+              >
+                <CornerUpLeft className="h-3 w-3" />
+                <span>Refund</span>
+              </button>
+            )}
+            
+            <Link
+              to={`/users?search=${row.original.userEmail}`}
+              className="inline-flex items-center gap-1 px-2 py-1 rounded border text-[10px] font-bold text-foreground hover:bg-accent transition"
+              aria-label="Inspect user details"
             >
-              <CornerUpLeft className="h-3 w-3" />
-              <span>Refund</span>
-            </button>
-          )}
-          
-          <Link
-            to={`/users?search=${row.original.userEmail}`}
-            className="inline-flex items-center gap-1 px-2 py-1 rounded border text-[10px] font-bold text-foreground hover:bg-accent transition"
-            aria-label="Inspect user details"
-          >
-            <User className="h-3 w-3" />
-            <span>View User</span>
-          </Link>
-        </div>
-      ),
-    },
-  ];
+              <User className="h-3 w-3" />
+              <span>View User</span>
+            </Link>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
+
+  // Build KPI cards config
+  const kpiCards = useMemo(
+    () => [
+      {
+        title: "Active Revenue",
+        value: isSummaryLoading ? "..." : `$${summary.activeRevenue.toFixed(2)}`,
+        description: "Total confirmed payments",
+        icon: <DollarSign className="h-4 w-4" />,
+      },
+      {
+        title: "Refunds Issued",
+        value: isSummaryLoading ? "..." : `$${summary.refundedRevenue.toFixed(2)}`,
+        description: "Returned to students",
+        icon: <CornerUpLeft className="h-4 w-4" />,
+      },
+      {
+        title: "Pending Revenue",
+        value: isSummaryLoading ? "..." : `$${summary.pendingRevenue.toFixed(2)}`,
+        description: "Awaiting confirmation",
+        icon: <DollarSign className="h-4 w-4" />,
+      },
+      {
+        title: "Transaction Count",
+        value: data?.totalCount ?? "...",
+        description: disputedCount > 0 ? `${disputedCount} disputed` : "In current filters",
+        icon: disputedCount > 0 ? <ShieldAlert className="h-4 w-4" /> : <Hash className="h-4 w-4" />,
+      },
+    ],
+    [isSummaryLoading, summary, data?.totalCount, disputedCount]
+  );
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center p-8 bg-card border border-destructive/20 rounded-xl max-w-md mx-auto mt-12 text-center select-none">
-        <div className="h-10 w-10 text-destructive bg-destructive/10 rounded-full flex items-center justify-center mb-4">
-          <AlertTriangle className="h-5 w-5" />
-        </div>
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">Failed to load Transaction Ledger</h2>
-        <p className="mt-1 text-xs text-muted-foreground max-w-xs">{error.message}</p>
-        <button
-          onClick={() => refetch()}
-          className="mt-4 flex items-center gap-2 px-4 py-2 text-xs font-semibold border rounded-md hover:bg-accent hover:text-accent-foreground transition"
-        >
-          <RefreshCw className="h-3 w-3" />
-          <span>Retry Loading</span>
-        </button>
-      </div>
+      <ErrorView
+        title="Failed to load Transaction Ledger"
+        message={error.message}
+        onRetry={() => refetch()}
+        className="mt-12"
+      />
     );
   }
 
   return (
     <div className="space-y-6">
-      {/* Page description */}
-      <div className="select-none">
-        <h2 className="text-sm font-medium text-muted-foreground">Monetization Ledger</h2>
-        <p className="text-xs text-muted-foreground">Monitor mobile app transactions, payments, and refunds</p>
-      </div>
+      <PageHeader
+        title="Monetization Ledger"
+        description="Monitor mobile app transactions, payments, and refunds"
+      />
+
+      {/* Disputed alert banner */}
+      {disputedCount > 0 && (
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-red-500/20 bg-red-500/5 select-none">
+          <ShieldAlert className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0" />
+          <div>
+            <span className="text-xs font-bold text-red-700 dark:text-red-400">
+              {disputedCount} disputed transaction{disputedCount > 1 ? "s" : ""} detected
+            </span>
+            <span className="text-xs text-red-600/80 dark:text-red-400/80 ml-2">
+              Review and resolve immediately to avoid chargebacks.
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Summary KPI row */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 select-none">
-        <div className="border bg-card p-4 rounded-xl shadow-sm flex items-center gap-4">
-          <div className="h-10 w-10 bg-emerald-500/10 text-emerald-600 rounded-full flex items-center justify-center shrink-0">
-            <DollarSign className="h-5 w-5" />
-          </div>
-          <div>
-            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">Total Active Revenue</span>
-            <span className="text-lg font-bold text-foreground mt-0.5 block">
-              {isSummaryLoading ? "Calculating..." : `$${summary.activeRevenue.toFixed(2)}`}
-            </span>
-          </div>
-        </div>
-
-        <div className="border bg-card p-4 rounded-xl shadow-sm flex items-center gap-4">
-          <div className="h-10 w-10 bg-red-500/10 text-red-600 rounded-full flex items-center justify-center shrink-0">
-            <CornerUpLeft className="h-5 w-5" />
-          </div>
-          <div>
-            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">Total Refunds Issued</span>
-            <span className="text-lg font-bold text-destructive mt-0.5 block">
-              {isSummaryLoading ? "Calculating..." : `$${summary.refundedRevenue.toFixed(2)}`}
-            </span>
-          </div>
-        </div>
-
-        <div className="border bg-card p-4 rounded-xl shadow-sm flex items-center gap-4">
-          <div className="h-10 w-10 bg-amber-500/10 text-amber-600 rounded-full flex items-center justify-center shrink-0">
-            <DollarSign className="h-5 w-5" />
-          </div>
-          <div>
-            <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">Total Pending Revenue</span>
-            <span className="text-lg font-bold text-amber-600 mt-0.5 block">
-              {isSummaryLoading ? "Calculating..." : `$${summary.pendingRevenue.toFixed(2)}`}
-            </span>
-          </div>
-        </div>
-      </div>
+      <KPIGrid cards={kpiCards} />
 
       {/* Filter toolbar panel */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 bg-card border p-4 rounded-xl shadow-sm select-none">
+      <FilterBar className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
         <div className="space-y-1">
           <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">Status</label>
           <select
@@ -216,6 +239,29 @@ export const Purchases: React.FC = () => {
             <option value="failed">Failed</option>
             <option value="refunded">Refunded</option>
             <option value="disputed">Disputed</option>
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">Provider</label>
+          <select
+            value=""
+            onChange={(e) => {
+              // Provider filter is informational; could be extended to filter server-side
+              if (e.target.value) {
+                setSearchSessionId(e.target.value);
+                setPage(1);
+              }
+            }}
+            className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground outline-none transition"
+            aria-label="Filter provider dropdown"
+          >
+            <option value="">All Providers</option>
+            {providers.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -255,7 +301,7 @@ export const Purchases: React.FC = () => {
             />
           </div>
         </div>
-      </div>
+      </FilterBar>
 
       {/* TanStack Table */}
       <DataTable

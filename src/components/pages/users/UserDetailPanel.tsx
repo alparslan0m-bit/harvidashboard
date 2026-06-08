@@ -3,8 +3,9 @@ import { useUserDetail, useUserMutations } from "../../../hooks/useUsers";
 import { SlideOver } from "../../shared/SlideOver";
 import { ConfirmDialog } from "../../shared/ConfirmDialog";
 import { StatusBadge } from "../../shared/StatusBadge";
+import { CopyButton } from "../../shared/CopyButton";
 import { formatCurrency, formatDate } from "../../../lib/utils";
-import { Award, Zap, Calendar, ShieldAlert, Trash2 } from "lucide-react";
+import { Award, Zap, Calendar, ShieldAlert, Trash2, Check } from "lucide-react";
 
 interface UserDetailPanelProps {
   userId: string | null;
@@ -48,6 +49,7 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
   };
 
   const userInitials = getInitials(user?.profile?.full_name);
+  const isAdmin = user?.app_metadata?.role === "admin";
 
   return (
     <>
@@ -99,7 +101,10 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
                 <h3 className="text-sm font-bold text-foreground truncate select-all">
                   {user.profile?.full_name || "Anonymous Student"}
                 </h3>
-                <p className="text-xs text-muted-foreground truncate select-all">{user.email}</p>
+                <div className="flex items-center gap-1.5 mt-0.5">
+                  <p className="text-xs text-muted-foreground truncate select-all">{user.email}</p>
+                  <CopyButton text={user.email} className="shrink-0" />
+                </div>
                 <div className="flex items-center gap-1.5 mt-2 text-[10px] text-muted-foreground">
                   <Calendar className="h-3 w-3" />
                   <span>Member since {formatDate(user.created_at)}</span>
@@ -113,7 +118,7 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
                 Quiz Stats Aggregate
               </h4>
               <div className="grid grid-cols-2 gap-3">
-                <div className="border bg-muted/20 p-3 rounded-lg flex items-center gap-3">
+                <div className="border border-border/60 bg-muted/20 p-3 rounded-lg flex items-center gap-3">
                   <Award className="h-4 w-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
                   <div>
                     <div className="text-xs font-bold text-foreground">
@@ -123,7 +128,7 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
                   </div>
                 </div>
 
-                <div className="border bg-muted/20 p-3 rounded-lg flex items-center gap-3">
+                <div className="border border-border/60 bg-muted/20 p-3 rounded-lg flex items-center gap-3">
                   <Zap className="h-4 w-4 text-amber-600 dark:text-amber-400 shrink-0" />
                   <div>
                     <div className="text-xs font-bold text-foreground">
@@ -133,7 +138,7 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
                   </div>
                 </div>
 
-                <div className="border bg-muted/20 p-3 rounded-lg flex items-center gap-3">
+                <div className="border border-border/60 bg-muted/20 p-3 rounded-lg flex items-center gap-3">
                   <Award className="h-4 w-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
                   <div>
                     <div className="text-xs font-bold text-foreground">
@@ -143,7 +148,7 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
                   </div>
                 </div>
 
-                <div className="border bg-muted/20 p-3 rounded-lg flex items-center gap-3">
+                <div className="border border-border/60 bg-muted/20 p-3 rounded-lg flex items-center gap-3">
                   <Award className="h-4 w-4 text-purple-600 dark:text-purple-400 shrink-0" />
                   <div>
                     <div className="text-xs font-bold text-foreground">
@@ -155,42 +160,44 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
               </div>
             </div>
 
-            {/* Quiz history list */}
+            {/* Quiz history list with scroll gradient fade */}
             <div className="space-y-2 select-none">
               <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Quiz Evaluation history (Last 20)
               </h4>
-              <div className="border rounded-lg bg-card max-h-[180px] overflow-y-auto">
-                {quizHistory.length === 0 ? (
-                  <p className="p-4 text-center text-[10px] text-muted-foreground">
-                    No quiz completions recorded yet.
-                  </p>
-                ) : (
-                  <table className="w-full text-left text-[11px] border-collapse">
-                    <thead className="bg-muted/30 text-muted-foreground border-b uppercase font-semibold">
-                      <tr>
-                        <th scope="col" className="px-4 py-2">Lecture</th>
-                        <th scope="col" className="px-4 py-2">Score</th>
-                        <th scope="col" className="px-4 py-2">Date</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                      {quizHistory.map((q) => (
-                        <tr key={q.id}>
-                          <td className="px-4 py-2 font-medium text-foreground">
-                            {q.lectures?.name || "Unknown"}
-                          </td>
-                          <td className="px-4 py-2 text-foreground font-semibold">
-                            {q.score}%
-                          </td>
-                          <td className="px-4 py-2 text-muted-foreground">
-                            {formatDate(q.created_at)}
-                          </td>
+              <div className="scroll-fade">
+                <div className="border border-border/60 rounded-lg bg-card max-h-[180px] overflow-y-auto">
+                  {quizHistory.length === 0 ? (
+                    <p className="p-4 text-center text-[10px] text-muted-foreground">
+                      No quiz completions recorded yet.
+                    </p>
+                  ) : (
+                    <table className="w-full text-left text-[11px] border-collapse">
+                      <thead className="bg-muted/30 text-muted-foreground border-b uppercase font-semibold">
+                        <tr>
+                          <th scope="col" className="px-4 py-2">Lecture</th>
+                          <th scope="col" className="px-4 py-2">Score</th>
+                          <th scope="col" className="px-4 py-2">Date</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
+                      </thead>
+                      <tbody className="divide-y divide-border/60">
+                        {quizHistory.map((q) => (
+                          <tr key={q.id}>
+                            <td className="px-4 py-2 font-medium text-foreground">
+                              {q.lectures?.name || "Unknown"}
+                            </td>
+                            <td className="px-4 py-2 text-foreground font-semibold">
+                              {q.score}%
+                            </td>
+                            <td className="px-4 py-2 text-muted-foreground">
+                              {formatDate(q.created_at)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
               </div>
             </div>
 
@@ -199,59 +206,72 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
               <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Commerce purchase Ledger
               </h4>
-              <div className="border rounded-lg bg-card max-h-[150px] overflow-y-auto">
-                {purchases.length === 0 ? (
-                  <p className="p-4 text-center text-[10px] text-muted-foreground">
-                    No transaction history logged.
-                  </p>
-                ) : (
-                  <table className="w-full text-left text-[11px] border-collapse">
-                    <thead className="bg-muted/30 text-muted-foreground border-b uppercase font-semibold">
-                      <tr>
-                        <th scope="col" className="px-4 py-2">Unlocked item</th>
-                        <th scope="col" className="px-4 py-2">Amount</th>
-                        <th scope="col" className="px-4 py-2">Status</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y">
-                      {purchases.map((p) => {
-                        const itemName = p.modules?.name || p.subjects?.name || "Premium Item";
-                        return (
-                          <tr key={p.id}>
-                            <td className="px-4 py-2 text-foreground font-medium">{itemName}</td>
-                            <td className="px-4 py-2 text-foreground font-semibold">
-                              {formatCurrency(p.amount_cents)}
-                            </td>
-                            <td className="px-4 py-2">
-                              <StatusBadge status={p.status} />
-                            </td>
-                          </tr>
-                        );
-                      })}
-                    </tbody>
-                  </table>
-                )}
+              <div className="scroll-fade">
+                <div className="border border-border/60 rounded-lg bg-card max-h-[150px] overflow-y-auto">
+                  {purchases.length === 0 ? (
+                    <p className="p-4 text-center text-[10px] text-muted-foreground">
+                      No transaction history logged.
+                    </p>
+                  ) : (
+                    <table className="w-full text-left text-[11px] border-collapse">
+                      <thead className="bg-muted/30 text-muted-foreground border-b uppercase font-semibold">
+                        <tr>
+                          <th scope="col" className="px-4 py-2">Unlocked item</th>
+                          <th scope="col" className="px-4 py-2">Amount</th>
+                          <th scope="col" className="px-4 py-2">Status</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-border/60">
+                        {purchases.map((p) => {
+                          const itemName = p.modules?.name || p.subjects?.name || "Premium Item";
+                          return (
+                            <tr key={p.id}>
+                              <td className="px-4 py-2 text-foreground font-medium">{itemName}</td>
+                              <td className="px-4 py-2 text-foreground font-semibold">
+                                {formatCurrency(p.amount_cents)}
+                              </td>
+                              <td className="px-4 py-2">
+                                <StatusBadge status={p.status} />
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Danger zone actions */}
-            <div className="space-y-2 border-t pt-6 select-none">
+            <div className="space-y-2 border-t border-border/60 pt-6 select-none">
               <h4 className="text-xs font-semibold uppercase tracking-wider text-red-500">
                 Danger Zone Operations
               </h4>
               <div className="flex gap-4">
-                <button
-                  onClick={() => setIsAdminConfirmOpen(true)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-zinc-950 dark:bg-zinc-800 border hover:bg-zinc-900 dark:hover:bg-zinc-700/50 text-xs font-semibold text-foreground transition"
-                  aria-label="Grant Admin Role"
-                >
-                  <ShieldAlert className="h-4 w-4" />
-                  <span>Grant Admin Access</span>
-                </button>
+                {isAdmin ? (
+                  <button
+                    disabled
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-muted text-muted-foreground border border-border/60 text-xs font-semibold transition cursor-not-allowed"
+                    aria-label="Already Admin"
+                  >
+                    <Check className="h-4 w-4 text-emerald-500" />
+                    <span>Already Admin</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => setIsAdminConfirmOpen(true)}
+                    className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-zinc-950 dark:bg-zinc-800 border border-border/60 hover:bg-zinc-900 dark:hover:bg-zinc-700/50 text-xs font-semibold text-foreground transition cursor-pointer"
+                    aria-label="Grant Admin Role"
+                  >
+                    <ShieldAlert className="h-4 w-4" />
+                    <span>Grant Admin Access</span>
+                  </button>
+                )}
 
                 <button
                   onClick={() => setIsDeleteConfirmOpen(true)}
-                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-destructive text-white hover:bg-destructive/90 text-xs font-semibold transition"
+                  className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-destructive text-white hover:bg-destructive/90 text-xs font-semibold transition cursor-pointer"
                   aria-label="Delete Student Profile"
                 >
                   <Trash2 className="h-4 w-4" />
@@ -269,7 +289,7 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
         onClose={() => setIsAdminConfirmOpen(false)}
         onConfirm={handleGrantAdmin}
         title="Elevate account privilege?"
-        description="This will set raw_app_meta_data.role = 'admin' on Supabase Auth module, granting this account full CRUD capabilities over all system data. This action cannot be revoked from the client app."
+        description="This will set app_metadata.role = 'admin' on Supabase Auth module, granting this account full CRUD capabilities over all system data. This action cannot be revoked from the client app."
         confirmText="Confirm Upgrade"
       />
 
@@ -286,4 +306,5 @@ export const UserDetailPanel: React.FC<UserDetailPanelProps> = ({
     </>
   );
 };
+
 export default UserDetailPanel;

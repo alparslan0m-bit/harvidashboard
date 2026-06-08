@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useModules } from "../../../hooks/useCurriculum";
 import { Plus, Edit2, Trash2, GripVertical } from "lucide-react";
 import {
@@ -38,7 +38,7 @@ interface SortableModuleItemProps {
   onDelete: () => void;
 }
 
-const SortableModuleItem: React.FC<SortableModuleItemProps> = ({
+const SortableModuleItem: React.FC<SortableModuleItemProps> = React.memo(({
   id,
   name,
   isFree,
@@ -68,9 +68,9 @@ const SortableModuleItem: React.FC<SortableModuleItemProps> = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center justify-between border rounded-lg p-3 select-none transition-colors",
+        "flex items-center justify-between border rounded-lg p-3 select-none transition-colors group",
         isSelected
-          ? "border-primary bg-primary/5 text-primary-foreground dark:text-primary"
+          ? "border-primary/40 bg-primary/8 text-primary font-semibold"
           : "border-border bg-card hover:bg-muted/10",
         isDragging && "z-50 shadow-md border-primary"
       )}
@@ -80,7 +80,7 @@ const SortableModuleItem: React.FC<SortableModuleItemProps> = ({
           type="button"
           {...attributes}
           {...listeners}
-          className="p-1 rounded hover:bg-muted text-muted-foreground/60 cursor-grab active:cursor-grabbing shrink-0"
+          className="p-1 rounded hover:bg-muted text-muted-foreground/60 cursor-grab active:cursor-grabbing shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
           aria-label="Drag to reorder"
         >
           <GripVertical className="h-4 w-4" />
@@ -123,7 +123,9 @@ const SortableModuleItem: React.FC<SortableModuleItemProps> = ({
       </div>
     </div>
   );
-};
+});
+
+SortableModuleItem.displayName = "SortableModuleItem";
 
 export const ModulesPanel: React.FC<ModulesPanelProps> = ({
   selectedYearId,
@@ -147,6 +149,22 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
   const [formPriceDollars, setFormPriceDollars] = useState("0");
 
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Keyboard shortcut: N to create new item when focused
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isFocused) return;
+      const activeElement = document.activeElement;
+      const isTyping = activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement;
+      if (e.key?.toLowerCase() === "n" && !isFormOpen && !editingId && !isTyping) {
+        e.preventDefault();
+        handleOpenCreate();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFocused, isFormOpen, editingId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -216,18 +234,32 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
 
   if (!selectedYearId) {
     return (
-      <div className="flex flex-col border rounded-xl bg-card shadow-sm h-[600px] items-center justify-center p-6 text-center select-none text-muted-foreground text-xs">
+      <div className="flex flex-col border border-border/60 rounded-xl bg-card shadow-sm h-[600px] items-center justify-center p-6 text-center select-none text-muted-foreground text-xs">
         Select an academic year to display modules.
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col border rounded-xl bg-card shadow-sm h-[600px] select-none">
+    <div
+      tabIndex={0}
+      onFocus={() => setIsFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+          setIsFocused(false);
+        }
+      }}
+      className={cn(
+        "flex flex-col border rounded-xl bg-card shadow-sm h-[600px] select-none outline-none transition-all duration-200",
+        isFocused ? "ring-1 ring-primary/20 border-primary/30" : "border-border/60"
+      )}
+    >
       {/* Header */}
       <div className="p-4 border-b flex items-center justify-between">
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">2. Modules</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+            2. Modules ({modules.length})
+          </h3>
           <p className="text-[10px] text-muted-foreground">Academic courses inside this year</p>
         </div>
         <button
@@ -253,9 +285,10 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
               type="text"
               value={formName}
               onChange={(e) => setFormName(e.target.value)}
-              className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none"
+              className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
               placeholder="e.g. Cardiology"
               aria-label="Module Name"
+              autoFocus
             />
           </div>
 
@@ -279,7 +312,7 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
                 min="0"
                 value={formPriceDollars}
                 onChange={(e) => setFormPriceDollars(e.target.value)}
-                className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none"
+                className="w-full rounded-md border bg-background px-2 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
                 placeholder="9.99"
                 aria-label="Module Price in USD"
               />
@@ -349,4 +382,5 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
     </div>
   );
 };
+
 export default ModulesPanel;

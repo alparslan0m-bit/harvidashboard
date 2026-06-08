@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCurriculum } from "../../../hooks/useCurriculum";
 import { Plus, Edit2, Trash2, GripVertical, Check, X } from "lucide-react";
 import {
@@ -35,7 +35,7 @@ interface SortableItemProps {
   onDelete: () => void;
 }
 
-const SortableYearItem: React.FC<SortableItemProps> = ({
+const SortableYearItem: React.FC<SortableItemProps> = React.memo(({
   id,
   name,
   isSelected,
@@ -63,9 +63,9 @@ const SortableYearItem: React.FC<SortableItemProps> = ({
       ref={setNodeRef}
       style={style}
       className={cn(
-        "flex items-center justify-between border rounded-lg p-3 select-none transition-colors",
+        "flex items-center justify-between border rounded-lg p-3 select-none transition-colors group",
         isSelected
-          ? "border-primary bg-primary/5 text-primary-foreground dark:text-primary"
+          ? "border-primary/40 bg-primary/8 text-primary font-semibold"
           : "border-border bg-card hover:bg-muted/10",
         isDragging && "z-50 shadow-md border-primary"
       )}
@@ -75,7 +75,7 @@ const SortableYearItem: React.FC<SortableItemProps> = ({
           type="button"
           {...attributes}
           {...listeners}
-          className="p-1 rounded hover:bg-muted text-muted-foreground/60 cursor-grab active:cursor-grabbing shrink-0"
+          className="p-1 rounded hover:bg-muted text-muted-foreground/60 cursor-grab active:cursor-grabbing shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-150"
           aria-label="Drag to reorder"
         >
           <GripVertical className="h-4 w-4" />
@@ -113,7 +113,9 @@ const SortableYearItem: React.FC<SortableItemProps> = ({
       </div>
     </div>
   );
-};
+});
+
+SortableYearItem.displayName = "SortableYearItem";
 
 export const YearsPanel: React.FC<YearsPanelProps> = ({
   selectedYearId,
@@ -126,6 +128,23 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState("");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Keyboard shortcut: N to create new item when focused
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!isFocused) return;
+      // Trigger if user presses N/n key and not typing in input
+      const activeElement = document.activeElement;
+      const isTyping = activeElement instanceof HTMLInputElement || activeElement instanceof HTMLTextAreaElement;
+      if (e.key?.toLowerCase() === "n" && !isCreating && !editingId && !isTyping) {
+        e.preventDefault();
+        setIsCreating(true);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFocused, isCreating, editingId]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -145,7 +164,6 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({
       order_index: idx,
     }));
 
-    // In-memory immediate reorder update
     await reorderYears(payload);
   };
 
@@ -174,11 +192,26 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({
   };
 
   return (
-    <div className="flex flex-col border rounded-xl bg-card shadow-sm h-[600px] select-none">
+    <div
+      tabIndex={0}
+      onFocus={() => setIsFocused(true)}
+      onBlur={(e) => {
+        // Only lose focus if moving outside the component
+        if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+          setIsFocused(false);
+        }
+      }}
+      className={cn(
+        "flex flex-col border rounded-xl bg-card shadow-sm h-[600px] select-none outline-none transition-all duration-200",
+        isFocused ? "ring-1 ring-primary/20 border-primary/30" : "border-border/60"
+      )}
+    >
       {/* Header */}
       <div className="p-4 border-b flex items-center justify-between">
         <div>
-          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">1. Academic Years</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
+            1. Academic Years ({years.length})
+          </h3>
           <p className="text-[10px] text-muted-foreground">Specify the general degrees/levels</p>
         </div>
         <button
@@ -201,6 +234,7 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({
             className="flex-1 rounded-md border bg-background px-2.5 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
             placeholder="e.g. Year 1"
             aria-label="New Year Name"
+            autoFocus
             onKeyDown={(e) => e.key === "Enter" && handleCreate()}
           />
           <button
@@ -237,6 +271,7 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({
                         onChange={(e) => setEditingName(e.target.value)}
                         className="flex-1 rounded border bg-background px-2.5 py-1 text-xs text-foreground outline-none"
                         aria-label="Edit Year Name"
+                        autoFocus
                         onKeyDown={(e) => e.key === "Enter" && handleUpdate()}
                       />
                       <button
@@ -287,4 +322,5 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({
     </div>
   );
 };
+
 export default YearsPanel;

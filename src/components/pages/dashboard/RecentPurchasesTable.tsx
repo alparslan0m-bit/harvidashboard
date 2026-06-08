@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useMemo } from "react";
 import type { RecentPurchase } from "../../../hooks/useDashboard";
 import { formatCurrency, formatDate } from "../../../lib/utils";
 import { StatusBadge } from "../../shared/StatusBadge";
-import { EmptyState } from "../../shared/EmptyState";
+import { DataTable } from "../../shared/DataTable";
+import { SectionCard } from "../../shared/SectionCard";
+import { Link } from "react-router";
+import type { ColumnDef } from "@tanstack/react-table";
 
 interface RecentPurchasesTableProps {
   purchases: RecentPurchase[];
@@ -11,77 +14,86 @@ interface RecentPurchasesTableProps {
 export const RecentPurchasesTable: React.FC<RecentPurchasesTableProps> = ({
   purchases,
 }) => {
-  return (
-    <div className="rounded-3xl border border-border bg-card shadow-sm flex flex-col h-[400px]">
-      <div className="p-6 border-b border-border/50">
-        <h2 className="text-sm font-semibold tracking-tight text-foreground">
-          Recent Purchases
-        </h2>
-        <p className="text-xs text-muted-foreground">
-          Latest module and subject transactions
-        </p>
-      </div>
+  const columns = useMemo<ColumnDef<RecentPurchase>[]>(
+    () => [
+      {
+        accessorKey: "email",
+        header: "User",
+        cell: ({ row }) => (
+          <span className="font-semibold text-foreground select-all text-xs truncate block max-w-[150px]" title={row.original.email}>
+            {row.original.email}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "itemName",
+        header: "Item",
+        cell: ({ row }) => (
+          <span className="text-foreground font-medium text-xs truncate block max-w-[140px]" title={row.original.itemName}>
+            {row.original.itemName}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "amountCents",
+        header: "Amount",
+        cell: ({ row }) => (
+          <span className="font-semibold text-foreground">
+            {formatCurrency(row.original.amountCents)}
+          </span>
+        ),
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ row }) => <StatusBadge status={row.original.status} />,
+      },
+      {
+        accessorKey: "date",
+        header: "Date",
+        cell: ({ row }) => (
+          <span className="text-muted-foreground">
+            {formatDate(row.original.date)}
+          </span>
+        ),
+      },
+    ],
+    []
+  );
 
-      <div className="flex-1 overflow-auto min-h-0">
-        {purchases.length === 0 ? (
-          <div className="h-full flex items-center justify-center p-6">
-            <EmptyState
-              icon="ShoppingBag"
-              title="No purchases yet"
-              description="Transaction records are currently empty."
-            />
-          </div>
-        ) : (
-          <table className="min-w-full divide-y divide-border/50 text-sm">
-            <thead className="bg-muted/50 text-muted-foreground uppercase tracking-[0.18em] text-[11px] font-semibold sticky top-0 border-b border-border/50">
-              <tr>
-                <th scope="col" className="px-6 py-3 text-left">
-                  User
-                </th>
-                <th scope="col" className="px-6 py-3 text-left">
-                  Item
-                </th>
-                <th scope="col" className="px-6 py-3 text-left">
-                  Amount
-                </th>
-                <th scope="col" className="px-6 py-3 text-left">
-                  Status
-                </th>
-                <th scope="col" className="px-6 py-3 text-left">
-                  Date
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-border/50">
-              {purchases.map((purchase) => (
-                <tr
-                  key={purchase.id}
-                  className="hover:bg-muted/20 transition-colors"
-                >
-                  <td className="px-6 py-3.5">
-                    <span className="font-medium text-foreground select-all">
-                      {purchase.email}
-                    </span>
-                  </td>
-                  <td className="px-6 py-3.5 text-foreground">
-                    {purchase.itemName}
-                  </td>
-                  <td className="px-6 py-3.5 font-semibold text-foreground">
-                    {formatCurrency(purchase.amountCents)}
-                  </td>
-                  <td className="px-6 py-3.5">
-                    <StatusBadge status={purchase.status} />
-                  </td>
-                  <td className="px-6 py-3.5 text-muted-foreground">
-                    {formatDate(purchase.date)}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
+  const actions = (
+    <Link
+      to="/purchases"
+      className="text-[11px] font-semibold text-foreground hover:underline transition-all"
+    >
+      View All
+    </Link>
+  );
+
+  // Take only top 5 rows as per spec
+  const visiblePurchases = useMemo(() => purchases.slice(0, 5), [purchases]);
+
+  return (
+    <SectionCard
+      title="Recent Purchases"
+      description="Latest module and subject transactions"
+      actions={actions}
+      className="p-0 border border-border/60 bg-card overflow-hidden shadow-xs flex flex-col h-auto"
+    >
+      <div className="px-5 pt-3">
+        <DataTable
+          columns={columns}
+          data={visiblePurchases}
+          pageCount={0}
+          currentPage={1}
+          onPageChange={() => {}}
+          emptyStateTitle="No recent purchases"
+          emptyStateDescription="Module and subject transaction logs are currently empty."
+          emptyStateIcon="ShoppingBag"
+        />
       </div>
-    </div>
+    </SectionCard>
   );
 };
+
 export default RecentPurchasesTable;

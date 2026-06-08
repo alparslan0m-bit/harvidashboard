@@ -14,7 +14,21 @@ export function useFeedback(page: number, status: string) {
         const from = (page - 1) * pageSize;
         const to = from + pageSize - 1;
 
-        // Base query
+        // 1. Get auth users list first (consolidated batch)
+        const { data: authData, error: authError } = await supabaseAdmin.auth.admin.listUsers({
+          page: 1,
+          perPage: 10000,
+        });
+        if (authError) {
+          throw new Error(`[Feedback.listUsers] ${authError.message}`);
+        }
+        const authUsers = authData?.users || [];
+        const authMap = new Map<string, typeof authUsers[0]>();
+        authUsers.forEach((u) => {
+          authMap.set(u.id, u);
+        });
+
+        // 2. Base query
         let query = supabaseAdmin
           .from("feedback")
           .select("*", { count: "exact" });
@@ -24,58 +38,41 @@ export function useFeedback(page: number, status: string) {
           query = query.eq("status", status);
         }
 
-        const { data, count, error } = await query
+        const { data, count, error: feedbackError } = await query
           .order("created_at", { ascending: false })
           .range(from, to);
 
-        if (error) throw error;
+        if (feedbackError) {
+          throw new Error(`[Feedback.feedbackQuery] ${feedbackError.message}`);
+        }
 
-        // Resolve user profiles & emails via service role client
-        const feedbackWithUser: FeedbackWithUser[] = [];
-        const authUsers: any[] = [];
+        const resolvedFeedback: any[] = [];
         if (data && data.length > 0) {
           const userIds = Array.from(new Set(data.map((f: any) => f.user_id).filter(Boolean))) as string[];
           
           let profiles: any[] = [];
           if (userIds.length > 0) {
-            const { data: profileData } = await supabaseAdmin
+            const { data: profileData, error: profileError } = await supabaseAdmin
               .from("profiles")
               .select("id, full_name")
               .in("id", userIds);
+            if (profileError) {
+              throw new Error(`[Feedback.profilesQuery] ${profileError.message}`);
+            }
             profiles = profileData || [];
           }
 
-          const resolvedAuthUsers = await Promise.all(
-            data.map(async (f: any) => {
-              if (!f.user_id) return null;
-              try {
-                const { data: userData } = await supabaseAdmin.auth.admin.getUserById(f.user_id);
-                return userData?.user || null;
-              } catch {
-                return null;
-              }
-            })
-          );
-          authUsers.push(...resolvedAuthUsers);
-
           data.forEach((f: any) => {
             const profile = profiles.find((p: any) => p.id === f.user_id) || null;
-            feedbackWithUser.push({
+            const authUser = f.user_id ? authMap.get(f.user_id) : null;
+            resolvedFeedback.push({
               ...f,
               profiles: profile,
               status: f.status as any,
+              userEmail: authUser?.email || "Anonymous Student",
             });
           });
         }
-
-        // Map resolved emails
-        const resolvedFeedback = feedbackWithUser.map((f: any, idx: number) => {
-          const authUser = authUsers[idx];
-          return {
-            ...f,
-            userEmail: authUser?.email || "Anonymous Student",
-          };
-        });
 
         return {
           feedbackList: resolvedFeedback,
@@ -86,6 +83,7 @@ export function useFeedback(page: number, status: string) {
         throw new Error(err.message || "Failed to load feedback logs");
       }
     },
+    staleTime: 10 * 1000, // feedback list stale after 10s
   });
 
   const unreadCountQuery = useQuery({
@@ -95,9 +93,12 @@ export function useFeedback(page: number, status: string) {
         .from("feedback")
         .select("*", { count: "exact", head: true })
         .eq("status", "new");
-      if (error) throw error;
+      if (error) {
+        throw new Error(`[Feedback.unreadCountQuery] ${error.message}`);
+      }
       return count || 0;
     },
+    staleTime: 10 * 1000, // unread count stale after 10s
   });
 
   return {
@@ -120,18 +121,15 @@ export function useFeedbackMutations(page: number, statusFilter: string) {
         .eq("id", id)
         .select()
         .single();
-      if (error) throw error;
+      if (error) {
+        throw new Error(error.message);
+      }
       return data;
     },
-    // OPTIMISTIC UPDATES: Spec requirement non-negotiable
     onMutate: async ({ id, status }) => {
-      // Cancel outgoing refetches so they don't overwrite our optimistic update
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.feedback(page, statusFilter) });
-
-      // Snapshot the previous state
       const previousState = queryClient.getQueryData(QUERY_KEYS.feedback(page, statusFilter));
 
-      // Optimistically update the list cache
       queryClient.setQueryData(QUERY_KEYS.feedback(page, statusFilter), (old: any) => {
         if (!old) return old;
         return {
@@ -142,15 +140,12 @@ export function useFeedbackMutations(page: number, statusFilter: string) {
         };
       });
 
-      // Optimistically update unread count if transitioning to/from "new"
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.feedbackUnreadCount });
       const previousUnread = queryClient.getQueryData<number>(QUERY_KEYS.feedbackUnreadCount) || 0;
 
-      // Return context containing previous state and unread count
       return { previousState, previousUnread };
     },
     onError: (err: any, _variables, context) => {
-      // Rollback to previous state if error
       if (context?.previousState) {
         queryClient.setQueryData(QUERY_KEYS.feedback(page, statusFilter), context.previousState);
       }
@@ -163,7 +158,6 @@ export function useFeedbackMutations(page: number, statusFilter: string) {
       toast.success("Feedback status updated");
     },
     onSettled: () => {
-      // Sync with real DB state
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.feedback(page, statusFilter) });
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.feedbackUnreadCount });
     },
@@ -172,7 +166,9 @@ export function useFeedbackMutations(page: number, statusFilter: string) {
   const deleteFeedbackMutation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabaseAdmin.from("feedback").delete().eq("id", id);
-      if (error) throw error;
+      if (error) {
+        throw new Error(error.message);
+      }
     },
     onSuccess: () => {
       toast.success("Feedback log deleted");

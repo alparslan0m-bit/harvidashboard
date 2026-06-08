@@ -1,41 +1,62 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { ErrorBoundary } from "../shared/ErrorBoundary";
+import { CommandPalette } from "../shared/CommandPalette";
 import { ThemeProvider } from "next-themes";
-import { useWindowSize } from "@/hooks/useWindowSize";
 
 export const AppShell: React.FC = () => {
-  const { width } = useWindowSize();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCommandPaletteOpen, setCommandPaletteOpen] = useState(false);
 
-  if (width !== undefined && width < 1024) {
-    return (
-      <div className="flex h-screen w-screen flex-col items-center justify-center bg-background p-6 text-center">
-        <h1 className="text-xl font-bold tracking-tight mb-2">Desktop Browser Required</h1>
-        <p className="text-sm text-muted-foreground max-w-sm">
-          Please use a desktop browser to access the Harvi Admin Dashboard. Minimum supported width is 1024px.
-        </p>
-      </div>
-    );
-  }
+  // Global key listener for Command Palette (Cmd+K or Ctrl+K)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key?.toLowerCase() === "k") {
+        e.preventDefault();
+        setCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="flex h-screen w-screen overflow-hidden bg-background">
-        {/* Fixed Left Sidebar */}
-        <Sidebar />
+        {/* Responsive Sidebar Drawer */}
+        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+
+        {/* Backdrop for mobile drawer */}
+        {isSidebarOpen && (
+          <div
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 z-30 bg-black/60 backdrop-blur-xs lg:hidden transition-opacity duration-300"
+          />
+        )}
 
         {/* Main Workspace Area */}
-        <div className="flex flex-1 flex-col overflow-hidden">
-          <Topbar />
-          <main className="flex-1 overflow-y-auto p-6">
+        <div className="flex flex-1 flex-col overflow-hidden relative">
+          <Topbar
+            onMenuToggle={() => setIsSidebarOpen((prev) => !prev)}
+            onSearchTrigger={() => setCommandPaletteOpen(true)}
+          />
+          <main className="flex-1 overflow-y-auto p-4 sm:p-5 lg:p-6">
             <ErrorBoundary fallbackMessage="This page encountered an error">
               <Outlet />
             </ErrorBoundary>
           </main>
         </div>
+
+        {/* Command Palette search */}
+        <CommandPalette
+          isOpen={isCommandPaletteOpen}
+          onClose={() => setCommandPaletteOpen(false)}
+        />
       </div>
     </ThemeProvider>
   );
 };
+
+export default AppShell;

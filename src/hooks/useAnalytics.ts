@@ -18,18 +18,21 @@ export interface AnalyticsData {
 export function useAnalytics(fromDate: string, toDate: string) {
   const query = useQuery({
     queryKey: [...QUERY_KEYS.analytics(30), fromDate, toDate],
-    queryFn: async (): Promise<AnalyticsData> => {
+    queryFn: async ({ signal }): Promise<AnalyticsData> => {
       try {
         const startIso = `${fromDate}T00:00:00Z`;
         const endIso = `${toDate}T23:59:59Z`;
 
-        // 1. Line chart: Daily active users (distinct user_id in quiz_results grouped by Date)
+        // 1. Line chart: Daily active users
         const { data: dauData, error: dauError } = await supabaseAdmin
           .from("quiz_results")
           .select("user_id, created_at")
           .gte("created_at", startIso)
-          .lte("created_at", endIso);
-        if (dauError) throw dauError;
+          .lte("created_at", endIso)
+          .abortSignal(signal);
+        if (dauError) {
+          throw new Error(`[Analytics.dailyActiveUsers] ${dauError.message}`);
+        }
 
         const dauMap: Record<string, Set<string>> = {};
         // Initialize date map
@@ -56,13 +59,16 @@ export function useAnalytics(fromDate: string, toDate: string) {
           };
         });
 
-        // 2. Bar chart: Score distribution (0-20, 21-40, 41-60, 61-80, 81-100)
+        // 2. Bar chart: Score distribution
         const { data: scoreData, error: scoreError } = await supabaseAdmin
           .from("quiz_results")
           .select("score")
           .gte("created_at", startIso)
-          .lte("created_at", endIso);
-        if (scoreError) throw scoreError;
+          .lte("created_at", endIso)
+          .abortSignal(signal);
+        if (scoreError) {
+          throw new Error(`[Analytics.scoreDistribution] ${scoreError.message}`);
+        }
 
         const buckets = {
           "0-20": 0,
@@ -91,21 +97,27 @@ export function useAnalytics(fromDate: string, toDate: string) {
           .from("lecture_statistics")
           .select("average_score, lectures (name)")
           .order("average_score", { ascending: false })
-          .limit(10);
-        if (topLectsError) throw topLectsError;
+          .limit(10)
+          .abortSignal(signal);
+        if (topLectsError) {
+          throw new Error(`[Analytics.topLecturesScore] ${topLectsError.message}`);
+        }
 
         const topLecturesScore = (topLectsData || []).map((row: any) => ({
           name: row.lectures?.name || "Unknown Lecture",
           average: parseFloat(row.average_score || "0"),
         }));
 
-        // 4. Pie chart: Purchase status breakdown (count purchases grouped by status)
+        // 4. Pie chart: Purchase status breakdown
         const { data: purchasesData, error: purError } = await supabaseAdmin
           .from("purchases")
           .select("status")
           .gte("created_at", startIso)
-          .lte("created_at", endIso);
-        if (purError) throw purError;
+          .lte("created_at", endIso)
+          .abortSignal(signal);
+        if (purError) {
+          throw new Error(`[Analytics.purchaseBreakdown] ${purError.message}`);
+        }
 
         const statusMap: Record<string, number> = {};
         purchasesData.forEach((row) => {
@@ -119,35 +131,43 @@ export function useAnalytics(fromDate: string, toDate: string) {
         }));
 
         // 5. Stats card counters in range
-        // Total quizzes in period
         const totalQuizzes = scoreData.length;
 
-        // New users in period (count profiles created in date range)
+        // New users in period
         const { count: newUsers, error: newUsersError } = await supabaseAdmin
           .from("profiles")
           .select("id", { count: "exact", head: true })
-          .gte("updated_at", startIso) // Sync profiles date boundary
-          .lte("updated_at", endIso);
-        if (newUsersError) throw newUsersError;
+          .gte("updated_at", startIso)
+          .lte("updated_at", endIso)
+          .abortSignal(signal);
+        if (newUsersError) {
+          throw new Error(`[Analytics.newUsersStats] ${newUsersError.message}`);
+        }
 
-        // Total revenue in period (sum amount_cents for active status)
+        // Total revenue in period
         const { data: revenueData, error: revError } = await supabaseAdmin
           .from("purchases")
           .select("amount_cents")
           .eq("status", "active")
           .gte("created_at", startIso)
-          .lte("created_at", endIso);
-        if (revError) throw revError;
+          .lte("created_at", endIso)
+          .abortSignal(signal);
+        if (revError) {
+          throw new Error(`[Analytics.revenueStats] ${revError.message}`);
+        }
 
         const totalRevenueCents = revenueData.reduce((acc, row) => acc + (row.amount_cents || 0), 0);
 
-        // Questions answered in period (sum total_questions of quiz_results)
+        // Questions answered in period
         const { data: answeredData, error: ansError } = await supabaseAdmin
           .from("quiz_results")
           .select("total_questions")
           .gte("created_at", startIso)
-          .lte("created_at", endIso);
-        if (ansError) throw ansError;
+          .lte("created_at", endIso)
+          .abortSignal(signal);
+        if (ansError) {
+          throw new Error(`[Analytics.questionsAnsweredStats] ${ansError.message}`);
+        }
 
         const questionsAnswered = answeredData.reduce((acc, row) => acc + (row.total_questions || 0), 0);
 
@@ -168,6 +188,7 @@ export function useAnalytics(fromDate: string, toDate: string) {
       }
     },
     enabled: !!fromDate && !!toDate,
+    staleTime: 30 * 1000, // analytics stats cache stale after 30s
   });
 
   return {

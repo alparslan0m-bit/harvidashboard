@@ -6,7 +6,7 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
+export const StatusBadge: React.FC<StatusBadgeProps> = React.memo(({ status, className }) => {
   const normalizedStatus = status.toLowerCase();
 
   const colorStyles: Record<string, string> = {
@@ -37,5 +37,6 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) =
       {normalizedStatus}
     </span>
   );
-};
+});
+
 export default StatusBadge;
