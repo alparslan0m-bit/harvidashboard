@@ -23,10 +23,10 @@ export const EmptyChart: React.FC<EmptyChartProps> = ({
       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted text-muted-foreground/60 mb-3">
         <BarChart3 className="h-5 w-5" />
       </div>
-      <h4 className="text-xs font-semibold text-foreground tracking-tight">
+      <h4 className="text-sm font-bold text-foreground tracking-tight font-heading">
         {title}
       </h4>
-      <p className="mt-1 text-[11px] text-muted-foreground max-w-[200px] leading-normal">
+      <p className="mt-1 text-sm text-muted-foreground max-w-[240px] leading-relaxed">
         {description}
       </p>
     </div>

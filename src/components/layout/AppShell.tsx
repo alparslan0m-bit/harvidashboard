@@ -5,10 +5,12 @@ import { Topbar } from "./Topbar";
 import { ErrorBoundary } from "../shared/ErrorBoundary";
 import { CommandPalette } from "../shared/CommandPalette";
 import { ThemeProvider } from "next-themes";
+import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
 
 export const AppShell: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isCommandPaletteOpen, setCommandPaletteOpen] = useState(false);
+  const { isCollapsed, toggle: toggleSidebarCollapse } = useSidebarCollapsed();
 
   // Global key listener for Command Palette (Cmd+K or Ctrl+K)
   useEffect(() => {
@@ -26,7 +28,12 @@ export const AppShell: React.FC = () => {
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <div className="flex h-screen w-screen overflow-hidden bg-background">
         {/* Responsive Sidebar Drawer */}
-        <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+          isCollapsed={isCollapsed}
+          onToggleCollapse={toggleSidebarCollapse}
+        />
 
         {/* Backdrop for mobile drawer */}
         {isSidebarOpen && (
@@ -42,10 +49,12 @@ export const AppShell: React.FC = () => {
             onMenuToggle={() => setIsSidebarOpen((prev) => !prev)}
             onSearchTrigger={() => setCommandPaletteOpen(true)}
           />
-          <main className="flex-1 overflow-y-auto p-4 sm:p-5 lg:p-6">
-            <ErrorBoundary fallbackMessage="This page encountered an error">
-              <Outlet />
-            </ErrorBoundary>
+          <main className="flex-1 overflow-y-auto p-4 sm:p-5 lg:p-6 page-enter">
+            <div className="mx-auto max-w-[1800px]">
+              <ErrorBoundary fallbackMessage="This page encountered an error">
+                <Outlet />
+              </ErrorBoundary>
+            </div>
           </main>
         </div>
 

@@ -40,7 +40,7 @@ export const Analytics: React.FC = () => {
     return (
       <div className="space-y-6 animate-pulse">
         <div className="h-14 bg-muted rounded-xl border" />
-        <div className="grid grid-cols-4 gap-5">{[1, 2, 3, 4].map((i) => <div key={i} className="h-24 bg-muted rounded-xl border" />)}</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">{[1, 2, 3, 4].map((i) => <div key={i} className="h-24 bg-muted rounded-xl border" />)}</div>
         <div className="grid grid-cols-2 gap-6">{[1, 2].map((i) => <div key={i} className="h-80 bg-muted rounded-xl border" />)}</div>
       </div>
     );
@@ -51,10 +51,10 @@ export const Analytics: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="System Analytics" description="Comprehensive reporting across engagement, revenue, and content performance" />
       <AnalyticsDateFilter fromDate={fromDate} toDate={toDate} onFromDateChange={setFromDate} onToDateChange={setToDate} onPreset={applyPreset} />
-      <KPIGrid cards={kpiCards} />
+      <KPIGrid cards={kpiCards} compact />
       <AnalyticsChartsGrid
         dailyActiveUsers={data?.dailyActiveUsers}
         scoreDistribution={data?.scoreDistribution}

@@ -29,7 +29,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = React.memo(({ status, cla
   return (
     <span
       className={cn(
-        "inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border capitalize tracking-wide select-none",
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold border capitalize tracking-wide select-none",
         currentStyles,
         className
       )}

@@ -10,7 +10,7 @@ const COLORS = ["#6366f1", "#22c55e", "#f59e0b", "#ef4444", "#8b5cf6"];
 const tooltipStyle = {
   backgroundColor: "var(--color-card)",
   borderColor: "var(--color-border)",
-  fontSize: "11px",
+  fontSize: "13px",
   borderRadius: "var(--radius)",
 };
 
@@ -27,7 +27,7 @@ export const AnalyticsChartsGrid: React.FC<AnalyticsChartsGridProps> = ({
   topLecturesScore,
   purchaseBreakdown,
 }) => (
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 select-none">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 select-none">
     <ChartCard title="Daily Active Users" description="Chronological student login counts" data={dailyActiveUsers} filename="daily_active_users">
       {!dailyActiveUsers?.length ? (
         <EmptyChart description="No quiz activity recorded in this period" />
@@ -35,10 +35,10 @@ export const AnalyticsChartsGrid: React.FC<AnalyticsChartsGridProps> = ({
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={dailyActiveUsers} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
-            <XAxis dataKey="name" fontSize={9} tickLine={false} axisLine={false} />
-            <YAxis fontSize={9} tickLine={false} axisLine={false} allowDecimals={false} />
+            <XAxis dataKey="name" fontSize={12} tickLine={false} axisLine={false} />
+            <YAxis fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Line type="monotone" dataKey="count" stroke="var(--color-chart-1)" strokeWidth={2} dot={{ r: 2 }} />
+            <Line type="monotone" dataKey="count" stroke="var(--color-chart-1)" strokeWidth={2.5} dot={{ r: 3 }} />
           </LineChart>
         </ResponsiveContainer>
       )}
@@ -51,10 +51,10 @@ export const AnalyticsChartsGrid: React.FC<AnalyticsChartsGridProps> = ({
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={scoreDistribution} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
-            <XAxis dataKey="range" fontSize={9} tickLine={false} axisLine={false} />
-            <YAxis fontSize={9} tickLine={false} axisLine={false} allowDecimals={false} />
+            <XAxis dataKey="range" fontSize={12} tickLine={false} axisLine={false} />
+            <YAxis fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Bar dataKey="count" fill="var(--color-chart-2)" radius={[4, 4, 0, 0]} maxBarSize={40} />
+            <Bar dataKey="count" fill="var(--color-chart-2)" radius={[4, 4, 0, 0]} maxBarSize={48} />
           </BarChart>
         </ResponsiveContainer>
       )}
@@ -67,10 +67,10 @@ export const AnalyticsChartsGrid: React.FC<AnalyticsChartsGridProps> = ({
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={topLecturesScore} layout="vertical" margin={{ top: 5, right: 10, left: 20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" horizontal={false} className="stroke-muted" />
-            <XAxis type="number" fontSize={9} tickLine={false} axisLine={false} />
-            <YAxis dataKey="name" type="category" fontSize={9} tickLine={false} axisLine={false} width={80} />
+            <XAxis type="number" fontSize={12} tickLine={false} axisLine={false} />
+            <YAxis dataKey="name" type="category" fontSize={12} tickLine={false} axisLine={false} width={100} />
             <Tooltip contentStyle={tooltipStyle} />
-            <Bar dataKey="average" fill="var(--color-chart-3)" radius={[0, 4, 4, 0]} maxBarSize={20} />
+            <Bar dataKey="average" fill="var(--color-chart-3)" radius={[0, 4, 4, 0]} maxBarSize={26} />
           </BarChart>
         </ResponsiveContainer>
       )}
@@ -88,7 +88,7 @@ export const AnalyticsChartsGrid: React.FC<AnalyticsChartsGridProps> = ({
               ))}
             </Pie>
             <Tooltip contentStyle={tooltipStyle} />
-            <Legend wrapperStyle={{ fontSize: "10px" }} />
+            <Legend wrapperStyle={{ fontSize: "12px" }} />
           </PieChart>
         </ResponsiveContainer>
       )}

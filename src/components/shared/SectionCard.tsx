@@ -16,23 +16,25 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   children,
   className,
 }) => {
+  const isFlush = className?.includes("p-0");
+
   return (
     <section
       className={cn(
-        "rounded-xl border border-border/60 bg-card p-5 shadow-sm transition-all duration-200",
+        "rounded-2xl border border-border bg-card shadow-sm transition-all duration-200 hover:shadow-md hover:border-primary/15 overflow-hidden",
         className
       )}
     >
       {(title || description || actions) && (
-        <div className="flex items-start justify-between gap-4 mb-4 select-none">
-          <div className="space-y-0.5">
+        <div className="flex items-start justify-between gap-3 px-4 py-3 border-b border-border bg-secondary/60">
+          <div className="space-y-0.5 min-w-0">
             {title && (
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              <h2 className="text-lg font-bold tracking-tight text-foreground font-heading">
                 {title}
-              </h3>
+              </h2>
             )}
             {description && (
-              <p className="text-[11px] text-muted-foreground">
+              <p className="text-sm text-muted-foreground leading-snug">
                 {description}
               </p>
             )}
@@ -44,7 +46,7 @@ export const SectionCard: React.FC<SectionCardProps> = ({
           )}
         </div>
       )}
-      <div className="w-full">{children}</div>
+      <div className={cn("w-full flex-1 min-h-0 flex flex-col", !isFlush && "p-4")}>{children}</div>
     </section>
   );
 };

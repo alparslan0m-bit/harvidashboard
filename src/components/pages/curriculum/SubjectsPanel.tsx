@@ -49,7 +49,6 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [focusedId, setFocusedId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const openCreate = useCallback(() => {
     setEditingId(null);
@@ -80,13 +79,11 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
 
   if (!selectedModuleId) {
     return (
-      <div className="flex flex-col border border-border/60 rounded-xl bg-card shadow-sm h-[500px] p-6 justify-center">
+      <div className="flex flex-col border border-border rounded-xl bg-card shadow-sm h-[380px] p-5 justify-center">
         <EmptyState icon="BookOpen" title="Select Module" description="Choose a module to manage subjects." />
       </div>
     );
   }
-
-  const filtered = subjects.filter((s) => s.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <CurriculumPanelShell
@@ -102,35 +99,28 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
         addLabel="Add Subject"
         onBack={onBack}
         onAdd={openCreate}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        showSearch={subjects.length > 0}
       />
 
       {isFormOpen && (
-        <div className="relative border-b">
-          <PricingFormOverlay
-            title={editingId ? "Edit Subject" : "Create Subject"}
-            form={form}
-            onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
-            onSave={async () => {
-              if (!form.name.trim()) return;
-              const payload = pricingFormToPayload(form);
-              if (editingId) await updateSubject({ id: editingId, ...payload });
-              else await createSubject(payload);
-              setIsFormOpen(false);
-            }}
-            onCancel={() => setIsFormOpen(false)}
-            namePlaceholder="e.g. Cardiology"
-          />
-        </div>
+        <PricingFormOverlay
+          title={editingId ? "Edit Subject" : "Create Subject"}
+          form={form}
+          onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
+          onSave={async () => {
+            if (!form.name.trim()) return;
+            const payload = pricingFormToPayload(form);
+            if (editingId) await updateSubject({ id: editingId, ...payload });
+            else await createSubject(payload);
+            setIsFormOpen(false);
+          }}
+          onCancel={() => setIsFormOpen(false)}
+          namePlaceholder="e.g. Cardiology"
+        />
       )}
 
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {subjects.length === 0 ? (
           <EmptyState icon="Layers" title="No subjects yet" description="Create subjects inside this module." />
-        ) : filtered.length === 0 ? (
-          <p className="text-center py-8 text-[11px] text-muted-foreground">No subjects match your search.</p>
         ) : (
           <DndContext
             sensors={sensors}
@@ -142,9 +132,9 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
               if (payload.length) await reorderSubjects(payload);
             }}
           >
-            <SortableContext items={filtered.map((s) => s.id)} strategy={verticalListSortingStrategy}>
+            <SortableContext items={subjects.map((s) => s.id)} strategy={verticalListSortingStrategy}>
               <div className="space-y-2">
-                {filtered.map((subj) => (
+                {subjects.map((subj) => (
                   <SortableCurriculumRow
                     key={subj.id}
                     id={subj.id}

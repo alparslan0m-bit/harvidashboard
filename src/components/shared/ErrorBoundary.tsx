@@ -32,7 +32,7 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="flex flex-col items-center justify-center p-8 bg-card border border-destructive/20 rounded-xl max-w-lg mx-auto mt-12 text-center select-none">
+        <div className="flex flex-col items-center justify-center p-8 bg-card border border-destructive/20 rounded-xl max-w-lg mx-auto mt-12 text-center">
           <div className="h-10 w-10 text-destructive bg-destructive/10 rounded-full flex items-center justify-center mb-4">
             <AlertTriangle className="h-5 w-5" />
           </div>
@@ -49,7 +49,7 @@ export class ErrorBoundary extends Component<Props, State> {
           )}
           <button
             onClick={this.handleReset}
-            className="mt-4 flex items-center gap-2 px-4 py-2 text-xs font-semibold border rounded-md hover:bg-accent hover:text-accent-foreground transition"
+            className="mt-4 flex items-center gap-2 px-4 py-2 text-xs font-semibold border rounded-md hover:bg-accent hover:text-accent-foreground transition focus-ring"
           >
             <RefreshCw className="h-3 w-3" />
             <span>Try Again</span>

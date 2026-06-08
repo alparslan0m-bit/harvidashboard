@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useDashboardRealtime } from "@/hooks/useDashboardRealtime";
 import { DailyQuizzesChart } from "@/components/pages/dashboard/DailyQuizzesChart";
@@ -14,32 +13,28 @@ import {
   DollarSign,
   Award,
   RefreshCw,
-  Plus,
-  ShoppingBag,
 } from "lucide-react";
 
 export const Dashboard: React.FC = () => {
-  const navigate = useNavigate();
   const { stats, recentData, isLoading, error, refetch } = useDashboard();
   const { isLive } = useDashboardRealtime();
 
   if (isLoading) {
     return (
-      <div className="space-y-5 animate-pulse select-none">
-        <div className="h-10 bg-muted rounded-lg border w-1/3 mb-4"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      <div className="space-y-5 animate-pulse">
+        <div className="h-10 bg-secondary rounded-2xl w-1/3"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-28 bg-muted rounded-xl border"></div>
+            <div key={i} className="h-24 bg-card rounded-2xl border border-border"></div>
           ))}
         </div>
-        <div className="h-14 bg-muted rounded-xl border w-full"></div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div className="h-72 bg-muted rounded-xl border"></div>
-          <div className="h-72 bg-muted rounded-xl border"></div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="h-72 bg-card rounded-2xl border border-border"></div>
+          <div className="h-72 bg-card rounded-2xl border border-border"></div>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          <div className="h-[280px] bg-muted rounded-xl border"></div>
-          <div className="h-[280px] bg-muted rounded-xl border"></div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="h-64 bg-card rounded-2xl border border-border"></div>
+          <div className="h-64 bg-card rounded-2xl border border-border"></div>
         </div>
       </div>
     );
@@ -63,7 +58,7 @@ export const Dashboard: React.FC = () => {
       description: "Sign-ups synced from Auth",
       icon: <Users />,
       trend: stats ? { value: stats.usersTrend, label: "vs last period" } : null,
-      color: "zinc" as const,
+      color: "sky" as const,
     },
     {
       title: "Quizzes Taken Today",
@@ -71,7 +66,7 @@ export const Dashboard: React.FC = () => {
       description: "Attempts recorded since UTC midnight",
       icon: <FileSpreadsheet />,
       trend: stats ? { value: stats.quizzesTrend, label: "vs yesterday" } : null,
-      color: "zinc" as const,
+      color: "amber" as const,
     },
     {
       title: "Monthly Revenue",
@@ -86,7 +81,7 @@ export const Dashboard: React.FC = () => {
       value: `${stats?.averageQuizScore || 0}%`,
       description: "Average score across all quizzes",
       icon: <Award />,
-      color: "indigo" as const,
+      color: "violet" as const,
     },
   ];
 
@@ -96,7 +91,7 @@ export const Dashboard: React.FC = () => {
       <button
         onClick={() => refetch()}
         disabled={isLoading}
-        className="inline-flex items-center justify-center gap-2 rounded-md border border-border/60 bg-background px-3 py-1.5 text-xs font-semibold text-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer"
+        className="inline-flex items-center justify-center gap-2 rounded-md border border-border/60 bg-background px-3.5 py-2 text-sm font-semibold text-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer focus-ring"
       >
         <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
         <span>{isLoading ? "Refreshing…" : "Refresh metrics"}</span>
@@ -105,48 +100,20 @@ export const Dashboard: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <PageHeader
         title="Dashboard Overview"
-        description="Realtime user activity, quiz volume, revenue trends, and recent student and purchase signals."
         actions={headerActions}
       />
 
-      <KPIGrid cards={kpiCards} />
+      <KPIGrid cards={kpiCards} compact className="gap-4" />
 
-      <div className="flex flex-wrap items-center gap-3 bg-card border border-border/60 p-4 rounded-xl shadow-xs select-none">
-        <span className="text-[10px] uppercase tracking-widest font-semibold text-muted-foreground mr-2">
-          Quick Actions:
-        </span>
-        <button
-          onClick={() => navigate("/questions?action=new")}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/60 text-xs font-semibold text-foreground hover:bg-accent transition-all duration-200 cursor-pointer"
-        >
-          <Plus className="h-3.5 w-3.5" />
-          <span>Add Question</span>
-        </button>
-        <button
-          onClick={() => navigate("/import")}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/60 text-xs font-semibold text-foreground hover:bg-accent transition-all duration-200 cursor-pointer"
-        >
-          <FileSpreadsheet className="h-3.5 w-3.5" />
-          <span>Upload CSV</span>
-        </button>
-        <button
-          onClick={() => navigate("/purchases")}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/60 text-xs font-semibold text-foreground hover:bg-accent transition-all duration-200 cursor-pointer"
-        >
-          <ShoppingBag className="h-3.5 w-3.5" />
-          <span>View Purchases</span>
-        </button>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <DailyQuizzesChart data={recentData?.dailyQuizzes || []} />
         <TopLecturesChart data={recentData?.topLectures || []} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <RecentStudentsTable students={recentData?.recentStudents || []} />
         <RecentPurchasesTable purchases={recentData?.recentPurchases || []} />
       </div>

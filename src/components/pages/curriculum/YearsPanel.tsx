@@ -27,7 +27,6 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({ onSelectYear }) => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [focusedYearId, setFocusedYearId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const startEdit = useCallback((year: YearWithCount) => {
     setEditingId(year.id);
@@ -56,10 +55,6 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({ onSelectYear }) => {
     if (payload.length) await reorderYears(payload);
   };
 
-  const filteredYears = years.filter((y) =>
-    y.name.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
-
   return (
     <CurriculumPanelShell
       isFocused={isFocused}
@@ -75,9 +70,6 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({ onSelectYear }) => {
         description="Specify general degrees & levels. Double click an item or click its title to drill down."
         addLabel="Add Year"
         onAdd={() => setIsCreating(true)}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        showSearch={years.length > 0}
       />
 
       {isCreating && (
@@ -96,20 +88,18 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({ onSelectYear }) => {
         />
       )}
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
         {years.length === 0 ? (
           <EmptyState
             icon="Calendar"
             title="No academic years yet"
             description="Create your first academic year level to start building the curriculum tree."
           />
-        ) : filteredYears.length === 0 ? (
-          <p className="text-center py-8 text-[11px] text-muted-foreground">No years match your search query.</p>
         ) : (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={filteredYears.map((y) => y.id)} strategy={verticalListSortingStrategy}>
+            <SortableContext items={years.map((y) => y.id)} strategy={verticalListSortingStrategy}>
               <div className="space-y-2">
-                {filteredYears.map((year) =>
+                {years.map((year) =>
                   editingId === year.id ? (
                     <InlineNameEditor
                       key={year.id}

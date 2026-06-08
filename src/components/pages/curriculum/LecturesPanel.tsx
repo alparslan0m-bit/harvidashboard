@@ -44,7 +44,6 @@ export const LecturesPanel: React.FC<LecturesPanelProps> = ({
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [focusedId, setFocusedId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const openCreate = useCallback(() => {
     setEditingId(null);
@@ -76,8 +75,6 @@ export const LecturesPanel: React.FC<LecturesPanelProps> = ({
     onClearFocus: onBack,
   });
 
-  const filtered = lectures.filter((l) => l.name.toLowerCase().includes(searchQuery.toLowerCase()));
-
   const saveLecture = async () => {
     if (!lectureName.trim()) return;
     if (editingId) await updateLecture({ id: editingId, name: lectureName.trim() });
@@ -99,9 +96,6 @@ export const LecturesPanel: React.FC<LecturesPanelProps> = ({
         addLabel="Add Lecture"
         onBack={onBack}
         onAdd={openCreate}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        showSearch={lectures.length > 0}
       />
 
       {isFormOpen && (
@@ -118,8 +112,6 @@ export const LecturesPanel: React.FC<LecturesPanelProps> = ({
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {lectures.length === 0 ? (
           <EmptyState icon="FileText" title="No lectures yet" description="Add lectures to this subject." />
-        ) : filtered.length === 0 ? (
-          <p className="text-center py-8 text-[11px] text-muted-foreground">No lectures match your search.</p>
         ) : (
           <DndContext
             sensors={sensors}
@@ -131,9 +123,9 @@ export const LecturesPanel: React.FC<LecturesPanelProps> = ({
               if (payload.length) await reorderLectures(payload);
             }}
           >
-            <SortableContext items={filtered.map((l) => l.id)} strategy={verticalListSortingStrategy}>
+            <SortableContext items={lectures.map((l) => l.id)} strategy={verticalListSortingStrategy}>
               <div className="space-y-2">
-                {filtered.map((lect) => {
+                {lectures.map((lect) => {
                   const qCount = questionCounts.get(lect.id) ?? 0;
                   return (
                     <SortableCurriculumRow

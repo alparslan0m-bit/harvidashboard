@@ -18,13 +18,13 @@ export function DataTableToolbar<TData>({
       <div className="flex items-center gap-2">
         {onPageSizeChange && (
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] uppercase font-semibold text-muted-foreground tracking-wider">
+            <span className="text-xs uppercase font-semibold text-muted-foreground tracking-wide">
               Show
             </span>
             <select
               value={pageSize}
               onChange={(e) => onPageSizeChange(Number(e.target.value))}
-              className="rounded-md border border-input bg-card px-2 py-1 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
+              className="rounded-md border border-input bg-card px-2.5 py-1.5 text-sm text-foreground outline-none focus:ring-1 focus:ring-primary"
               aria-label="Items per page"
             >
               <option value={10}>10</option>
@@ -38,7 +38,7 @@ export function DataTableToolbar<TData>({
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-border/60 bg-card text-xs font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-border/60 bg-card text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 focus-ring"
             aria-label="Toggle Column Visibility"
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
@@ -52,7 +52,7 @@ export function DataTableToolbar<TData>({
             align="end"
             sideOffset={4}
           >
-            <DropdownMenu.Label className="px-2.5 py-1.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+            <DropdownMenu.Label className="px-2.5 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               Toggle Columns
             </DropdownMenu.Label>
             <DropdownMenu.Separator className="h-px bg-border my-1" />
@@ -69,7 +69,7 @@ export function DataTableToolbar<TData>({
                     key={col.id}
                     checked={col.getIsVisible()}
                     onCheckedChange={(value) => col.toggleVisibility(!!value)}
-                    className="relative flex items-center justify-between rounded px-2.5 py-1.5 text-xs text-foreground hover:bg-accent hover:text-accent-foreground outline-none cursor-pointer"
+                    className="relative flex items-center justify-between rounded px-2.5 py-2 text-sm text-foreground hover:bg-accent hover:text-accent-foreground outline-none cursor-pointer"
                   >
                     <span>{label}</span>
                     {col.getIsVisible() && <Check className="h-3.5 w-3.5 text-primary" />}

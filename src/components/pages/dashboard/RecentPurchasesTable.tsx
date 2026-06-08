@@ -20,7 +20,7 @@ export const RecentPurchasesTable: React.FC<RecentPurchasesTableProps> = ({
         accessorKey: "email",
         header: "User",
         cell: ({ row }) => (
-          <span className="font-semibold text-foreground select-all text-xs truncate block max-w-[150px]" title={row.original.email}>
+          <span className="font-semibold text-foreground select-all text-sm truncate block max-w-[150px]" title={row.original.email}>
             {row.original.email}
           </span>
         ),
@@ -29,7 +29,7 @@ export const RecentPurchasesTable: React.FC<RecentPurchasesTableProps> = ({
         accessorKey: "itemName",
         header: "Item",
         cell: ({ row }) => (
-          <span className="text-foreground font-medium text-xs truncate block max-w-[140px]" title={row.original.itemName}>
+          <span className="text-foreground font-medium text-sm truncate block max-w-[140px]" title={row.original.itemName}>
             {row.original.itemName}
           </span>
         ),
@@ -64,7 +64,7 @@ export const RecentPurchasesTable: React.FC<RecentPurchasesTableProps> = ({
   const actions = (
     <Link
       to="/purchases"
-      className="text-[11px] font-semibold text-foreground hover:underline transition-all"
+      className="text-sm font-semibold text-foreground hover:underline transition-all"
     >
       View All
     </Link>

@@ -21,17 +21,17 @@ export const Questions: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Question Bank"
         description="Manage and filter quiz multiple choice questions"
         actions={
           <div className="flex items-center gap-2">
-            <Link to="/import" className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border text-xs font-semibold hover:bg-accent transition">
-              <Upload className="h-3.5 w-3.5" />
+            <Link to="/import" className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md border text-sm font-semibold hover:bg-accent transition">
+              <Upload className="h-4 w-4" />
               <span>Bulk Import</span>
             </Link>
-            <button onClick={openCreate} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-primary text-white text-xs font-bold transition">
+            <button onClick={openCreate} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-primary text-white text-sm font-bold transition">
               <Plus className="h-4 w-4" />
               <span>Add Question</span>
             </button>

@@ -15,21 +15,21 @@ export const TrendBadge: React.FC<TrendBadgeProps> = ({ value, className }) => {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold tracking-wide tabular-nums",
+        "inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold tracking-wide tabular-nums",
         isPositive
-          ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-          : "bg-red-500/10 text-red-600 dark:text-red-400",
+          ? "bg-success/10 text-success"
+          : "bg-destructive/10 text-destructive",
         className
       )}
     >
       {isPositive ? (
         <>
-          <TrendingUp className="h-3 w-3 shrink-0" />
+          <TrendingUp className="h-3.5 w-3.5 shrink-0" />
           <span>+{value.toFixed(1)}%</span>
         </>
       ) : (
         <>
-          <TrendingDown className="h-3 w-3 shrink-0" />
+          <TrendingDown className="h-3.5 w-3.5 shrink-0" />
           <span>{value.toFixed(1)}%</span>
         </>
       )}

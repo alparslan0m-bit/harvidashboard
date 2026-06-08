@@ -10,7 +10,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({ children, className }) => 
   return (
     <div
       className={cn(
-        "flex flex-col sm:flex-row gap-4 items-center justify-between bg-card border border-border/60 p-4 rounded-xl shadow-sm select-none transition-all duration-200",
+        "flex flex-col sm:flex-row gap-3 items-center justify-between bg-muted/30 border border-border px-4 py-3 rounded-xl shadow-sm select-none transition-all duration-200",
         className
       )}
     >

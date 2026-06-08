@@ -36,7 +36,7 @@ export const TopLecturesChart: React.FC<TopLecturesChartProps> = ({ data }) => {
           />
           <XAxis
             type="number"
-            tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+            tick={{ fill: "var(--color-muted-foreground)", fontSize: 13 }}
             tickLine={false}
             axisLine={false}
             allowDecimals={false}
@@ -44,10 +44,10 @@ export const TopLecturesChart: React.FC<TopLecturesChartProps> = ({ data }) => {
           <YAxis
             dataKey="name"
             type="category"
-            tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+            tick={{ fill: "var(--color-muted-foreground)", fontSize: 13 }}
             tickLine={false}
             axisLine={false}
-            width={120}
+            width={140}
             tickFormatter={(val) => (val.length > 18 ? `${val.substring(0, 18)}...` : val)}
           />
           <Tooltip
@@ -55,7 +55,7 @@ export const TopLecturesChart: React.FC<TopLecturesChartProps> = ({ data }) => {
               backgroundColor: "var(--color-card)",
               borderColor: "var(--color-border)",
               color: "var(--color-foreground)",
-              fontSize: "11px",
+              fontSize: "13px",
               borderRadius: "var(--radius)",
               padding: "8px 12px",
             }}
@@ -65,13 +65,13 @@ export const TopLecturesChart: React.FC<TopLecturesChartProps> = ({ data }) => {
             dataKey="attempts"
             fill="var(--color-chart-2)"
             radius={[0, 4, 4, 0]}
-            maxBarSize={22}
+            maxBarSize={28}
           >
             <LabelList
               dataKey="attempts"
               position="right"
               fill="var(--color-muted-foreground)"
-              fontSize={10}
+              fontSize={12}
               fontWeight={600}
             />
           </Bar>

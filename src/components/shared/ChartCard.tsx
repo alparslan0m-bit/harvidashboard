@@ -11,6 +11,7 @@ interface ChartCardProps {
   filename?: string;
   children: React.ReactNode;
   className?: string;
+  heightClassName?: string;
 }
 
 export const ChartCard: React.FC<ChartCardProps> = ({
@@ -20,6 +21,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   filename = "chart_data",
   children,
   className,
+  heightClassName = "h-72",
 }) => {
   const handleExport = () => {
     if (!data || data.length === 0) {
@@ -28,14 +30,12 @@ export const ChartCard: React.FC<ChartCardProps> = ({
     }
 
     try {
-      // Get all headers from object keys
       const headers = Object.keys(data[0]);
       const csvRows = [headers.join(",")];
 
       for (const row of data) {
         const values = headers.map((header) => {
           const val = row[header];
-          // Escape quotes and wrap in quotes
           const strVal = val === null || val === undefined ? "" : String(val);
           return `"${strVal.replace(/"/g, '""')}"`;
         });
@@ -44,7 +44,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
 
       const csvContent = "data:text/csv;charset=utf-8," + csvRows.join("\n");
       const encodedUri = encodeURI(csvContent);
-      
+
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
       link.setAttribute("download", `${filename}_export_${Date.now()}.csv`);
@@ -62,7 +62,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   const actions = data && data.length > 0 && (
     <button
       onClick={handleExport}
-      className="p-1 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground border transition-all duration-200"
+      className="p-1 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground border transition-all duration-200 focus-ring"
       title="Export Chart Data as CSV"
       aria-label="Export Chart Data"
     >
@@ -75,7 +75,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
       title={title}
       description={description}
       actions={actions || undefined}
-      className={cn("h-72 flex flex-col justify-between overflow-hidden", className)}
+      className={cn(heightClassName, "flex flex-col justify-between overflow-hidden", className)}
     >
       <div className="flex-1 w-full relative min-h-0">
         {children}

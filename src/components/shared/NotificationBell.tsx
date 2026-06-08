@@ -62,8 +62,8 @@ export const NotificationBell: React.FC = () => {
           sideOffset={8}
         >
           <div className="flex items-center justify-between border-b pb-2 mb-3">
-            <h3 className="text-xs font-semibold text-foreground tracking-tight">Notifications</h3>
-            <span className="text-[10px] bg-muted px-2 py-0.5 rounded-full font-medium text-muted-foreground">
+            <h3 className="text-sm font-bold text-foreground tracking-tight font-heading">Notifications</h3>
+            <span className="text-xs bg-muted px-2 py-0.5 rounded-full font-semibold text-muted-foreground">
               {totalNotifications} Alert{totalNotifications === 1 ? "" : "s"}
             </span>
           </div>
@@ -72,8 +72,8 @@ export const NotificationBell: React.FC = () => {
             {totalNotifications === 0 ? (
               <div className="py-6 flex flex-col items-center justify-center text-center">
                 <Check className="h-8 w-8 text-emerald-500 bg-emerald-500/10 p-1.5 rounded-full mb-2" />
-                <p className="text-xs font-semibold text-foreground">All clear!</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">No outstanding system alerts.</p>
+                <p className="text-sm font-semibold text-foreground">All clear!</p>
+                <p className="text-sm text-muted-foreground mt-0.5">No outstanding system alerts.</p>
               </div>
             ) : (
               <>
@@ -86,10 +86,10 @@ export const NotificationBell: React.FC = () => {
                   >
                     <MessageSquare className="h-4 w-4 text-indigo-500 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">
+                      <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                         Unread Student Feedback
                       </p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                      <p className="text-sm text-muted-foreground mt-0.5">
                         There are {unreadFeedback} feedback submission{unreadFeedback === 1 ? "" : "s"} requiring attention.
                       </p>
                     </div>
@@ -105,10 +105,10 @@ export const NotificationBell: React.FC = () => {
                   >
                     <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-xs font-semibold text-foreground group-hover:text-primary transition-colors">
+                      <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                         Disputed Transactions
                       </p>
-                      <p className="text-[10px] text-muted-foreground mt-0.5">
+                      <p className="text-sm text-muted-foreground mt-0.5">
                         There are {disputedPurchases} transaction{disputedPurchases === 1 ? "" : "s"} flagged as disputed.
                       </p>
                     </div>

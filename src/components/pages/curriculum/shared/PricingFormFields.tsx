@@ -18,40 +18,46 @@ export const PricingFormFields: React.FC<PricingFormFieldsProps> = ({
   onChange,
   namePlaceholder = "Module name",
 }) => (
-  <div className="space-y-3">
-    <input
-      type="text"
-      value={form.name}
-      onChange={(e) => onChange({ name: e.target.value })}
-      className="w-full rounded-md border bg-background px-2.5 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
-      placeholder={namePlaceholder}
-      aria-label="Name"
-      autoFocus
-    />
-    <div className="flex items-center gap-4">
-      <label className="flex items-center gap-2 text-xs font-medium cursor-pointer">
-        <input
-          type="checkbox"
-          checked={form.isFree}
-          onChange={(e) => onChange({ isFree: e.target.checked })}
-          className="rounded border-border"
-        />
-        Free access
-      </label>
-      {!form.isFree && (
-        <div className="flex items-center gap-1.5">
-          <span className="text-xs text-muted-foreground">$</span>
+  <div className="space-y-4">
+    <div className="space-y-1">
+      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Name</label>
+      <input
+        type="text"
+        value={form.name}
+        onChange={(e) => onChange({ name: e.target.value })}
+        className="w-full rounded-lg border border-border bg-background px-3 py-2 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
+        placeholder={namePlaceholder}
+        aria-label="Name"
+        autoFocus
+      />
+    </div>
+    <div className="space-y-2">
+      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">Pricing & Access</label>
+      <div className="flex items-center gap-4 bg-muted/30 p-2.5 rounded-lg border border-border/40">
+        <label className="flex items-center gap-2 text-xs font-medium cursor-pointer text-foreground select-none">
           <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={form.priceDollars}
-            onChange={(e) => onChange({ priceDollars: e.target.value })}
-            className="w-24 rounded-md border bg-background px-2 py-1 text-xs outline-none focus:ring-1 focus:ring-primary"
-            aria-label="Price in dollars"
+            type="checkbox"
+            checked={form.isFree}
+            onChange={(e) => onChange({ isFree: e.target.checked })}
+            className="rounded border-border text-primary focus:ring-primary"
           />
-        </div>
-      )}
+          Free access
+        </label>
+        {!form.isFree && (
+          <div className="flex items-center gap-1.5 ml-auto">
+            <span className="text-xs text-muted-foreground font-semibold">$</span>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              value={form.priceDollars}
+              onChange={(e) => onChange({ priceDollars: e.target.value })}
+              className="w-24 rounded-md border border-border bg-background px-2.5 py-1 text-xs outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
+              aria-label="Price in dollars"
+            />
+          </div>
+        )}
+      </div>
     </div>
   </div>
 );
@@ -94,22 +100,31 @@ export const PricingFormOverlay: React.FC<{
   onCancel: () => void;
   namePlaceholder?: string;
 }> = ({ title, form, onChange, onSave, onCancel, namePlaceholder }) => (
-  <div className="absolute inset-0 z-20 bg-background/95 backdrop-blur-sm p-4 flex flex-col border-b">
-    <h4 className="text-xs font-bold uppercase tracking-wider text-foreground mb-3">{title}</h4>
-    <PricingFormFields form={form} onChange={onChange} namePlaceholder={namePlaceholder} />
-    <div className="flex gap-2 mt-4">
-      <button
-        onClick={onSave}
-        className="flex-1 py-1.5 rounded-md bg-primary text-white text-xs font-bold hover:bg-primary/95"
-      >
-        Save
-      </button>
-      <button
-        onClick={onCancel}
-        className="px-4 py-1.5 rounded-md border text-xs font-semibold hover:bg-accent"
-      >
-        Cancel
-      </button>
+  <div className="absolute inset-0 z-20 bg-background/98 backdrop-blur-md p-6 flex flex-col justify-center items-center">
+    <div className="w-full max-w-sm bg-card border border-border/80 rounded-xl p-5 shadow-lg space-y-4">
+      <div>
+        <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">{title}</h4>
+        <p className="text-[10px] text-muted-foreground mt-0.5">Configure item information and access pricing.</p>
+      </div>
+      
+      <div className="border-t border-border/60 pt-3">
+        <PricingFormFields form={form} onChange={onChange} namePlaceholder={namePlaceholder} />
+      </div>
+
+      <div className="flex gap-2 pt-2">
+        <button
+          onClick={onSave}
+          className="flex-1 py-2 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/95 transition duration-200 cursor-pointer shadow-sm"
+        >
+          Save
+        </button>
+        <button
+          onClick={onCancel}
+          className="px-4 py-2 rounded-lg border border-border bg-background text-xs font-semibold hover:bg-accent text-foreground transition duration-200 cursor-pointer"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
   </div>
 );

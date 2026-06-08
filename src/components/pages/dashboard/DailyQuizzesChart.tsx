@@ -46,12 +46,12 @@ export const DailyQuizzesChart: React.FC<DailyQuizzesChartProps> = ({ data }) =>
           />
           <XAxis
             dataKey="name"
-            tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+            tick={{ fill: "var(--color-muted-foreground)", fontSize: 13 }}
             tickLine={false}
             axisLine={false}
           />
           <YAxis
-            tick={{ fill: "var(--color-muted-foreground)", fontSize: 11 }}
+            tick={{ fill: "var(--color-muted-foreground)", fontSize: 13 }}
             tickLine={false}
             axisLine={false}
             allowDecimals={false}
@@ -61,7 +61,7 @@ export const DailyQuizzesChart: React.FC<DailyQuizzesChartProps> = ({ data }) =>
               backgroundColor: "var(--color-card)",
               borderColor: "var(--color-border)",
               color: "var(--color-foreground)",
-              fontSize: "11px",
+              fontSize: "13px",
               borderRadius: "var(--radius)",
               padding: "8px 12px",
             }}
@@ -77,7 +77,7 @@ export const DailyQuizzesChart: React.FC<DailyQuizzesChartProps> = ({ data }) =>
                 value: `Avg: ${avgValue}`,
                 position: "top",
                 fill: "var(--color-muted-foreground)",
-                fontSize: 10,
+                fontSize: 12,
               }}
             />
           )}
@@ -85,7 +85,7 @@ export const DailyQuizzesChart: React.FC<DailyQuizzesChartProps> = ({ data }) =>
             type="monotone"
             dataKey="quizzes"
             stroke="var(--color-chart-1)"
-            strokeWidth={2}
+            strokeWidth={2.5}
             fillOpacity={1}
             fill="url(#quizzesGradient)"
           />

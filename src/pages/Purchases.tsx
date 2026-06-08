@@ -46,7 +46,7 @@ export const Purchases: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Monetization Ledger"
         description="Monitor mobile app transactions, payments, and refunds"
@@ -54,7 +54,7 @@ export const Purchases: React.FC = () => {
 
       <DisputedAlertBanner count={disputedCount} />
 
-      <KPIGrid cards={kpiCards} />
+      <KPIGrid cards={kpiCards} compact />
 
       <PurchasesFilterBar
         status={status}

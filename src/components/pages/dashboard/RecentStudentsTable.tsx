@@ -20,10 +20,10 @@ export const RecentStudentsTable: React.FC<RecentStudentsTableProps> = ({
         header: "Student",
         cell: ({ row }) => (
           <div className="flex flex-col gap-0.5 min-w-0">
-            <span className="font-semibold text-foreground text-xs truncate">
+            <span className="font-semibold text-foreground text-sm truncate">
               {row.original.full_name || "Anonymous User"}
             </span>
-            <span className="text-muted-foreground text-[10px] select-all truncate">
+            <span className="text-muted-foreground text-xs select-all truncate">
               {row.original.email}
             </span>
           </div>
@@ -63,7 +63,7 @@ export const RecentStudentsTable: React.FC<RecentStudentsTableProps> = ({
   const actions = (
     <Link
       to="/users"
-      className="text-[11px] font-semibold text-foreground hover:underline transition-all"
+      className="text-sm font-semibold text-foreground hover:underline transition-all"
     >
       View All
     </Link>

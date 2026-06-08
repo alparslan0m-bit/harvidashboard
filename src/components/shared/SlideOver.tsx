@@ -31,18 +31,18 @@ export const SlideOver: React.FC<SlideOverProps> = ({
         {/* Sliding Panel */}
         <Dialog.Content
           className={cn(
-            "fixed inset-y-0 right-0 z-50 h-full w-[480px] bg-card border-l border-border shadow-2xl flex flex-col focus:outline-none transition-transform duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
+            "fixed inset-y-0 right-0 z-50 h-full w-full sm:w-[480px] bg-card border-l border-border shadow-2xl flex flex-col focus:outline-none transition-transform duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
             className
           )}
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b px-6 py-4">
             <div>
-              <Dialog.Title className="text-base font-semibold leading-6 text-foreground tracking-tight">
+              <Dialog.Title className="text-lg font-bold leading-6 text-foreground tracking-tight font-heading">
                 {title}
               </Dialog.Title>
               {description && (
-                <Dialog.Description className="mt-1 text-xs text-muted-foreground">
+                <Dialog.Description className="mt-1 text-sm text-muted-foreground">
                   {description}
                 </Dialog.Description>
               )}
@@ -58,13 +58,13 @@ export const SlideOver: React.FC<SlideOverProps> = ({
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+          <div className="flex-1 overflow-y-auto p-5 space-y-5">
             {children}
           </div>
 
           {/* Footer */}
           {footer && (
-            <div className="border-t px-6 py-4 bg-muted/40 flex items-center justify-end gap-3 select-none">
+            <div className="border-t px-6 py-4 bg-muted/40 flex items-center justify-end gap-3">
               {footer}
             </div>
           )}

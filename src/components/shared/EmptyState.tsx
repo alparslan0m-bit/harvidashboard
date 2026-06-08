@@ -15,12 +15,12 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   const IconComponent = Lucide[icon] as React.ComponentType<any>;
 
   return (
-    <div className="flex flex-col items-center justify-center p-12 text-center rounded-lg border border-dashed border-border bg-card/50 select-none">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-muted-foreground mb-4">
-        {IconComponent && <IconComponent className="h-6 w-6" />}
+    <div className="flex flex-col items-center justify-center p-8 text-center rounded-lg border border-dashed border-border bg-muted/20">
+      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted text-foreground/60 mb-4 select-none">
+        {IconComponent && <IconComponent className="h-8 w-8" />}
       </div>
-      <h3 className="text-sm font-semibold text-foreground tracking-tight">{title}</h3>
-      <p className="mt-1 text-xs text-muted-foreground max-w-[280px]">
+      <h3 className="text-base font-bold text-foreground tracking-tight font-heading">{title}</h3>
+      <p className="mt-1.5 text-sm text-muted-foreground max-w-[320px] leading-relaxed">
         {description}
       </p>
     </div>

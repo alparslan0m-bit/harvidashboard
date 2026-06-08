@@ -8,7 +8,7 @@ interface DataTableHeaderProps<TData> {
 
 export function DataTableHeader<TData>({ table }: DataTableHeaderProps<TData>) {
   return (
-    <thead className="sticky top-0 z-10 bg-card text-muted-foreground uppercase tracking-widest font-semibold border-b border-border/60 select-none">
+    <thead className="table-head sticky top-0 z-10 border-b border-border select-none">
       {table.getHeaderGroups().map((headerGroup) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {
@@ -20,7 +20,7 @@ export function DataTableHeader<TData>({ table }: DataTableHeaderProps<TData>) {
                 key={header.id}
                 scope="col"
                 style={{ width: header.getSize() }}
-                className="px-6 py-3 relative group"
+                className="px-4 py-2.5 relative group"
               >
                 {header.isPlaceholder ? null : (
                   <div

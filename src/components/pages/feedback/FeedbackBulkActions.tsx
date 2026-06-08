@@ -13,19 +13,19 @@ export const FeedbackBulkActions: React.FC<FeedbackBulkActionsProps> = ({
   onBulkArchive,
 }) => (
   <div className="flex items-center gap-2">
-    <span className="text-[11px] font-semibold text-muted-foreground">{selectedCount} selected</span>
+    <span className="text-sm font-semibold text-muted-foreground">{selectedCount} selected</span>
     <button
       onClick={onBulkMarkRead}
-      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md border text-[11px] font-semibold text-foreground hover:bg-accent transition"
+      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md border text-sm font-semibold text-foreground hover:bg-accent transition"
     >
-      <CheckCheck className="h-3.5 w-3.5" />
+      <CheckCheck className="h-4 w-4" />
       <span>Mark Read</span>
     </button>
     <button
       onClick={onBulkArchive}
-      className="inline-flex items-center gap-1 px-3 py-1.5 rounded-md border text-[11px] font-semibold text-foreground hover:bg-accent transition"
+      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md border text-sm font-semibold text-foreground hover:bg-accent transition"
     >
-      <Archive className="h-3.5 w-3.5" />
+      <Archive className="h-4 w-4" />
       <span>Archive</span>
     </button>
   </div>

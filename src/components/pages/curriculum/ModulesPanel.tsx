@@ -43,7 +43,6 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const [focusedId, setFocusedId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const openCreate = useCallback(() => {
     setEditingId(null);
@@ -74,13 +73,11 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
 
   if (!selectedYearId) {
     return (
-      <div className="flex flex-col border border-border/60 rounded-xl bg-card shadow-sm h-[500px] p-6 justify-center">
+      <div className="flex flex-col border border-border rounded-xl bg-card shadow-sm h-[380px] p-5 justify-center">
         <EmptyState icon="Calendar" title="Select Academic Year" description="Choose a year to manage modules." />
       </div>
     );
   }
-
-  const filtered = modules.filter((m) => m.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
@@ -103,28 +100,23 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
         addLabel="Add Module"
         onBack={onBack}
         onAdd={openCreate}
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        showSearch={modules.length > 0}
       />
 
       {isFormOpen && (
-        <div className="relative border-b">
-          <PricingFormOverlay
-            title={editingId ? "Edit Module Properties" : "Create New Module"}
-            form={form}
-            onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
-            onSave={async () => {
-              if (!form.name.trim()) return;
-              const payload = pricingFormToPayload(form);
-              if (editingId) await updateModule({ id: editingId, ...payload });
-              else await createModule(payload);
-              setIsFormOpen(false);
-            }}
-            onCancel={() => setIsFormOpen(false)}
-            namePlaceholder="e.g. Cardiology"
-          />
-        </div>
+        <PricingFormOverlay
+          title={editingId ? "Edit Module Properties" : "Create New Module"}
+          form={form}
+          onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
+          onSave={async () => {
+            if (!form.name.trim()) return;
+            const payload = pricingFormToPayload(form);
+            if (editingId) await updateModule({ id: editingId, ...payload });
+            else await createModule(payload);
+            setIsFormOpen(false);
+          }}
+          onCancel={() => setIsFormOpen(false)}
+          namePlaceholder="e.g. Cardiology"
+        />
       )}
 
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
@@ -134,13 +126,11 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
           </div>
         ) : modules.length === 0 ? (
           <EmptyState icon="BookOpen" title="No modules yet" description="Create your first module inside this academic level." />
-        ) : filtered.length === 0 ? (
-          <p className="text-center py-8 text-[11px] text-muted-foreground">No modules match your search.</p>
         ) : (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <SortableContext items={filtered.map((m) => m.id)} strategy={verticalListSortingStrategy}>
+            <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
               <div className="space-y-2">
-                {filtered.map((mod) => (
+                {modules.map((mod) => (
                   <SortableCurriculumRow
                     key={mod.id}
                     id={mod.id}

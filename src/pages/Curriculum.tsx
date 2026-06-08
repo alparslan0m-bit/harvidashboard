@@ -9,7 +9,7 @@ import LectureQuestionsPanel from "../components/pages/curriculum/LectureQuestio
 import { useCurriculum, useModules, useSubjectsAndLectures, useCurriculumStats } from "../hooks/useCurriculum";
 import PageHeader from "../components/shared/PageHeader";
 import MetricCard from "../components/shared/MetricCard";
-import { Calendar, BookOpen, Bookmark, FileText, ChevronRight } from "lucide-react";
+import { Calendar, BookOpen, Bookmark, FileText, ChevronRight, Home } from "lucide-react";
 import { cn } from "../lib/utils";
 
 export const Curriculum: React.FC = () => {
@@ -92,88 +92,99 @@ export const Curriculum: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Curriculum Management"
-        description="Configure academic levels, modules, subjects, and lectures in full-width workspace panels. Click items to drill down."
       />
 
-      {/* Stats Bar */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 select-none">
-        <MetricCard
-          title="Academic Years"
-          value={isLoadingStats ? "..." : stats.yearsCount}
-          icon={<Calendar />}
-          color="indigo"
-        />
-        <MetricCard
-          title="Course Modules"
-          value={isLoadingStats ? "..." : stats.modulesCount}
-          icon={<BookOpen />}
-          color="emerald"
-        />
-        <MetricCard
-          title="Subjects"
-          value={isLoadingStats ? "..." : stats.subjectsCount}
-          icon={<Bookmark />}
-          color="amber"
-        />
-        <MetricCard
-          title="Lectures"
-          value={isLoadingStats ? "..." : stats.lecturesCount}
-          icon={<FileText />}
-          color="zinc"
-        />
+      {/* Page-level Interactive Breadcrumbs */}
+      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-card px-3.5 py-2 rounded-full border border-border/60 shadow-xs w-fit">
+        <span
+          className={cn(
+            "transition-colors flex items-center gap-1",
+            selectedYear || selectedModule || selectedSubject ? "hover:text-foreground cursor-pointer font-medium" : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md"
+          )}
+          onClick={navigateToYears}
+        >
+          <Home className="h-3.5 w-3.5" />
+          <span>Curriculum</span>
+        </span>
+        {selectedYear && (
+          <>
+            <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
+            <span
+              className={cn(
+                "transition-colors",
+                selectedModule || selectedSubject ? "hover:text-foreground cursor-pointer font-medium" : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md"
+              )}
+              onClick={() => navigateToModules(selectedYear.id)}
+            >
+              {selectedYear.name}
+            </span>
+            {selectedModule && (
+              <>
+                <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
+                <span
+                  className={cn(
+                    "transition-colors",
+                    selectedSubject ? "hover:text-foreground cursor-pointer font-medium" : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md"
+                  )}
+                  onClick={() => navigateToSubjects(selectedYear.id, selectedModule.id)}
+                >
+                  {selectedModule.name}
+                </span>
+                {selectedSubject && (
+                  <>
+                    <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
+                    <span className="font-semibold text-foreground px-2 py-0.5 bg-muted rounded-md">
+                      {selectedSubject.name}
+                    </span>
+                  </>
+                )}
+              </>
+            )}
+          </>
+        )}
       </div>
 
-      {/* Page-level Interactive Breadcrumbs */}
-      {(selectedYear || selectedModule || selectedSubject) && (
-        <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/40 px-3 py-1.5 rounded-lg border border-border/40 select-none w-fit">
-          <span className="hover:text-foreground cursor-pointer transition-colors" onClick={navigateToYears}>
-            Curriculum
-          </span>
-          <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
-          {selectedYear && (
-            <>
-              <span
-                className={cn(
-                  "transition-colors font-semibold",
-                  selectedModule || selectedSubject ? "hover:text-foreground cursor-pointer" : "text-foreground font-bold"
-                )}
-                onClick={() => navigateToModules(selectedYear.id)}
-              >
-                {selectedYear.name}
-              </span>
-              {selectedModule && (
-                <>
-                  <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
-                  <span
-                    className={cn(
-                      "transition-colors font-semibold",
-                      selectedSubject ? "hover:text-foreground cursor-pointer" : "text-foreground font-bold"
-                    )}
-                    onClick={() => navigateToSubjects(selectedYear.id, selectedModule.id)}
-                  >
-                    {selectedModule.name}
-                  </span>
-                  {selectedSubject && (
-                    <>
-                      <ChevronRight className="h-3.5 w-3.5 text-muted-foreground/50" />
-                      <span className="font-bold text-foreground">
-                        {selectedSubject.name}
-                      </span>
-                    </>
-                  )}
-                </>
-              )}
-            </>
-          )}
+      {/* Grid Layout: Active workspace panel on the left, compact stats cards on the right side */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
+        {/* Workspace Panel */}
+        <div className="lg:col-span-3 w-full order-last lg:order-first">
+          {renderActivePanel()}
         </div>
-      )}
 
-      {/* Full-width Sequential Workspace Panel */}
-      <div className="w-full">
-        {renderActivePanel()}
+        {/* Stats Bar on the side (vertical stack) */}
+        <div className="lg:col-span-1 flex flex-col gap-3.5">
+          <MetricCard
+            title="Academic Years"
+            value={isLoadingStats ? "..." : stats.yearsCount}
+            icon={<Calendar />}
+            color="sky"
+            compact
+          />
+          <MetricCard
+            title="Course Modules"
+            value={isLoadingStats ? "..." : stats.modulesCount}
+            icon={<BookOpen />}
+            color="emerald"
+            compact
+          />
+          <MetricCard
+            title="Subjects"
+            value={isLoadingStats ? "..." : stats.subjectsCount}
+            icon={<Bookmark />}
+            color="amber"
+            compact
+          />
+          <MetricCard
+            title="Lectures"
+            value={isLoadingStats ? "..." : stats.lecturesCount}
+            icon={<FileText />}
+            color="zinc"
+            compact
+          />
+        </div>
       </div>
 
       {/* Lecture questions slide-over drawer */}

@@ -4,3 +4,4 @@ export { getErrorMessage, throwSupabaseError } from "./errors";
 export { QUERY_KEYS } from "./queryKeys";
 export { supabase, supabaseAdmin } from "./supabaseAdmin";
 export { cn, formatCurrency, formatDate, formatDateTime } from "./utils";
+export { lightPalette, darkPalette, chartColors, yearGradients, borderRadius } from "./colors";

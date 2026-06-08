@@ -29,13 +29,13 @@ export const PurchasesFilterBar: React.FC<PurchasesFilterBarProps> = ({
 }) => (
   <FilterBar className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
     <div className="space-y-1">
-      <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">
+      <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">
         Status
       </label>
       <select
         value={status}
         onChange={(e) => onStatusChange(e.target.value)}
-        className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground outline-none transition"
+        className="w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground outline-none transition"
         aria-label="Filter status dropdown"
       >
         <option value="all">All Transactions</option>
@@ -48,7 +48,7 @@ export const PurchasesFilterBar: React.FC<PurchasesFilterBarProps> = ({
     </div>
 
     <div className="space-y-1">
-      <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">
+      <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">
         Provider
       </label>
       <select
@@ -58,7 +58,7 @@ export const PurchasesFilterBar: React.FC<PurchasesFilterBarProps> = ({
             onProviderSelect(e.target.value);
           }
         }}
-        className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground outline-none transition"
+        className="w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground outline-none transition"
         aria-label="Filter provider dropdown"
       >
         <option value="">All Providers</option>
@@ -71,33 +71,33 @@ export const PurchasesFilterBar: React.FC<PurchasesFilterBarProps> = ({
     </div>
 
     <div className="space-y-1">
-      <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">
+      <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">
         From Date
       </label>
       <input
         type="date"
         value={fromDate}
         onChange={(e) => onFromDateChange(e.target.value)}
-        className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground outline-none transition"
+        className="w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground outline-none transition"
         aria-label="Start date filter picker"
       />
     </div>
 
     <div className="space-y-1">
-      <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">
+      <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">
         To Date
       </label>
       <input
         type="date"
         value={toDate}
         onChange={(e) => onToDateChange(e.target.value)}
-        className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground outline-none transition"
+        className="w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground outline-none transition"
         aria-label="End date filter picker"
       />
     </div>
 
     <div className="space-y-1">
-      <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">
+      <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">
         Search Session ID
       </label>
       <div className="relative">
@@ -106,7 +106,7 @@ export const PurchasesFilterBar: React.FC<PurchasesFilterBarProps> = ({
           type="text"
           value={searchSessionId}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full rounded-md border border-input bg-background pl-8 pr-3 py-2 text-xs text-foreground outline-none transition"
+          className="w-full rounded-md border border-input bg-background pl-8 pr-3 py-2.5 text-sm text-foreground outline-none transition"
           placeholder="Session ID or ref..."
           aria-label="Search Session ID"
         />

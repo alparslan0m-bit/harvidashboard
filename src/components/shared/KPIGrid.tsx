@@ -8,19 +8,21 @@ interface KPICardConfig {
   description?: string;
   icon?: React.ReactNode;
   trend?: { value: number; label: string } | null;
+  color?: "emerald" | "red" | "amber" | "sky" | "violet" | "zinc";
   className?: string;
 }
 
 interface KPIGridProps {
   cards: KPICardConfig[];
   className?: string;
+  compact?: boolean;
 }
 
-export const KPIGrid: React.FC<KPIGridProps> = ({ cards, className }) => {
+export const KPIGrid: React.FC<KPIGridProps> = ({ cards, className, compact = false }) => {
   return (
     <div
       className={cn(
-        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5",
+        "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5",
         className
       )}
     >
@@ -32,7 +34,9 @@ export const KPIGrid: React.FC<KPIGridProps> = ({ cards, className }) => {
           description={card.description}
           icon={card.icon}
           trend={card.trend}
+          color={card.color}
           className={card.className}
+          compact={compact}
         />
       ))}
     </div>

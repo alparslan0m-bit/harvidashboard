@@ -40,7 +40,7 @@ export const SortableCurriculumRow: React.FC<SortableRowProps> = React.memo(({
       onClick={onFocus}
       onDoubleClick={onSelect}
       className={cn(
-        "flex items-center justify-between border rounded-lg p-3.5 select-none transition-all duration-200 group cursor-pointer",
+        "flex items-center justify-between border rounded-lg px-4 py-3 select-none transition-all duration-200 group cursor-pointer",
         isFocused
           ? "border-primary bg-primary/[0.02] shadow-sm border-l-[3px] border-l-primary"
           : "border-border/60 bg-card hover:bg-muted/30 hover:border-border",
@@ -59,12 +59,9 @@ export const SortableCurriculumRow: React.FC<SortableRowProps> = React.memo(({
           <GripVertical className="h-4 w-4" />
         </button>
         <div className="min-w-0 flex-1" onClick={onSelect}>
-          <span className="text-sm font-semibold truncate block text-foreground group-hover:text-primary transition-colors">
+          <span className="text-base font-semibold truncate block text-foreground group-hover:text-primary transition-colors">
             {name}
           </span>
-          {subtitle && (
-            <span className="text-[11px] text-muted-foreground font-medium block mt-0.5">{subtitle}</span>
-          )}
         </div>
       </div>
       <div className="flex items-center gap-3 shrink-0">

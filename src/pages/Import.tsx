@@ -4,25 +4,26 @@ import { useImportWizard } from "@/hooks/useImportWizard";
 import { ImportUploadZone } from "@/components/pages/import/ImportUploadZone";
 import { ImportValidationView } from "@/components/pages/import/ImportValidationView";
 import { ImportProgressView } from "@/components/pages/import/ImportProgressView";
+import { PageHeader } from "@/components/shared/PageHeader";
 
 export const Import: React.FC = () => {
   const wizard = useImportWizard();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between select-none">
-        <div>
-          <h2 className="text-sm font-medium text-muted-foreground">CSV Question Importer</h2>
-          <p className="text-xs text-muted-foreground">Bulk upload quiz curriculum and MCQs from spreadsheet</p>
-        </div>
-        <button
-          onClick={wizard.handleDownloadTemplate}
-          className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md border text-xs font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition"
-        >
-          <Download className="h-4 w-4" />
-          <span>Download CSV Template</span>
-        </button>
-      </div>
+    <div className="space-y-4">
+      <PageHeader
+        title="CSV Question Importer"
+        description="Bulk upload quiz curriculum and MCQs from spreadsheet"
+        actions={
+          <button
+            onClick={wizard.handleDownloadTemplate}
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-md border text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition focus-ring"
+          >
+            <Download className="h-4 w-4" />
+            <span>Download CSV Template</span>
+          </button>
+        }
+      />
 
       {wizard.step === 1 && !wizard.file && (
         <ImportUploadZone

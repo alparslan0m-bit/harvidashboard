@@ -13,22 +13,22 @@ export const LiveIndicator: React.FC<LiveIndicatorProps> = ({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full border border-border/60 bg-muted/30 select-none text-[10px] font-semibold tracking-wider uppercase",
+        "inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-success/20 bg-success/10 select-none text-xs font-semibold tracking-wide uppercase",
         className
       )}
     >
       <span className="relative flex h-1.5 w-1.5">
         {active && (
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
         )}
         <span
           className={cn(
             "relative inline-flex rounded-full h-1.5 w-1.5",
-            active ? "bg-emerald-500" : "bg-zinc-400"
+            active ? "bg-success" : "bg-muted-foreground"
           )}
         ></span>
       </span>
-      <span className={active ? "text-emerald-600 dark:text-emerald-400" : "text-muted-foreground"}>
+      <span className={active ? "text-success" : "text-muted-foreground"}>
         {active ? "Live" : "Offline"}
       </span>
     </div>

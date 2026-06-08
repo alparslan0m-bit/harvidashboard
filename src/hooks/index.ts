@@ -15,3 +15,4 @@ export { usePurchases } from "./usePurchases";
 export { useQuestions } from "./useQuestions";
 export { useUsers } from "./useUsers";
 export { useQuestionsPage } from "./useQuestionsPage";
+export { useSidebarCollapsed } from "./useSidebarCollapsed";

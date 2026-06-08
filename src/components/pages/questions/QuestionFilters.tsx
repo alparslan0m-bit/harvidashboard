@@ -107,16 +107,16 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
   };
 
   return (
-    <div className="space-y-4 bg-card border p-4 rounded-xl shadow-sm select-none">
+    <div className="space-y-3 bg-muted/30 border border-border p-4 rounded-xl shadow-sm select-none">
       {/* Cascading Select Selectors Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         {/* Year */}
         <div className="space-y-1">
-          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">Year</label>
+          <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">Year</label>
           <select
             value={filters.yearId || ""}
             onChange={(e) => handleYearChange(e.target.value)}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground outline-none transition"
+            className="w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground outline-none transition"
             aria-label="Year Selector"
           >
             <option value="">All Years</option>
@@ -145,12 +145,12 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
 
         {/* Subject */}
         <div className="space-y-1">
-          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">Subject</label>
+          <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">Subject</label>
           <select
             value={filters.subjectId || ""}
             onChange={(e) => handleSubjectChange(e.target.value)}
             disabled={!filters.moduleId}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground outline-none transition disabled:opacity-50"
+            className="w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground outline-none transition disabled:opacity-50"
             aria-label="Subject Selector"
           >
             <option value="">All Subjects</option>
@@ -162,12 +162,12 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
 
         {/* Lecture */}
         <div className="space-y-1">
-          <label className="text-[10px] uppercase font-bold text-muted-foreground tracking-wide">Lecture</label>
+          <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">Lecture</label>
           <select
             value={filters.lectureId || ""}
             onChange={(e) => handleLectureChange(e.target.value)}
             disabled={!filters.subjectId}
-            className="w-full rounded-md border border-input bg-background px-3 py-2 text-xs text-foreground outline-none transition disabled:opacity-50"
+            className="w-full rounded-md border border-input bg-background px-3 py-2.5 text-sm text-foreground outline-none transition disabled:opacity-50"
             aria-label="Lecture Selector"
           >
             <option value="">All Lectures</option>
@@ -185,7 +185,7 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full rounded-md border border-input bg-background pl-9 pr-4 py-2 text-xs text-foreground placeholder-muted-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
+          className="w-full rounded-md border border-input bg-background pl-9 pr-4 py-2.5 text-sm text-foreground placeholder-muted-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary transition"
           placeholder="Search question content text..."
           aria-label="Search Question Content"
         />

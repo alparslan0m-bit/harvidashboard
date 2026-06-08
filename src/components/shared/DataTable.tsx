@@ -60,16 +60,18 @@ export function DataTable<TData>({
   );
 
   return (
-    <div className="space-y-3.5">
-      <DataTableToolbar
-        table={table}
-        pageSize={pageSize}
-        onPageSizeChange={onPageSizeChange}
-      />
+    <div className="space-y-3">
+      <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
+        <div className="px-4 py-2.5 border-b border-border bg-muted/20">
+          <DataTableToolbar
+            table={table}
+            pageSize={pageSize}
+            onPageSizeChange={onPageSizeChange}
+          />
+        </div>
 
-      <div className="rounded-xl border border-border/60 bg-card shadow-sm overflow-hidden select-none">
         <div className="overflow-x-auto max-h-[600px]">
-          <table className="w-full text-left text-xs border-collapse relative">
+          <table className="w-full text-left text-sm border-collapse relative">
             <DataTableHeader table={table} />
             <DataTableBody
               table={table}
