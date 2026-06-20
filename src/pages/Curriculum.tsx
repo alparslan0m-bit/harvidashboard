@@ -96,10 +96,15 @@ export const Curriculum: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Curriculum Management" />
+      <div className="relative -mx-4 -mt-4 mb-6 sm:-mx-5 sm:-mt-5 lg:-mx-6 lg:-mt-6 px-4 py-8 sm:px-5 sm:py-10 lg:px-6 lg:py-12 border-b border-border bg-card overflow-hidden">
+        <div className="absolute inset-0 z-0 bg-vercel-mesh opacity-20 dark:opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-screen" />
+        <div className="relative z-10">
+          <PageHeader title="Curriculum Management" className="mb-0" />
+        </div>
+      </div>
 
       {/* Page-level Interactive Breadcrumbs */}
-      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-card px-3.5 py-2 rounded-full border border-border/60 shadow-xs w-fit">
+      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-card px-4 py-2.5 rounded-[8px] border border-border shadow-xs w-fit">
         <span
           className={cn(
             "transition-colors flex items-center gap-1",
@@ -169,28 +174,24 @@ export const Curriculum: React.FC = () => {
             title="Academic Years"
             value={isLoadingStats ? "..." : stats.yearsCount}
             icon={<Calendar />}
-            color="sky"
             compact
           />
           <MetricCard
             title="Course Modules"
             value={isLoadingStats ? "..." : stats.modulesCount}
             icon={<BookOpen />}
-            color="emerald"
             compact
           />
           <MetricCard
             title="Subjects"
             value={isLoadingStats ? "..." : stats.subjectsCount}
             icon={<Bookmark />}
-            color="amber"
             compact
           />
           <MetricCard
             title="Lectures"
             value={isLoadingStats ? "..." : stats.lecturesCount}
             icon={<FileText />}
-            color="zinc"
             compact
           />
         </div>

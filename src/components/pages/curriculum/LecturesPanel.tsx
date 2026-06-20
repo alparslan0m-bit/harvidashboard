@@ -109,7 +109,7 @@ export const LecturesPanel: React.FC<LecturesPanelProps> = ({
         />
       )}
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <div className="flex-1 overflow-y-auto">
         {lectures.length === 0 ? (
           <EmptyState icon="FileText" title="No lectures yet" description="Add lectures to this subject." />
         ) : (
@@ -124,7 +124,7 @@ export const LecturesPanel: React.FC<LecturesPanelProps> = ({
             }}
           >
             <SortableContext items={lectures.map((l) => l.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-2">
+              <div>
                 {lectures.map((lect) => {
                   const qCount = questionCounts.get(lect.id) ?? 0;
                   return (

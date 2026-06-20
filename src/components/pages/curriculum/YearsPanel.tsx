@@ -88,7 +88,7 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({ onSelectYear }) => {
         />
       )}
 
-      <div className="flex-1 overflow-y-auto p-3 space-y-1.5">
+      <div className="flex-1 overflow-y-auto">
         {years.length === 0 ? (
           <EmptyState
             icon="Calendar"
@@ -98,7 +98,7 @@ export const YearsPanel: React.FC<YearsPanelProps> = ({ onSelectYear }) => {
         ) : (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={years.map((y) => y.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-2">
+              <div>
                 {years.map((year) =>
                   editingId === year.id ? (
                     <InlineNameEditor

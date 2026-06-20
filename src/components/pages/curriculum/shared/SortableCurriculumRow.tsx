@@ -40,11 +40,11 @@ export const SortableCurriculumRow: React.FC<SortableRowProps> = React.memo(({
       onClick={onFocus}
       onDoubleClick={onSelect}
       className={cn(
-        "flex items-center justify-between border rounded-lg px-4 py-3 select-none transition-all duration-200 group cursor-pointer",
+        "flex items-center justify-between border-b last:border-b-0 px-5 py-3.5 select-none transition-colors duration-200 group cursor-pointer bg-card",
         isFocused
-          ? "border-primary bg-primary/5 shadow-sm border-l-2 border-l-primary"
-          : "border-border/60 bg-card hover:bg-muted/30 hover:border-border",
-        isDragging && "z-50 shadow-md border-primary scale-[1.01] rotate-[0.2deg]",
+          ? "bg-muted/50 shadow-[inset_2px_0_0_0_var(--color-foreground)]"
+          : "hover:bg-muted/30 border-border/60",
+        isDragging && "z-50 shadow-md border-primary/20 scale-[1.01] rotate-[0.2deg]",
       )}
     >
       <div className="flex items-center gap-3 min-w-0 flex-1">

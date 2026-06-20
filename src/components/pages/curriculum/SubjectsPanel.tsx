@@ -118,7 +118,7 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
         />
       )}
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <div className="flex-1 overflow-y-auto">
         {subjects.length === 0 ? (
           <EmptyState icon="Layers" title="No subjects yet" description="Create subjects inside this module." />
         ) : (
@@ -133,7 +133,7 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
             }}
           >
             <SortableContext items={subjects.map((s) => s.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-2">
+              <div>
                 {subjects.map((subj) => (
                   <SortableCurriculumRow
                     key={subj.id}

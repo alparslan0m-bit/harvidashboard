@@ -119,7 +119,7 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
         />
       )}
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-2">
+      <div className="flex-1 overflow-y-auto">
         {isLoadingModules ? (
           <div className="space-y-3 animate-pulse">
             {[1, 2, 3].map((i) => <div key={i} className="h-14 bg-muted rounded-lg border" />)}
@@ -129,7 +129,7 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
         ) : (
           <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
             <SortableContext items={modules.map((m) => m.id)} strategy={verticalListSortingStrategy}>
-              <div className="space-y-2">
+              <div>
                 {modules.map((mod) => (
                   <SortableCurriculumRow
                     key={mod.id}

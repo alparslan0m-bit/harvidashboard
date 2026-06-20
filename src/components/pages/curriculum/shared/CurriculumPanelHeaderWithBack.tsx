@@ -20,7 +20,7 @@ export const CurriculumPanelHeaderWithBack: React.FC<CurriculumPanelHeaderWithBa
   onBack,
   onAdd,
 }) => (
-  <div className="px-4 py-3 border-b bg-muted/30 space-y-2">
+  <div className="px-5 py-4 border-b border-border bg-card space-y-2">
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
         <button
@@ -43,7 +43,7 @@ export const CurriculumPanelHeaderWithBack: React.FC<CurriculumPanelHeaderWithBa
       </div>
       <button
         onClick={onAdd}
-        className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/95 transition flex items-center gap-1 text-sm font-bold"
+        className="px-4 py-1.5 rounded-[8px] bg-foreground text-background hover:bg-foreground/90 transition flex items-center gap-1 text-sm font-medium"
         title="Press N to add"
         aria-label={addLabel}
       >

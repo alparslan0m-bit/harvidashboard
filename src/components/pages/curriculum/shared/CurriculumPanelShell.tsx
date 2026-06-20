@@ -21,7 +21,7 @@ export const CurriculumPanelShell: React.FC<CurriculumPanelShellProps> = ({
     onFocus={onFocus}
     onBlur={onBlur}
     className={cn(
-      "relative overflow-hidden flex flex-col border rounded-xl bg-card shadow-sm outline-none transition-all duration-200 w-full min-h-[420px]",
+      "relative overflow-hidden flex flex-col border rounded-[8px] bg-card shadow-xs outline-none transition-all duration-200 w-full min-h-[420px]",
       isFocused ? "ring-1 ring-primary/20 border-primary/30" : "border-border/60",
       className,
     )}
@@ -49,7 +49,7 @@ export const CurriculumPanelHeader: React.FC<CurriculumPanelHeaderProps> = ({
   addLabel,
   onAdd,
 }) => (
-  <div className="px-4 py-3 border-b bg-muted/30 space-y-2">
+  <div className="px-5 py-4 border-b border-border bg-card space-y-2">
     <div className="flex items-center justify-between">
       <div>
         <div className="flex items-center gap-2">
@@ -63,7 +63,7 @@ export const CurriculumPanelHeader: React.FC<CurriculumPanelHeaderProps> = ({
       </div>
       <button
         onClick={onAdd}
-        className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/95 transition flex items-center gap-1 text-sm font-bold"
+        className="px-4 py-1.5 rounded-[8px] bg-foreground text-background hover:bg-foreground/90 transition flex items-center gap-1 text-sm font-medium"
         title="Press N to add"
         aria-label={addLabel}
       >
