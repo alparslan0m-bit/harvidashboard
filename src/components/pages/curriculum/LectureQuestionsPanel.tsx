@@ -70,7 +70,7 @@ export const LectureQuestionsPanel: React.FC<LectureQuestionsPanelProps> = ({
           <div className="flex items-center gap-2 justify-between w-full">
             <button
               onClick={handleCreate}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-white hover:brightness-105 text-xs font-bold select-none shadow-sm transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground hover:brightness-105 text-xs font-bold select-none shadow-sm transition-all cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Add Question</span>
@@ -98,7 +98,7 @@ export const LectureQuestionsPanel: React.FC<LectureQuestionsPanelProps> = ({
             <p className="text-sm font-medium text-muted-foreground">No questions found in this lecture topic.</p>
             <button
               onClick={handleCreate}
-              className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-white text-xs font-bold hover:brightness-105 shadow-sm transition-all cursor-pointer"
+              className="mt-4 inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-primary-foreground text-xs font-bold hover:brightness-105 shadow-sm transition-all cursor-pointer"
             >
               <Plus className="h-3.5 w-3.5" />
               <span>Add First Question</span>

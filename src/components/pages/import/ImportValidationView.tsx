@@ -130,7 +130,7 @@ export function ImportValidationView({
         <button
           onClick={onImport}
           disabled={totalErrors > 0 || validRows.length === 0}
-          className="flex-1 inline-flex items-center justify-center gap-2 rounded-md bg-primary py-2 text-xs font-bold text-white hover:bg-primary/95 transition disabled:opacity-50"
+          className="flex-1 inline-flex items-center justify-center gap-2 rounded-md bg-primary py-2 text-xs font-bold text-primary-foreground hover:bg-primary/95 transition disabled:opacity-50"
         >
           <Play className="h-4 w-4" />
           <span>Import {validRows.length} Valid Rows</span>

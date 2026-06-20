@@ -170,7 +170,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex-1 inline-flex items-center justify-center rounded-xl bg-primary py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-105 disabled:opacity-50"
+          className="flex-1 inline-flex items-center justify-center rounded-xl bg-primary py-2.5 text-sm font-bold text-primary-foreground shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-105 disabled:opacity-50"
         >
           {isSubmitting ? "Saving question..." : "Save Question"}
         </button>

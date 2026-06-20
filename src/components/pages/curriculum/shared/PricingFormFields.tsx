@@ -114,7 +114,7 @@ export const PricingFormOverlay: React.FC<{
       <div className="flex gap-2 pt-2">
         <button
           onClick={onSave}
-          className="flex-1 py-2 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary/95 transition duration-200 cursor-pointer shadow-sm"
+          className="flex-1 py-2 rounded-lg bg-primary text-primary-foreground text-xs font-bold hover:bg-primary/95 transition duration-200 cursor-pointer shadow-sm"
         >
           Save
         </button>

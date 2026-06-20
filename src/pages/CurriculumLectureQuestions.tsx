@@ -119,7 +119,7 @@ export const CurriculumLectureQuestions: React.FC = () => {
             <button
               type="button"
               onClick={openCreate}
-              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-primary/95 transition"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/95 transition"
             >
               <Plus className="h-4 w-4" />
               Add Question
@@ -153,7 +153,7 @@ export const CurriculumLectureQuestions: React.FC = () => {
           <button
             type="button"
             onClick={openCreate}
-            className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/95 transition"
+            className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/95 transition"
           >
             <Plus className="h-4 w-4" />
             Add First Question

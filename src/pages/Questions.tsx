@@ -31,7 +31,7 @@ export const Questions: React.FC = () => {
               <Upload className="h-4 w-4" />
               <span>Bulk Import</span>
             </Link>
-            <button onClick={openCreate} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-primary text-white text-sm font-bold transition">
+            <button onClick={openCreate} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-bold transition">
               <Plus className="h-4 w-4" />
               <span>Add Question</span>
             </button>

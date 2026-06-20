@@ -63,7 +63,7 @@ export const CurriculumPanelHeader: React.FC<CurriculumPanelHeaderProps> = ({
       </div>
       <button
         onClick={onAdd}
-        className="px-3 py-1.5 rounded-md bg-primary text-white hover:bg-primary/95 transition flex items-center gap-1 text-sm font-bold"
+        className="px-3 py-1.5 rounded-md bg-primary text-primary-foreground hover:bg-primary/95 transition flex items-center gap-1 text-sm font-bold"
         title="Press N to add"
         aria-label={addLabel}
       >
