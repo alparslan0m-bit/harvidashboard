@@ -40,7 +40,7 @@ export const Feedback: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PageHeader
         title="Feedback Log"
         description="Process, audit, and archive reports submitted by students"

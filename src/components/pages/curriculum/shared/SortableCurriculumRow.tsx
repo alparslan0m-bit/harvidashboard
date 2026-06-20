@@ -19,7 +19,7 @@ export interface SortableRowProps {
 export const SortableCurriculumRow: React.FC<SortableRowProps> = React.memo(({
   id,
   name,
-  subtitle,
+  subtitle: _subtitle,
   isFocused,
   onFocus,
   onSelect,
@@ -42,7 +42,7 @@ export const SortableCurriculumRow: React.FC<SortableRowProps> = React.memo(({
       className={cn(
         "flex items-center justify-between border rounded-lg px-4 py-3 select-none transition-all duration-200 group cursor-pointer",
         isFocused
-          ? "border-primary bg-primary/[0.02] shadow-sm border-l-[3px] border-l-primary"
+          ? "border-primary bg-primary/5 shadow-sm border-l-2 border-l-primary"
           : "border-border/60 bg-card hover:bg-muted/30 hover:border-border",
         isDragging && "z-50 shadow-md border-primary scale-[1.01] rotate-[0.2deg]",
       )}

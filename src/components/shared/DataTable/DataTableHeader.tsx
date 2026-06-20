@@ -8,7 +8,7 @@ interface DataTableHeaderProps<TData> {
 
 export function DataTableHeader<TData>({ table }: DataTableHeaderProps<TData>) {
   return (
-    <thead className="table-head sticky top-0 z-10 border-b border-border select-none">
+    <thead className="sticky top-0 z-10 border-b border-border select-none bg-muted/40 text-muted-foreground text-xs font-medium">
       {table.getHeaderGroups().map((headerGroup) => (
         <tr key={headerGroup.id}>
           {headerGroup.headers.map((header) => {

@@ -43,7 +43,7 @@ export class ErrorBoundary extends Component<Props, State> {
             {this.state.error?.message || "An unexpected error occurred."}
           </p>
           {this.state.error?.stack && (
-            <pre className="mt-3 p-3 bg-muted rounded text-[10px] text-left text-muted-foreground max-w-md max-h-40 overflow-auto w-full">
+            <pre className="mt-3 p-3 bg-muted rounded text-xs text-left text-muted-foreground max-w-md max-h-40 overflow-auto w-full">
               {this.state.error.stack}
             </pre>
           )}

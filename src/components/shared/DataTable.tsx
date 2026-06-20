@@ -61,7 +61,7 @@ export function DataTable<TData>({
 
   return (
     <div className="space-y-3">
-      <div className="rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
+      <div className="rounded-xl border border-border bg-card shadow-sm overflow-hidden">
         <div className="px-4 py-2.5 border-b border-border bg-muted/20">
           <DataTableToolbar
             table={table}

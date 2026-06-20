@@ -21,7 +21,7 @@ export const Questions: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PageHeader
         title="Question Bank"
         description="Manage and filter quiz multiple choice questions"

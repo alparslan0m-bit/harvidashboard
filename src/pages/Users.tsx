@@ -40,7 +40,7 @@ export const Users: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PageHeader
         title="User Accounts"
         description="Configure student permissions, details, and access control."

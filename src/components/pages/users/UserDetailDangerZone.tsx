@@ -21,7 +21,7 @@ export const UserDetailDangerZone: React.FC<UserDetailDangerZoneProps> = ({
           <span>Already Admin</span>
         </button>
       ) : (
-        <button onClick={onGrantAdmin} className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-zinc-950 dark:bg-zinc-800 border text-xs font-semibold transition">
+        <button onClick={onGrantAdmin} className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-foreground text-background border text-xs font-semibold transition hover:bg-foreground/90">
           <ShieldAlert className="h-4 w-4" />
           <span>Grant Admin Access</span>
         </button>

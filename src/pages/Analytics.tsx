@@ -51,7 +51,7 @@ export const Analytics: React.FC = () => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PageHeader title="System Analytics" description="Comprehensive reporting across engagement, revenue, and content performance" />
       <AnalyticsDateFilter fromDate={fromDate} toDate={toDate} onFromDateChange={setFromDate} onToDateChange={setToDate} onPreset={applyPreset} />
       <KPIGrid cards={kpiCards} compact />

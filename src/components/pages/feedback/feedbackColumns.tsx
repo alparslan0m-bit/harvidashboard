@@ -143,10 +143,10 @@ export function applyExpansionColumnOverrides(columns: ColumnDef<any>[]): Column
 
               {hasMetadata && (
                 <div className="bg-muted/10 border p-3 rounded-lg space-y-1">
-                  <span className="font-bold text-[10px] text-muted-foreground uppercase tracking-wider block">
+                  <span className="font-bold text-xs text-muted-foreground uppercase tracking-wider block">
                     Submission Context (Metadata)
                   </span>
-                  <pre className="text-[10px] font-mono text-muted-foreground select-text overflow-x-auto whitespace-pre-wrap">
+                  <pre className="text-xs font-mono text-muted-foreground select-text overflow-x-auto whitespace-pre-wrap">
                     {JSON.stringify(rowData.metadata, null, 2)}
                   </pre>
                 </div>

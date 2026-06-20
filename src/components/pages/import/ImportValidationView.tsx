@@ -24,19 +24,19 @@ export function ImportValidationView({
     <div className="space-y-6">
       <div className="grid grid-cols-3 gap-6 select-none">
         <div className="border bg-card p-4 rounded-xl shadow-sm text-center">
-          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">
+          <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider block">
             Total Rows
           </span>
           <span className="text-xl font-bold text-foreground mt-1 block">{parsedRows.length} rows</span>
         </div>
         <div className="border bg-card p-4 rounded-xl shadow-sm text-center">
-          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">
+          <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider block">
             Valid Rows
           </span>
           <span className="text-xl font-bold text-emerald-600 mt-1 block">{validRows.length} valid</span>
         </div>
         <div className="border bg-card p-4 rounded-xl shadow-sm text-center">
-          <span className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wider block">
+          <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider block">
             Failed Rows
           </span>
           <span className="text-xl font-bold text-destructive mt-1 block">{totalErrors} errors</span>
@@ -51,7 +51,7 @@ export function ImportValidationView({
           </div>
           <div className="max-h-48 overflow-y-auto border rounded bg-card text-xs">
             <table className="w-full text-left">
-              <thead className="bg-muted text-muted-foreground uppercase font-semibold text-[10px] border-b">
+              <thead className="bg-muted/40 text-muted-foreground font-medium text-xs border-b">
                 <tr>
                   <th scope="col" className="px-4 py-2">
                     Row #

@@ -20,12 +20,18 @@ export const InlineNameEditor: React.FC<InlineNameEditorProps> = ({
   ariaLabel,
   compact = false,
 }) => (
-  <div className={compact ? "p-2 border rounded-lg flex gap-2 items-center bg-muted/10" : "p-3 bg-muted/40 border-b flex gap-2 items-center"}>
+  <div
+    className={
+      compact
+        ? "p-2 border rounded-lg flex gap-2 items-center bg-muted/10 animate-in fade-in slide-in-from-top-1 duration-200"
+        : "p-3 bg-muted/40 border-b flex gap-2 items-center animate-in fade-in slide-in-from-top-1 duration-200"
+    }
+  >
     <input
       type="text"
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      className="flex-1 rounded-md border bg-background px-2.5 py-1.5 text-xs text-foreground outline-none focus:ring-1 focus:ring-primary"
+      className="flex-1 rounded-lg border bg-background px-3 py-2 text-sm text-foreground outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:outline-none"
       placeholder={placeholder}
       aria-label={ariaLabel}
       autoFocus
@@ -40,7 +46,7 @@ export const InlineNameEditor: React.FC<InlineNameEditorProps> = ({
     </button>
     <button
       onClick={onCancel}
-      className={`rounded bg-zinc-300 dark:bg-zinc-800 text-foreground hover:bg-muted transition ${compact ? "p-1" : "p-1.5"}`}
+      className={`rounded-lg bg-muted text-foreground hover:bg-muted/80 transition ${compact ? "p-1" : "p-1.5"}`}
       aria-label="Cancel"
     >
       <X className={compact ? "h-3.5 w-3.5" : "h-3 w-3"} />

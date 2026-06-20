@@ -38,7 +38,7 @@ export function DataTableToolbar<TData>({
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-md border border-border/60 bg-card text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 focus-ring"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border/60 bg-card text-xs font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 focus-ring"
             aria-label="Toggle Column Visibility"
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />

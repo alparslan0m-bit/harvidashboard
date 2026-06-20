@@ -14,7 +14,7 @@ export interface QuestionFiltersState {
 export function useQuestions(
   filters: QuestionFiltersState,
   page: number,
-  search: string
+  search: string,
 ) {
   const pageSize = 25;
 
@@ -45,7 +45,10 @@ export function useQuestions(
             .select("id")
             .eq("subject_id", filters.subjectId);
           const ids = (lectures || []).map((l) => l.id);
-          query = query.in("lecture_id", ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"]);
+          query = query.in(
+            "lecture_id",
+            ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"],
+          );
         } else if (filters.moduleId) {
           // Join modules via subjects & lectures
           const { data: subjects } = await supabaseAdmin
@@ -53,16 +56,21 @@ export function useQuestions(
             .select("id")
             .eq("module_id", filters.moduleId);
           const sIds = (subjects || []).map((s) => s.id);
-          
+
           if (sIds.length > 0) {
             const { data: lectures } = await supabaseAdmin
               .from("lectures")
               .select("id")
               .in("subject_id", sIds);
             const ids = (lectures || []).map((l) => l.id);
-            query = query.in("lecture_id", ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"]);
+            query = query.in(
+              "lecture_id",
+              ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"],
+            );
           } else {
-            query = query.in("lecture_id", ["00000000-0000-0000-0000-000000000000"]);
+            query = query.in("lecture_id", [
+              "00000000-0000-0000-0000-000000000000",
+            ]);
           }
         } else if (filters.yearId) {
           // Join years via modules, subjects, & lectures
@@ -85,12 +93,19 @@ export function useQuestions(
                 .select("id")
                 .in("subject_id", sIds);
               const ids = (lectures || []).map((l) => l.id);
-              query = query.in("lecture_id", ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"]);
+              query = query.in(
+                "lecture_id",
+                ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"],
+              );
             } else {
-              query = query.in("lecture_id", ["00000000-0000-0000-0000-000000000000"]);
+              query = query.in("lecture_id", [
+                "00000000-0000-0000-0000-000000000000",
+              ]);
             }
           } else {
-            query = query.in("lecture_id", ["00000000-0000-0000-0000-000000000000"]);
+            query = query.in("lecture_id", [
+              "00000000-0000-0000-0000-000000000000",
+            ]);
           }
         }
 
@@ -109,7 +124,7 @@ export function useQuestions(
             text: row.text,
             image_url: row.image_url,
             options: (row.options || []).map((o: any) =>
-              typeof o === "string" ? o : o?.text ?? ""
+              typeof o === "string" ? o : (o?.text ?? ""),
             ),
             correct_answer_index: row.correct_answer_index,
             explanation: row.explanation,
@@ -140,7 +155,9 @@ export function useQuestionMutations() {
   const queryClient = useQueryClient();
 
   const createQuestionMutation = useMutation({
-    mutationFn: async (payload: Omit<Question, "id" | "created_at" | "updated_at">) => {
+    mutationFn: async (
+      payload: Omit<Question, "id" | "created_at" | "updated_at">,
+    ) => {
       const { data, error } = await supabaseAdmin
         .from("questions")
         .insert(payload)
@@ -152,6 +169,10 @@ export function useQuestionMutations() {
     onSuccess: () => {
       toast.success("Question created successfully");
       queryClient.invalidateQueries({ queryKey: ["questions"] });
+      queryClient.invalidateQueries({
+        queryKey: ["questions", "by-lecture"],
+        exact: false,
+      });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: (err: any) => {
@@ -160,7 +181,11 @@ export function useQuestionMutations() {
   });
 
   const updateQuestionMutation = useMutation({
-    mutationFn: async (payload: { id: string } & Partial<Omit<Question, "id" | "created_at" | "updated_at">>) => {
+    mutationFn: async (
+      payload: { id: string } & Partial<
+        Omit<Question, "id" | "created_at" | "updated_at">
+      >,
+    ) => {
       const { data, error } = await supabaseAdmin
         .from("questions")
         .update(payload)
@@ -173,6 +198,10 @@ export function useQuestionMutations() {
     onSuccess: () => {
       toast.success("Question updated successfully");
       queryClient.invalidateQueries({ queryKey: ["questions"] });
+      queryClient.invalidateQueries({
+        queryKey: ["questions", "by-lecture"],
+        exact: false,
+      });
     },
     onError: (err: any) => {
       toast.error(err.message || "Failed to update question");
@@ -181,12 +210,19 @@ export function useQuestionMutations() {
 
   const deleteQuestionMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await supabaseAdmin.from("questions").delete().eq("id", id);
+      const { error } = await supabaseAdmin
+        .from("questions")
+        .delete()
+        .eq("id", id);
       if (error) throw error;
     },
     onSuccess: () => {
       toast.success("Question deleted successfully");
       queryClient.invalidateQueries({ queryKey: ["questions"] });
+      queryClient.invalidateQueries({
+        queryKey: ["questions", "by-lecture"],
+        exact: false,
+      });
       queryClient.invalidateQueries({ queryKey: ["dashboard"] });
     },
     onError: (err: any) => {

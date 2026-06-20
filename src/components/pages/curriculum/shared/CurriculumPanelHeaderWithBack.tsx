@@ -15,7 +15,7 @@ export const CurriculumPanelHeaderWithBack: React.FC<CurriculumPanelHeaderWithBa
   step,
   title,
   count,
-  parentLabel,
+  parentLabel: _parentLabel,
   addLabel,
   onBack,
   onAdd,

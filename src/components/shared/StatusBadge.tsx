@@ -16,20 +16,20 @@ export const StatusBadge: React.FC<StatusBadgeProps> = React.memo(({ status, cla
     pending: "bg-amber-500/15 text-amber-700 dark:text-amber-400 border-amber-500/20",
     new: "bg-blue-500/15 text-blue-700 dark:text-blue-400 border-blue-500/20",
     
-    read: "bg-zinc-500/15 text-zinc-700 dark:text-zinc-400 border-zinc-500/20",
-    archived: "bg-zinc-500/10 text-zinc-500 dark:text-zinc-500 border-zinc-500/10",
+    read: "bg-muted text-muted-foreground border-border",
+    archived: "bg-muted/60 text-muted-foreground border-border/60",
     
     failed: "bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/20",
     refunded: "bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/20",
     disputed: "bg-red-500/15 text-red-700 dark:text-red-400 border-red-500/20",
   };
 
-  const currentStyles = colorStyles[normalizedStatus] || "bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border-zinc-200";
+  const currentStyles = colorStyles[normalizedStatus] || "bg-muted text-foreground border-border";
 
   return (
     <span
       className={cn(
-        "inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-semibold border capitalize tracking-wide select-none",
+        "inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold border capitalize select-none",
         currentStyles,
         className
       )}

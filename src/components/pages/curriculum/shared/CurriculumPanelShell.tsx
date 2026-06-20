@@ -21,7 +21,7 @@ export const CurriculumPanelShell: React.FC<CurriculumPanelShellProps> = ({
     onFocus={onFocus}
     onBlur={onBlur}
     className={cn(
-      "relative overflow-hidden flex flex-col border rounded-xl bg-card shadow-sm outline-none transition-all duration-200 w-full min-h-[380px]",
+      "relative overflow-hidden flex flex-col border rounded-xl bg-card shadow-sm outline-none transition-all duration-200 w-full min-h-[420px]",
       isFocused ? "ring-1 ring-primary/20 border-primary/30" : "border-border/60",
       className,
     )}

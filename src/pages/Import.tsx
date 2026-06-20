@@ -10,7 +10,7 @@ export const Import: React.FC = () => {
   const wizard = useImportWizard();
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <PageHeader
         title="CSV Question Importer"
         description="Bulk upload quiz curriculum and MCQs from spreadsheet"

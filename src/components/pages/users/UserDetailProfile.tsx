@@ -11,7 +11,7 @@ export function getUserInitials(name: string | null | undefined) {
 
 export const UserDetailProfile: React.FC<{ user: UserWithDetails }> = ({ user }) => (
   <div className="flex items-center gap-4 border-b pb-6 select-none">
-    <div className="h-14 w-14 rounded-full bg-indigo-600 text-white font-bold flex items-center justify-center text-lg shadow-sm shrink-0">
+    <div className="h-14 w-14 rounded-full bg-primary text-primary-foreground font-bold flex items-center justify-center text-lg shadow-sm shrink-0">
       {user.profile?.avatar_url ? (
         <img src={user.profile.avatar_url} alt={user.profile.full_name || ""} className="h-full w-full rounded-full object-cover" />
       ) : (
@@ -24,7 +24,7 @@ export const UserDetailProfile: React.FC<{ user: UserWithDetails }> = ({ user })
         <p className="text-xs text-muted-foreground truncate">{user.email}</p>
         <CopyButton text={user.email} className="shrink-0" />
       </div>
-      <div className="flex items-center gap-1.5 mt-2 text-[10px] text-muted-foreground">
+      <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
         <Calendar className="h-3 w-3" />
         <span>Member since {formatDate(user.created_at)}</span>
       </div>
@@ -44,7 +44,7 @@ export const UserDetailStatsGrid: React.FC<{ user: UserWithDetails }> = ({ user 
       ].map((stat) => (
         <div key={stat.label} className="border border-border/60 bg-muted/20 p-3 rounded-lg">
           <div className="text-xs font-bold text-foreground">{stat.value}</div>
-          <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+          <div className="text-xs text-muted-foreground">{stat.label}</div>
         </div>
       ))}
     </div>

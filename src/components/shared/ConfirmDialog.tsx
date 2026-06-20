@@ -55,8 +55,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm transition-opacity duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in" />
 
-        <AlertDialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-lg border border-border bg-card p-6 shadow-xl focus:outline-none transition-all duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
-          <AlertDialog.Title className="text-lg font-bold text-foreground leading-6 font-heading">
+        <AlertDialog.Content className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-border bg-card p-6 shadow-xl focus:outline-none transition-all duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95">
+          <AlertDialog.Title className="text-base font-semibold tracking-tight text-foreground leading-6 font-heading">
             {title}
           </AlertDialog.Title>
           <AlertDialog.Description className="mt-2 text-sm text-muted-foreground leading-relaxed">
@@ -82,7 +82,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <div className="mt-6 flex items-center justify-end gap-3">
             <AlertDialog.Cancel
               onClick={handleClose}
-              className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition focus-ring"
+              className="inline-flex items-center justify-center rounded-lg border border-input bg-background px-4 py-2.5 text-sm font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition focus-ring"
             >
               {cancelText}
             </AlertDialog.Cancel>
@@ -91,7 +91,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
               onClick={handleConfirm}
               disabled={isButtonDisabled}
               className={cn(
-                "inline-flex items-center justify-center rounded-md px-4 py-2.5 text-sm font-semibold text-white transition focus-ring disabled:opacity-50",
+                "inline-flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-semibold text-white transition focus-ring disabled:opacity-50",
                 variant === "destructive"
                   ? "bg-destructive hover:bg-destructive/90"
                   : "bg-primary hover:bg-primary/90"

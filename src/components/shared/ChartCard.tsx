@@ -21,7 +21,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   filename = "chart_data",
   children,
   className,
-  heightClassName = "h-72",
+  heightClassName = "h-80",
 }) => {
   const handleExport = () => {
     if (!data || data.length === 0) {
@@ -62,7 +62,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   const actions = data && data.length > 0 && (
     <button
       onClick={handleExport}
-      className="p-1 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground border transition-all duration-200 focus-ring"
+      className="inline-flex h-7 w-7 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition-all duration-200 focus-ring"
       title="Export Chart Data as CSV"
       aria-label="Export Chart Data"
     >

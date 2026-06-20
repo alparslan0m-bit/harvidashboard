@@ -31,14 +31,14 @@ export const SlideOver: React.FC<SlideOverProps> = ({
         {/* Sliding Panel */}
         <Dialog.Content
           className={cn(
-            "fixed inset-y-0 right-0 z-50 h-full w-full sm:w-[480px] bg-card border-l border-border shadow-2xl flex flex-col focus:outline-none transition-transform duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
+            "fixed inset-y-0 right-0 z-50 h-full w-full sm:w-[520px] bg-card border-l border-border shadow-2xl flex flex-col focus:outline-none transition-transform duration-300 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right",
             className
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b px-6 py-4">
+          <div className="flex items-center justify-between border-b bg-muted/20 px-6 py-4">
             <div>
-              <Dialog.Title className="text-lg font-bold leading-6 text-foreground tracking-tight font-heading">
+              <Dialog.Title className="text-base font-semibold leading-6 text-foreground tracking-tight font-heading">
                 {title}
               </Dialog.Title>
               {description && (
@@ -50,7 +50,7 @@ export const SlideOver: React.FC<SlideOverProps> = ({
             
             <button
               onClick={onClose}
-              className="p-1 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground transition"
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition"
               aria-label="Close panel"
             >
               <X className="h-4 w-4" />
@@ -58,7 +58,7 @@ export const SlideOver: React.FC<SlideOverProps> = ({
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto p-5 space-y-5">
+          <div className="flex-1 overflow-y-auto p-6 space-y-5">
             {children}
           </div>
 

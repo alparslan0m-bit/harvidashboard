@@ -36,7 +36,7 @@ export function ImportProgressView({
         </div>
         <div className="w-full bg-muted rounded-full h-3 overflow-hidden border">
           <div
-            className="bg-indigo-600 h-full rounded-full transition-all duration-300"
+            className="bg-primary h-full rounded-full transition-all duration-300"
             style={{ width: `${importProgress}%` }}
           ></div>
         </div>
@@ -74,7 +74,7 @@ export function ImportProgressView({
             <AlertTriangle className="h-4 w-4" />
             <span>Import Database Failures: {importErrorLog.length} rows failed</span>
           </div>
-          <div className="max-h-32 overflow-y-auto text-[10px] text-destructive space-y-1.5 font-medium">
+          <div className="max-h-32 overflow-y-auto text-xs text-destructive space-y-1.5 font-medium">
             {importErrorLog.map((log, idx) => (
               <div key={idx}>
                 Row #{log.row}: <span className="font-bold">{log.error}</span>

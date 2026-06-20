@@ -48,7 +48,7 @@ export const CommandPaletteDialog: React.FC<CommandPaletteDialogProps> = ({
               if (!categoryItems.length) return null;
               return (
                 <div key={category} className="space-y-1">
-                  <h4 className="px-3 py-1 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  <h4 className="px-3 py-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                     {category}
                   </h4>
                   <div className="space-y-0.5">

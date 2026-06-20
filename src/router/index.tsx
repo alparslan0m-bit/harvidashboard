@@ -6,6 +6,7 @@ import { Login } from "../pages/Login";
 import { Dashboard } from "../pages/Dashboard";
 import { Users } from "../pages/Users";
 import { Curriculum } from "../pages/Curriculum";
+import { CurriculumLectureQuestions } from "../pages/CurriculumLectureQuestions";
 import { Questions } from "../pages/Questions";
 import { Import } from "../pages/Import";
 import { Purchases } from "../pages/Purchases";
@@ -23,6 +24,10 @@ export const AppRouter: React.FC = () => {
           <Route path="/" element={<Dashboard />} />
           <Route path="/users" element={<Users />} />
           <Route path="/curriculum" element={<Curriculum />} />
+          <Route
+            path="/curriculum/lecture/:lectureId"
+            element={<CurriculumLectureQuestions />}
+          />
           <Route path="/questions" element={<Questions />} />
           <Route path="/import" element={<Import />} />
           <Route path="/purchases" element={<Purchases />} />

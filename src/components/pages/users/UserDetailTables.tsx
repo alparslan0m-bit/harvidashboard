@@ -9,7 +9,7 @@ export const UserDetailQuizHistory: React.FC<{ quizHistory: QuizResultWithLectur
     <div className="scroll-fade">
       <div className="border border-border/60 rounded-lg bg-card max-h-[180px] overflow-y-auto">
         {quizHistory.length === 0 ? (
-          <p className="p-4 text-center text-[10px] text-muted-foreground">No quiz completions recorded yet.</p>
+          <p className="p-4 text-center text-xs text-muted-foreground">No quiz completions recorded yet.</p>
         ) : (
           <table className="w-full text-left text-[11px] border-collapse">
             <thead className="bg-muted/30 text-muted-foreground border-b uppercase font-semibold">
@@ -41,7 +41,7 @@ export const UserDetailPurchases: React.FC<{ purchases: PurchaseWithDetails[] }>
     <div className="scroll-fade">
       <div className="border border-border/60 rounded-lg bg-card max-h-[150px] overflow-y-auto">
         {purchases.length === 0 ? (
-          <p className="p-4 text-center text-[10px] text-muted-foreground">No transaction history logged.</p>
+          <p className="p-4 text-center text-xs text-muted-foreground">No transaction history logged.</p>
         ) : (
           <table className="w-full text-left text-[11px] border-collapse">
             <thead className="bg-muted/30 text-muted-foreground border-b uppercase font-semibold">

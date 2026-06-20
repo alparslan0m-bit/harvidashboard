@@ -92,9 +92,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-40 border-r border-sidebar-border bg-sidebar-background text-sidebar-foreground flex flex-col h-full shadow-[4px_0_24px_-4px_rgba(0,0,0,0.08)] transition-all duration-300 ease-in-out lg:static lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-40 border-r border-sidebar-border bg-sidebar-background text-sidebar-foreground flex flex-col h-full shadow-[4px_0_24px_-4px_rgba(0,0,0,0.08)] transition-all duration-200 ease-in-out lg:static lg:translate-x-0",
         isOpen ? "translate-x-0" : "-translate-x-full",
-        isCollapsed ? "w-[268px] lg:w-[72px]" : "w-[268px]"
+        isCollapsed ? "w-[240px] lg:w-[72px]" : "w-[240px]"
       )}
     >
       {/* Brand Header */}
@@ -107,15 +107,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div
           className={cn(
             "flex items-center min-w-0",
-            isCollapsed ? "lg:justify-center gap-0" : "gap-2.5"
+            isCollapsed ? "lg:justify-center gap-0" : "gap-2"
           )}
         >
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground shadow-sm shrink-0">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
             <Shield className="h-4 w-4" />
           </div>
           <span
             className={cn(
-              "font-bold text-lg tracking-tight font-heading text-sidebar-foreground truncate transition-opacity duration-200",
+              "font-bold text-base tracking-tight font-heading text-sidebar-foreground truncate transition-opacity duration-200",
               isCollapsed && "lg:hidden"
             )}
           >
@@ -124,7 +124,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
         <button
           onClick={onClose}
-          className="p-1.5 rounded-md hover:bg-sidebar-accent text-muted-foreground lg:hidden focus-ring"
+          className="p-1.5 rounded-md hover:bg-muted/50 text-muted-foreground lg:hidden focus-ring"
           aria-label="Close sidebar"
         >
           <X className="h-4 w-4" />
@@ -148,7 +148,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             <h2
               className={cn(
-                "px-3 text-[11px] font-bold uppercase tracking-widest text-muted-foreground",
+                "px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60",
                 isCollapsed && "lg:hidden"
               )}
             >
@@ -164,17 +164,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     onClick={() => onClose()}
                     className={({ isActive }) =>
                       cn(
-                        "flex items-center text-sm font-medium rounded-xl transition-colors focus-ring",
+                        "flex items-center text-sm font-medium rounded-lg transition-colors focus-ring border-l-2",
                         isCollapsed
                           ? "lg:justify-center lg:px-0 lg:py-2.5 gap-3 px-3 py-2.5"
                           : "gap-3 px-3 py-2.5",
                         isActive
-                          ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold shadow-sm"
-                          : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                          ? "bg-primary/10 text-primary font-semibold border-primary"
+                          : "text-muted-foreground border-transparent hover:bg-muted/50 hover:text-foreground"
                       )
                     }
                   >
-                    <item.icon className="h-[18px] w-[18px] shrink-0" aria-hidden />
+                    <item.icon className="h-4 w-4 shrink-0" aria-hidden />
                     <span className={cn("truncate", isCollapsed && "lg:hidden")}>
                       {item.name}
                     </span>
@@ -191,7 +191,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={onToggleCollapse}
           className={cn(
-            "flex items-center w-full rounded-xl border border-sidebar-border text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors focus-ring text-sm font-medium",
+            "flex items-center w-full rounded-lg border border-sidebar-border text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors focus-ring text-xs font-medium",
             isCollapsed ? "justify-center p-2.5" : "gap-2 px-3 py-2"
           )}
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -211,7 +211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Sidebar Bottom Profile/Sign Out */}
       <div
         className={cn(
-          "border-t border-sidebar-border bg-muted/40 shrink-0",
+          "border-t border-sidebar-border bg-transparent shrink-0",
           isCollapsed ? "lg:p-2 p-4" : "p-4"
         )}
       >
@@ -233,12 +233,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
             <div className={cn("flex flex-col min-w-0", isCollapsed && "lg:hidden")}>
               <span
-                className="text-sm font-medium text-sidebar-foreground truncate max-w-[120px]"
+                className="text-sm font-medium text-sidebar-foreground truncate max-w-[100px]"
                 title={email}
               >
                 {email}
               </span>
-              <span className="text-[11px] text-muted-foreground uppercase font-semibold tracking-wider">
+              <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider">
                 Admin
               </span>
             </div>
@@ -246,11 +246,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           <button
             onClick={handleSignOut}
-            className="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors focus-ring shrink-0"
+            className="p-1 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors focus-ring shrink-0"
             title="Sign Out"
             aria-label="Sign Out"
           >
-            <LogOut className="h-4 w-4" />
+            <LogOut className="h-3.5 w-3.5" />
           </button>
         </div>
       </div>

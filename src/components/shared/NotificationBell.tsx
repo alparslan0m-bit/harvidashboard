@@ -42,7 +42,7 @@ export const NotificationBell: React.FC = () => {
     <Popover.Root>
       <Popover.Trigger asChild>
         <button
-          className="relative p-2 rounded-md hover:bg-accent hover:text-accent-foreground border transition-all duration-200"
+          className="relative p-2 rounded-lg bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
           aria-label="View notifications"
         >
           <Bell className="h-4 w-4 text-foreground" />
@@ -84,7 +84,7 @@ export const NotificationBell: React.FC = () => {
                     }}
                     className="w-full flex items-start gap-3 p-2 rounded-lg hover:bg-accent transition text-left group"
                   >
-                    <MessageSquare className="h-4 w-4 text-indigo-500 mt-0.5 shrink-0" />
+                    <MessageSquare className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                     <div>
                       <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                         Unread Student Feedback

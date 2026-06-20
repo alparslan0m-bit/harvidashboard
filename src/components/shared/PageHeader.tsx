@@ -17,13 +17,13 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4",
+        "flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-6",
         className
       )}
     >
       <div className="min-w-0">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground font-heading flex items-center gap-3">
-          <span className="h-8 w-1 rounded-full bg-primary shrink-0" aria-hidden />
+          <span className="h-5 w-0.5 rounded-full bg-primary/60 shrink-0" aria-hidden />
           {title}
         </h1>
         {description && (

@@ -1,29 +1,36 @@
 import React from "react";
-import { useSearchParams } from "react-router";
+import { useSearchParams, useNavigate } from "react-router";
 import YearsPanel from "../components/pages/curriculum/YearsPanel";
 import ModulesPanel from "../components/pages/curriculum/ModulesPanel";
 import SubjectsPanel from "../components/pages/curriculum/SubjectsPanel";
 import LecturesPanel from "../components/pages/curriculum/LecturesPanel";
-import LectureQuestionsPanel from "../components/pages/curriculum/LectureQuestionsPanel";
 
-import { useCurriculum, useModules, useSubjectsAndLectures, useCurriculumStats } from "../hooks/useCurriculum";
+import {
+  useCurriculum,
+  useModules,
+  useSubjectsAndLectures,
+  useCurriculumStats,
+} from "../hooks/useCurriculum";
 import PageHeader from "../components/shared/PageHeader";
 import MetricCard from "../components/shared/MetricCard";
-import { Calendar, BookOpen, Bookmark, FileText, ChevronRight, Home } from "lucide-react";
+import {
+  Calendar,
+  BookOpen,
+  Bookmark,
+  FileText,
+  ChevronRight,
+  Home,
+} from "lucide-react";
 import { cn } from "../lib/utils";
 
 export const Curriculum: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // Extract navigation parameters from URL query params
   const yearId = searchParams.get("yearId");
   const moduleId = searchParams.get("moduleId");
   const subjectId = searchParams.get("subjectId");
-
-  // Lecture Slide-over details state
-  const [selectedLectureId, setSelectedLectureId] = React.useState<string | null>(null);
-  const [selectedLectureName, setSelectedLectureName] = React.useState("");
-  const [isLectureQuestionsOpen, setIsLectureQuestionsOpen] = React.useState(false);
 
   // Load curriculum query data to derive breadcrumb names
   const { years } = useCurriculum();
@@ -35,16 +42,16 @@ export const Curriculum: React.FC = () => {
   const selectedModule = modules.find((m) => m.id === moduleId);
   const selectedSubject = subjects.find((s) => s.id === subjectId);
 
-  const handleSelectLecture = (id: string | null, name: string) => {
-    setSelectedLectureId(id);
-    setSelectedLectureName(name);
-    setIsLectureQuestionsOpen(true);
+  const handleSelectLecture = (id: string | null, _name: string) => {
+    if (!id) return;
+    navigate(`/curriculum/lecture/${encodeURIComponent(id)}`);
   };
 
   // Helper selectors to navigate by modifying search params
   const navigateToYears = () => setSearchParams({});
   const navigateToModules = (yId: string) => setSearchParams({ yearId: yId });
-  const navigateToSubjects = (yId: string, mId: string) => setSearchParams({ yearId: yId, moduleId: mId });
+  const navigateToSubjects = (yId: string, mId: string) =>
+    setSearchParams({ yearId: yId, moduleId: mId });
   const navigateToLectures = (yId: string, mId: string, sId: string) =>
     setSearchParams({ yearId: yId, moduleId: mId, subjectId: sId });
 
@@ -84,25 +91,21 @@ export const Curriculum: React.FC = () => {
       );
     }
 
-    return (
-      <YearsPanel
-        onSelectYear={navigateToModules}
-      />
-    );
+    return <YearsPanel onSelectYear={navigateToModules} />;
   };
 
   return (
-    <div className="space-y-4">
-      <PageHeader
-        title="Curriculum Management"
-      />
+    <div className="space-y-6">
+      <PageHeader title="Curriculum Management" />
 
       {/* Page-level Interactive Breadcrumbs */}
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-card px-3.5 py-2 rounded-full border border-border/60 shadow-xs w-fit">
         <span
           className={cn(
             "transition-colors flex items-center gap-1",
-            selectedYear || selectedModule || selectedSubject ? "hover:text-foreground cursor-pointer font-medium" : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md"
+            selectedYear || selectedModule || selectedSubject
+              ? "hover:text-foreground cursor-pointer font-medium"
+              : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md",
           )}
           onClick={navigateToYears}
         >
@@ -115,7 +118,9 @@ export const Curriculum: React.FC = () => {
             <span
               className={cn(
                 "transition-colors",
-                selectedModule || selectedSubject ? "hover:text-foreground cursor-pointer font-medium" : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md"
+                selectedModule || selectedSubject
+                  ? "hover:text-foreground cursor-pointer font-medium"
+                  : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md",
               )}
               onClick={() => navigateToModules(selectedYear.id)}
             >
@@ -127,9 +132,13 @@ export const Curriculum: React.FC = () => {
                 <span
                   className={cn(
                     "transition-colors",
-                    selectedSubject ? "hover:text-foreground cursor-pointer font-medium" : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md"
+                    selectedSubject
+                      ? "hover:text-foreground cursor-pointer font-medium"
+                      : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md",
                   )}
-                  onClick={() => navigateToSubjects(selectedYear.id, selectedModule.id)}
+                  onClick={() =>
+                    navigateToSubjects(selectedYear.id, selectedModule.id)
+                  }
                 >
                   {selectedModule.name}
                 </span>
@@ -186,18 +195,6 @@ export const Curriculum: React.FC = () => {
           />
         </div>
       </div>
-
-      {/* Lecture questions slide-over drawer */}
-      <LectureQuestionsPanel
-        lectureId={selectedLectureId}
-        lectureName={selectedLectureName}
-        isOpen={isLectureQuestionsOpen}
-        onClose={() => {
-          setIsLectureQuestionsOpen(false);
-          setSelectedLectureId(null);
-          setSelectedLectureName("");
-        }}
-      />
     </div>
   );
 };

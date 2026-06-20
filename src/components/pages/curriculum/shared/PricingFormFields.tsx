@@ -20,7 +20,7 @@ export const PricingFormFields: React.FC<PricingFormFieldsProps> = ({
 }) => (
   <div className="space-y-4">
     <div className="space-y-1">
-      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Name</label>
+      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Name</label>
       <input
         type="text"
         value={form.name}
@@ -32,7 +32,7 @@ export const PricingFormFields: React.FC<PricingFormFieldsProps> = ({
       />
     </div>
     <div className="space-y-2">
-      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground block">Pricing & Access</label>
+      <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground block">Pricing & Access</label>
       <div className="flex items-center gap-4 bg-muted/30 p-2.5 rounded-lg border border-border/40">
         <label className="flex items-center gap-2 text-xs font-medium cursor-pointer text-foreground select-none">
           <input
@@ -101,10 +101,10 @@ export const PricingFormOverlay: React.FC<{
   namePlaceholder?: string;
 }> = ({ title, form, onChange, onSave, onCancel, namePlaceholder }) => (
   <div className="absolute inset-0 z-20 bg-background/98 backdrop-blur-md p-6 flex flex-col justify-center items-center">
-    <div className="w-full max-w-sm bg-card border border-border/80 rounded-xl p-5 shadow-lg space-y-4">
+    <div className="w-full max-w-sm bg-card border border-border/80 rounded-xl p-5 shadow-elevated space-y-4">
       <div>
         <h4 className="text-sm font-bold uppercase tracking-wider text-foreground">{title}</h4>
-        <p className="text-[10px] text-muted-foreground mt-0.5">Configure item information and access pricing.</p>
+        <p className="text-xs text-muted-foreground mt-0.5">Configure item information and access pricing.</p>
       </div>
       
       <div className="border-t border-border/60 pt-3">

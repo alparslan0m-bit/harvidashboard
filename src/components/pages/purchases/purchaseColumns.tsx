@@ -77,7 +77,7 @@ export function createPurchaseColumns({
           {row.original.status === "active" && (
             <button
               onClick={() => setRefundPurchaseId(row.original.id)}
-              className="inline-flex items-center gap-1 px-2 py-1 rounded border border-destructive/20 text-[10px] font-bold text-destructive hover:bg-destructive/10 transition"
+              className="inline-flex items-center gap-1 px-2 py-1 rounded border border-destructive/20 text-xs font-bold text-destructive hover:bg-destructive/10 transition"
               aria-label="Refund Transaction"
             >
               <CornerUpLeft className="h-3 w-3" />
@@ -87,7 +87,7 @@ export function createPurchaseColumns({
 
           <Link
             to={`/users?search=${row.original.userEmail}`}
-            className="inline-flex items-center gap-1 px-2 py-1 rounded border text-[10px] font-bold text-foreground hover:bg-accent transition"
+            className="inline-flex items-center gap-1 px-2 py-1 rounded border text-xs font-bold text-foreground hover:bg-accent transition"
             aria-label="Inspect user details"
           >
             <User className="h-3 w-3" />

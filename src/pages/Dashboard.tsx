@@ -21,20 +21,20 @@ export const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="space-y-5 animate-pulse">
-        <div className="h-10 bg-secondary rounded-2xl w-1/3"></div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="space-y-6 animate-pulse">
+        <div className="h-10 bg-secondary rounded-xl w-1/3"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-card rounded-2xl border border-border"></div>
+            <div key={i} className="h-24 bg-card rounded-xl border border-border"></div>
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="h-72 bg-card rounded-2xl border border-border"></div>
-          <div className="h-72 bg-card rounded-2xl border border-border"></div>
+          <div className="h-80 bg-card rounded-xl border border-border"></div>
+          <div className="h-80 bg-card rounded-xl border border-border"></div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          <div className="h-64 bg-card rounded-2xl border border-border"></div>
-          <div className="h-64 bg-card rounded-2xl border border-border"></div>
+          <div className="h-64 bg-card rounded-xl border border-border"></div>
+          <div className="h-64 bg-card rounded-xl border border-border"></div>
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ export const Dashboard: React.FC = () => {
       <button
         onClick={() => refetch()}
         disabled={isLoading}
-        className="inline-flex items-center justify-center gap-2 rounded-md border border-border/60 bg-background px-3.5 py-2 text-sm font-semibold text-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer focus-ring"
+        className="inline-flex items-center justify-center gap-2 rounded-lg border border-border/60 bg-background px-3 py-1.5 text-xs font-semibold text-foreground transition hover:bg-accent disabled:cursor-not-allowed disabled:opacity-60 cursor-pointer focus-ring"
       >
         <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
         <span>{isLoading ? "Refreshing…" : "Refresh metrics"}</span>
@@ -100,13 +100,13 @@ export const Dashboard: React.FC = () => {
   );
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
       <PageHeader
         title="Dashboard Overview"
         actions={headerActions}
       />
 
-      <KPIGrid cards={kpiCards} compact className="gap-4" />
+      <KPIGrid cards={kpiCards} compact className="gap-3" />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <DailyQuizzesChart data={recentData?.dailyQuizzes || []} />

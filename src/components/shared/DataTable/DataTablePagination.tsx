@@ -37,7 +37,7 @@ export function DataTablePagination({
           <button
             onClick={() => onPageChange(currentPage - 1)}
             disabled={currentPage <= 1 || isLoading}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-50 transition-all duration-200"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-50 transition-all duration-200"
             aria-label="Previous Page"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -49,7 +49,7 @@ export function DataTablePagination({
               onClick={() => onPageChange(pageNum)}
               disabled={isLoading}
               className={cn(
-                "inline-flex h-9 w-9 items-center justify-center rounded-md border text-sm font-medium transition-all duration-200",
+                "inline-flex h-9 w-9 items-center justify-center rounded-lg border text-sm font-medium transition-all duration-200",
                 pageNum === currentPage
                   ? "bg-primary text-primary-foreground border-primary"
                   : "border-border bg-card text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -62,7 +62,7 @@ export function DataTablePagination({
           <button
             onClick={() => onPageChange(currentPage + 1)}
             disabled={currentPage >= pageCount || isLoading}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-50 transition-all duration-200"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground hover:text-foreground hover:bg-accent disabled:opacity-50 transition-all duration-200"
             aria-label="Next Page"
           >
             <ChevronRight className="h-4 w-4" />
