@@ -3,9 +3,14 @@ import { useDashboard } from "@/hooks/useDashboard";
 import { useDashboardRealtime } from "@/hooks/useDashboardRealtime";
 import { DailyQuizzesChart } from "@/components/pages/dashboard/DailyQuizzesChart";
 import { TopLecturesChart } from "@/components/pages/dashboard/TopLecturesChart";
-import { RecentStudentsTable } from "@/components/pages/dashboard/RecentStudentsTable";
-import { RecentPurchasesTable } from "@/components/pages/dashboard/RecentPurchasesTable";
-import { PageHeader, KPIGrid, LiveIndicator, ErrorView } from "@/components/shared";
+import { UserGrowthChart } from "@/components/pages/dashboard/UserGrowthChart";
+import { RevenueChart } from "@/components/pages/dashboard/RevenueChart";
+import {
+  PageHeader,
+  KPIGrid,
+  LiveIndicator,
+  ErrorView,
+} from "@/components/shared";
 import { formatCurrency, cn } from "@/lib/utils";
 import {
   Users,
@@ -25,7 +30,10 @@ export const Dashboard: React.FC = () => {
         <div className="h-10 bg-secondary rounded-[8px] w-1/3"></div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-24 bg-card rounded-[8px] border border-border"></div>
+            <div
+              key={i}
+              className="h-24 bg-card rounded-[8px] border border-border"
+            ></div>
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -57,21 +65,27 @@ export const Dashboard: React.FC = () => {
       value: stats?.totalUsers || 0,
       description: "Sign-ups synced from Auth",
       icon: <Users />,
-      trend: stats ? { value: stats.usersTrend, label: "vs last period" } : null,
+      trend: stats
+        ? { value: stats.usersTrend, label: "vs last period" }
+        : null,
     },
     {
       title: "Quizzes Taken Today",
       value: stats?.quizzesToday || 0,
       description: "Attempts recorded since UTC midnight",
       icon: <FileSpreadsheet />,
-      trend: stats ? { value: stats.quizzesTrend, label: "vs yesterday" } : null,
+      trend: stats
+        ? { value: stats.quizzesTrend, label: "vs yesterday" }
+        : null,
     },
     {
       title: "Monthly Revenue",
       value: formatCurrency(stats?.monthlyRevenueCents || 0),
       description: "Active subscription revenue this month",
       icon: <DollarSign />,
-      trend: stats ? { value: stats.revenueTrend, label: "vs last month" } : null,
+      trend: stats
+        ? { value: stats.revenueTrend, label: "vs last month" }
+        : null,
       featured: true,
     },
     {
@@ -117,8 +131,8 @@ export const Dashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <RecentStudentsTable students={recentData?.recentStudents || []} />
-        <RecentPurchasesTable purchases={recentData?.recentPurchases || []} />
+        <UserGrowthChart data={recentData?.userGrowth} />
+        <RevenueChart data={recentData?.revenue} />
       </div>
     </div>
   );

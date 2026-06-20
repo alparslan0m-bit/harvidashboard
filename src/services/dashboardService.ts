@@ -6,6 +6,8 @@ import {
   fetchTopLectures,
   fetchRecentStudents,
   fetchRecentPurchases,
+  fetchUserGrowth,
+  fetchRevenueGrowth,
 } from "./dashboardRecentService";
 
 function monthBoundaries() {
@@ -88,7 +90,7 @@ function computeUsersTrend(allUsers: Awaited<ReturnType<typeof listAllAuthUsers>
 
 export async function fetchDashboardData(): Promise<DashboardData> {
   const allUsers = await listAllAuthUsers("Dashboard");
-  const [quizTrends, revenue, averageQuizScore, dailyQuizzes, topLectures, recentStudents, recentPurchases] =
+  const [quizTrends, revenue, averageQuizScore, dailyQuizzes, topLectures, recentStudents, recentPurchases, revenueData] =
     await Promise.all([
       fetchQuizTrends(),
       fetchRevenueTrend(),
@@ -97,7 +99,10 @@ export async function fetchDashboardData(): Promise<DashboardData> {
       fetchTopLectures(),
       fetchRecentStudents(allUsers),
       fetchRecentPurchases(allUsers),
+      fetchRevenueGrowth(),
     ]);
+
+  const userGrowth = fetchUserGrowth(allUsers);
 
   return {
     stats: {
@@ -109,6 +114,6 @@ export async function fetchDashboardData(): Promise<DashboardData> {
       revenueTrend: revenue.revenueTrend,
       averageQuizScore,
     },
-    recentData: { dailyQuizzes, topLectures, recentStudents, recentPurchases },
+    recentData: { dailyQuizzes, topLectures, recentStudents, recentPurchases, userGrowth, revenue: revenueData },
   };
 }

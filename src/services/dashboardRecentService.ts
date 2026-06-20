@@ -109,3 +109,59 @@ export async function fetchRecentPurchases(
     };
   });
 }
+
+export async function fetchRevenueGrowth(): Promise<{ month: string; revenue: number }[]> {
+  const startOf6MonthsAgo = new Date();
+  startOf6MonthsAgo.setMonth(startOf6MonthsAgo.getMonth() - 5);
+  startOf6MonthsAgo.setDate(1);
+  startOf6MonthsAgo.setHours(0, 0, 0, 0);
+
+  const { data: revenueData, error } = await supabaseAdmin
+    .from("purchases")
+    .select("amount_cents, created_at")
+    .eq("status", "active")
+    .gte("created_at", startOf6MonthsAgo.toISOString());
+  if (error) throw new Error(`[Dashboard.revenueGrowth] ${error.message}`);
+
+  const months = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - (5 - i));
+    return { 
+      key: `${d.getFullYear()}-${d.getMonth()}`, 
+      name: d.toLocaleDateString("en-US", { month: "short" }), 
+      revenue: 0 
+    };
+  });
+
+  revenueData?.forEach((r) => {
+    const d = new Date(r.created_at);
+    const key = `${d.getFullYear()}-${d.getMonth()}`;
+    const month = months.find((m) => m.key === key);
+    if (month) {
+      month.revenue += (r.amount_cents || 0) / 100;
+    }
+  });
+
+  return months.map(m => ({ month: m.name, revenue: m.revenue }));
+}
+
+export function fetchUserGrowth(allUsers: Awaited<ReturnType<typeof listAllAuthUsers>>): { month: string; users: number }[] {
+  const months = Array.from({ length: 6 }, (_, i) => {
+    const d = new Date();
+    d.setMonth(d.getMonth() - (5 - i));
+    d.setMonth(d.getMonth() + 1);
+    d.setDate(0); 
+    d.setHours(23, 59, 59, 999);
+    return { 
+      dateObj: d,
+      name: d.toLocaleDateString("en-US", { month: "short" }), 
+      users: 0 
+    };
+  });
+
+  months.forEach((m) => {
+    m.users = allUsers.filter(u => new Date(u.created_at).getTime() <= m.dateObj.getTime()).length;
+  });
+
+  return months.map(m => ({ month: m.name, users: m.users }));
+}

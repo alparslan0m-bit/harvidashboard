@@ -45,5 +45,7 @@ export interface DashboardData {
     topLectures: TopLecture[];
     recentStudents: RecentStudent[];
     recentPurchases: RecentPurchase[];
+    userGrowth: { month: string; users: number }[];
+    revenue: { month: string; revenue: number }[];
   };
 }
