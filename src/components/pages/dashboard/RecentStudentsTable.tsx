@@ -77,9 +77,9 @@ export const RecentStudentsTable: React.FC<RecentStudentsTableProps> = ({
       title="Recent Students"
       description="Latest registrations and recent performance"
       actions={actions}
-      className="p-0 border border-border/60 bg-card overflow-hidden shadow-xs flex flex-col h-auto"
+      className="p-0 flex flex-col h-auto"
     >
-      <div className="px-5 pt-3">
+      <div className="px-5 pt-3 pb-3">
         <DataTable
           columns={columns}
           data={visibleStudents}

@@ -8,8 +8,8 @@ interface KPICardConfig {
   description?: string;
   icon?: React.ReactNode;
   trend?: { value: number; label: string } | null;
-  color?: "emerald" | "red" | "amber" | "sky" | "violet" | "zinc";
   className?: string;
+  featured?: boolean;
 }
 
 interface KPIGridProps {
@@ -34,9 +34,9 @@ export const KPIGrid: React.FC<KPIGridProps> = ({ cards, className, compact = fa
           description={card.description}
           icon={card.icon}
           trend={card.trend}
-          color={card.color}
           className={card.className}
           compact={compact}
+          featured={card.featured}
         />
       ))}
     </div>

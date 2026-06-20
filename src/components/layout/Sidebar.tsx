@@ -92,7 +92,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-40 border-r border-sidebar-border bg-sidebar-background text-sidebar-foreground flex flex-col h-full shadow-[4px_0_24px_-4px_rgba(0,0,0,0.08)] transition-all duration-200 ease-in-out lg:static lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-40 border-r border-border bg-background text-foreground flex flex-col h-full transition-all duration-200 ease-in-out lg:static lg:translate-x-0",
         isOpen ? "translate-x-0" : "-translate-x-full",
         isCollapsed ? "w-[240px] lg:w-[72px]" : "w-[240px]"
       )}
@@ -100,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Brand Header */}
       <div
         className={cn(
-          "h-14 border-b border-sidebar-border flex items-center shrink-0",
+          "h-14 border-b border-border flex items-center shrink-0",
           isCollapsed ? "lg:justify-center lg:px-0 px-5 justify-between" : "px-5 justify-between"
         )}
       >
@@ -115,7 +115,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           <span
             className={cn(
-              "font-bold text-base tracking-tight font-heading text-sidebar-foreground truncate transition-opacity duration-200",
+              "font-bold text-base tracking-tight font-heading text-foreground truncate transition-opacity duration-200",
               isCollapsed && "lg:hidden"
             )}
           >
@@ -139,16 +139,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
       >
         {navGroups.map((group, groupIdx) => (
-          <div
+            <div
             key={group.label}
             className={cn(
               "space-y-1.5",
-              isCollapsed && groupIdx > 0 && "lg:pt-1 lg:border-t lg:border-sidebar-border"
+              isCollapsed && groupIdx > 0 && "lg:pt-1 lg:border-t lg:border-border"
             )}
           >
             <h2
               className={cn(
-                "px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground/60",
+                "px-3 text-xs font-semibold tracking-wide text-muted-foreground font-heading",
                 isCollapsed && "lg:hidden"
               )}
             >
@@ -169,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                           ? "lg:justify-center lg:px-0 lg:py-2.5 gap-3 px-3 py-2.5"
                           : "gap-3 px-3 py-2.5",
                         isActive
-                          ? "bg-primary/10 text-primary font-semibold border-primary"
+                          ? "bg-muted/40 text-foreground font-semibold border-primary"
                           : "text-muted-foreground border-transparent hover:bg-muted/50 hover:text-foreground"
                       )
                     }
@@ -191,7 +191,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <button
           onClick={onToggleCollapse}
           className={cn(
-            "flex items-center w-full rounded-lg border border-sidebar-border text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors focus-ring text-xs font-medium",
+            "flex items-center w-full rounded-lg border border-border text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors focus-ring text-xs font-medium",
             isCollapsed ? "justify-center p-2.5" : "gap-2 px-3 py-2"
           )}
           aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
@@ -211,7 +211,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Sidebar Bottom Profile/Sign Out */}
       <div
         className={cn(
-          "border-t border-sidebar-border bg-transparent shrink-0",
+          "border-t border-border bg-transparent shrink-0",
           isCollapsed ? "lg:p-2 p-4" : "p-4"
         )}
       >
@@ -228,12 +228,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
             )}
             title={isCollapsed ? email : undefined}
           >
-            <div className="h-9 w-9 rounded-full bg-sidebar-primary flex items-center justify-center text-sm font-bold text-sidebar-primary-foreground shrink-0 uppercase">
+            <div className="h-9 w-9 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-primary-foreground shrink-0 uppercase">
               {initials}
             </div>
             <div className={cn("flex flex-col min-w-0", isCollapsed && "lg:hidden")}>
               <span
-                className="text-sm font-medium text-sidebar-foreground truncate max-w-[100px]"
+                className="text-sm font-medium text-foreground truncate max-w-[100px]"
                 title={email}
               >
                 {email}

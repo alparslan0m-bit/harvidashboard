@@ -21,13 +21,13 @@ export const SectionCard: React.FC<SectionCardProps> = ({
   return (
     <section
       className={cn(
-        "rounded-xl border border-border bg-card shadow-sm overflow-hidden",
+        "rounded-[8px] border border-border bg-card overflow-hidden",
         className
       )}
     >
       {(title || description || actions) && (
-        <div className="flex items-start justify-between gap-3 px-4 py-3 border-b border-border bg-muted/30">
-          <div className="space-y-0.5 min-w-0">
+        <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-border">
+          <div className="space-y-1 min-w-0">
             {title && (
               <h2 className="text-sm font-semibold tracking-tight text-foreground font-heading">
                 {title}

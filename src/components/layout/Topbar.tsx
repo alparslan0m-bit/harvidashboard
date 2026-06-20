@@ -28,7 +28,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         {/* Command Palette trigger */}
         <button
           onClick={onSearchTrigger}
-          className="inline-flex items-center gap-2 rounded-lg bg-muted/50 hover:bg-muted border-0 px-3 py-1.5 text-sm text-muted-foreground transition-all duration-200 focus-ring"
+          className="inline-flex items-center gap-2 rounded-md bg-background hover:bg-muted border border-border px-3 py-1.5 text-sm text-muted-foreground transition-all duration-200 focus-ring"
           aria-label="Search Console Command Palette"
         >
           <Search className="h-3.5 w-3.5 shrink-0" />
@@ -41,7 +41,7 @@ export const Topbar: React.FC<TopbarProps> = ({
         {/* Theme Toggle */}
         <button
           onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="relative p-2 rounded-lg bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
+          className="relative p-2 rounded-md bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
           aria-label="Toggle theme"
         >
           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-foreground" />

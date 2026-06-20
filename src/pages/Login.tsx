@@ -42,65 +42,68 @@ export const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background p-4">
-      <div className="w-full max-w-md rounded-xl border border-border bg-card p-8 shadow-elevated">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4">
+      {/* Vercel Mesh Gradient Background */}
+      <div className="absolute inset-0 z-0 bg-vercel-mesh opacity-60 mix-blend-multiply dark:mix-blend-screen" />
+
+      <div className="relative z-10 w-full max-w-md rounded-[12px] border border-border/10 bg-primary p-8 shadow-elevated">
         <div className="mb-8 flex flex-col items-center text-center">
-          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-foreground/10 text-primary-foreground">
             <Shield className="h-6 w-6" />
           </div>
-          <h1 className="mt-4 text-2xl font-bold tracking-tight text-foreground">Harvi Admin Gate</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <h1 className="mt-4 text-2xl font-bold tracking-tight text-primary-foreground">Harvi Admin Gate</h1>
+          <p className="mt-2 text-sm text-primary-foreground/70">
             Authorized admin credentials required.
           </p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-1">
-            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <label className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/70">
               Email Address
             </label>
             <input
               type="email"
               {...register("email")}
-              className="w-full rounded-md border border-input bg-muted/50 px-3 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
+              className="w-full rounded-md border border-primary-foreground/20 bg-primary-foreground/5 px-3 py-2 text-sm text-primary-foreground placeholder:text-primary-foreground/40 outline-none transition focus:border-primary-foreground focus:ring-1 focus:ring-primary-foreground"
               placeholder="admin@harvi.com"
               aria-label="Email Address"
             />
             {errors.email && (
-              <p className="text-xs text-red-500">{errors.email.message}</p>
+              <p className="text-xs text-red-400">{errors.email.message}</p>
             )}
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <label className="text-xs font-semibold uppercase tracking-wider text-primary-foreground/70">
               Password
             </label>
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 {...register("password")}
-                className="w-full rounded-md border border-input bg-muted/50 pl-3 pr-10 py-2 text-sm text-foreground placeholder:text-muted-foreground outline-none transition focus:border-primary focus:ring-1 focus:ring-primary"
+                className="w-full rounded-md border border-primary-foreground/20 bg-primary-foreground/5 pl-3 pr-10 py-2 text-sm text-primary-foreground placeholder:text-primary-foreground/40 outline-none transition focus:border-primary-foreground focus:ring-1 focus:ring-primary-foreground"
                 placeholder="••••••••"
                 aria-label="Password"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-foreground/50 hover:text-primary-foreground"
                 aria-label={showPassword ? "Hide password" : "Show password"}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
             </div>
             {errors.password && (
-              <p className="text-xs text-red-500">{errors.password.message}</p>
+              <p className="text-xs text-red-400">{errors.password.message}</p>
             )}
           </div>
 
           <button
             type="submit"
             disabled={submitting}
-            className="flex w-full items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background disabled:opacity-50"
+            className="flex w-full items-center justify-center rounded-full bg-primary-foreground px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary-foreground/90 focus:outline-none focus:ring-2 focus:ring-primary-foreground focus:ring-offset-2 focus:ring-offset-primary disabled:opacity-50"
           >
             {submitting ? "Signing in..." : "Enter Dashboard"}
           </button>
