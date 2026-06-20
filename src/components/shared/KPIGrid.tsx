@@ -1,19 +1,9 @@
 import React from "react";
-import { MetricCard } from "./MetricCard";
+import { MetricCard, type MetricCardProps } from "./MetricCard";
 import { cn } from "../../lib/utils";
 
-interface KPICardConfig {
-  title: string;
-  value: string | number;
-  description?: string;
-  icon?: React.ReactNode;
-  trend?: { value: number; label: string } | null;
-  className?: string;
-  featured?: boolean;
-}
-
 interface KPIGridProps {
-  cards: KPICardConfig[];
+  cards: MetricCardProps[];
   className?: string;
   compact?: boolean;
 }

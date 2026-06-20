@@ -3,7 +3,7 @@ import type { RecentPurchase } from "../../../hooks/useDashboard";
 import { formatCurrency, formatDate } from "../../../lib/utils";
 import { StatusBadge } from "../../shared/StatusBadge";
 import { DataTable } from "../../shared/DataTable";
-import { SectionCard } from "../../shared/SectionCard";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardActions } from "../../shared/Card";
 import { Link } from "react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
@@ -74,25 +74,29 @@ export const RecentPurchasesTable: React.FC<RecentPurchasesTableProps> = ({
   const visiblePurchases = useMemo(() => purchases.slice(0, 5), [purchases]);
 
   return (
-    <SectionCard
-      title="Recent Purchases"
-      description="Latest module and subject transactions"
-      actions={actions}
-      className="p-0 flex flex-col h-auto"
-    >
-      <div className="px-5 pt-3 pb-3">
-        <DataTable
-          columns={columns}
-          data={visiblePurchases}
-          pageCount={0}
-          currentPage={1}
-          onPageChange={() => {}}
-          emptyStateTitle="No recent purchases"
-          emptyStateDescription="Module and subject transaction logs are currently empty."
-          emptyStateIcon="ShoppingBag"
-        />
-      </div>
-    </SectionCard>
+    <Card className="flex flex-col h-auto">
+      <CardHeader>
+        <div className="space-y-1 min-w-0">
+          <CardTitle>Recent Purchases</CardTitle>
+          <CardDescription>Latest module and subject transactions</CardDescription>
+        </div>
+        <CardActions>{actions}</CardActions>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="px-5 pt-3 pb-3">
+          <DataTable
+            columns={columns}
+            data={visiblePurchases}
+            pageCount={0}
+            currentPage={1}
+            onPageChange={() => {}}
+            emptyStateTitle="No recent purchases"
+            emptyStateDescription="Module and subject transaction logs are currently empty."
+            emptyStateIcon="ShoppingBag"
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

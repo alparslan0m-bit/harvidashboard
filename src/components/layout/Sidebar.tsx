@@ -1,5 +1,4 @@
 import React from "react";
-import { NavLink } from "react-router";
 import {
   LayoutDashboard,
   Users,
@@ -9,25 +8,13 @@ import {
   ShoppingBag,
   MessageSquare,
   BarChart3,
-  Shield,
-  LogOut,
-  X,
-  PanelLeftClose,
-  PanelLeftOpen,
 } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { useAdminAuth } from "../../hooks/useAdminAuth";
-
-interface NavItem {
-  name: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-interface NavGroup {
-  label: string;
-  items: NavItem[];
-}
+import { SidebarHeader } from "./sidebar/SidebarHeader";
+import { SidebarNav, type NavGroup } from "./sidebar/SidebarNav";
+import { SidebarToggle } from "./sidebar/SidebarToggle";
+import { SidebarFooter } from "./sidebar/SidebarFooter";
 
 const navGroups: NavGroup[] = [
   {
@@ -97,163 +84,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
         isCollapsed ? "w-[240px] lg:w-[72px]" : "w-[240px]"
       )}
     >
-      {/* Brand Header */}
-      <div
-        className={cn(
-          "h-14 border-b border-border flex items-center shrink-0",
-          isCollapsed ? "lg:justify-center lg:px-0 px-5 justify-between" : "px-5 justify-between"
-        )}
-      >
-        <div
-          className={cn(
-            "flex items-center min-w-0",
-            isCollapsed ? "lg:justify-center gap-0" : "gap-2"
-          )}
-        >
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
-            <Shield className="h-4 w-4" />
-          </div>
-          <span
-            className={cn(
-              "font-bold text-base tracking-tight font-heading text-foreground truncate transition-opacity duration-200",
-              isCollapsed && "lg:hidden"
-            )}
-          >
-            Harvi Admin
-          </span>
-        </div>
-        <button
-          onClick={onClose}
-          className="p-1.5 rounded-md hover:bg-muted/50 text-muted-foreground lg:hidden focus-ring"
-          aria-label="Close sidebar"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      </div>
+      <SidebarHeader isCollapsed={isCollapsed} onClose={onClose} />
+      
+      <SidebarNav 
+        groups={navGroups} 
+        isCollapsed={isCollapsed} 
+        onClose={onClose} 
+      />
 
-      {/* Navigation Links */}
-      <nav
-        className={cn(
-          "flex-1 overflow-y-auto overflow-x-hidden py-5 space-y-5",
-          isCollapsed ? "lg:px-2 px-3" : "px-3"
-        )}
-      >
-        {navGroups.map((group, groupIdx) => (
-            <div
-            key={group.label}
-            className={cn(
-              "space-y-1.5",
-              isCollapsed && groupIdx > 0 && "lg:pt-1 lg:border-t lg:border-border"
-            )}
-          >
-            <h2
-              className={cn(
-                "px-3 text-xs font-semibold tracking-wide text-muted-foreground font-heading",
-                isCollapsed && "lg:hidden"
-              )}
-            >
-              {group.label}
-            </h2>
-            <ul className="space-y-0.5">
-              {group.items.map((item) => (
-                <li key={item.name}>
-                  <NavLink
-                    to={item.href}
-                    end={item.href === "/"}
-                    title={isCollapsed ? item.name : undefined}
-                    onClick={() => onClose()}
-                    className={({ isActive }) =>
-                      cn(
-                        "flex items-center text-sm font-medium rounded-lg transition-colors focus-ring border-l-2",
-                        isCollapsed
-                          ? "lg:justify-center lg:px-0 lg:py-2.5 gap-3 px-3 py-2.5"
-                          : "gap-3 px-3 py-2.5",
-                        isActive
-                          ? "bg-muted/40 text-foreground font-semibold border-primary"
-                          : "text-muted-foreground border-transparent hover:bg-muted/50 hover:text-foreground"
-                      )
-                    }
-                  >
-                    <item.icon className="h-4 w-4 shrink-0" aria-hidden />
-                    <span className={cn("truncate", isCollapsed && "lg:hidden")}>
-                      {item.name}
-                    </span>
-                  </NavLink>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </nav>
+      <SidebarToggle 
+        isCollapsed={isCollapsed} 
+        onToggleCollapse={onToggleCollapse} 
+      />
 
-      {/* Collapse toggle — desktop only */}
-      <div className={cn("hidden lg:block px-3 pb-2", isCollapsed && "px-2")}>
-        <button
-          onClick={onToggleCollapse}
-          className={cn(
-            "flex items-center w-full rounded-lg border border-border text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors focus-ring text-xs font-medium",
-            isCollapsed ? "justify-center p-2.5" : "gap-2 px-3 py-2"
-          )}
-          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-          title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {isCollapsed ? (
-            <PanelLeftOpen className="h-4 w-4 shrink-0" />
-          ) : (
-            <>
-              <PanelLeftClose className="h-4 w-4 shrink-0" />
-              <span>Collapse</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* Sidebar Bottom Profile/Sign Out */}
-      <div
-        className={cn(
-          "border-t border-border bg-transparent shrink-0",
-          isCollapsed ? "lg:p-2 p-4" : "p-4"
-        )}
-      >
-        <div
-          className={cn(
-            "flex items-center",
-            isCollapsed ? "lg:flex-col lg:gap-2 justify-between" : "justify-between gap-2.5"
-          )}
-        >
-          <div
-            className={cn(
-              "flex items-center min-w-0",
-              isCollapsed ? "lg:justify-center gap-0" : "gap-2.5"
-            )}
-            title={isCollapsed ? email : undefined}
-          >
-            <div className="h-9 w-9 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-primary-foreground shrink-0 uppercase">
-              {initials}
-            </div>
-            <div className={cn("flex flex-col min-w-0", isCollapsed && "lg:hidden")}>
-              <span
-                className="text-sm font-medium text-foreground truncate max-w-[100px]"
-                title={email}
-              >
-                {email}
-              </span>
-              <span className="text-xs text-muted-foreground uppercase font-semibold tracking-wider">
-                Admin
-              </span>
-            </div>
-          </div>
-
-          <button
-            onClick={handleSignOut}
-            className="p-1 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors focus-ring shrink-0"
-            title="Sign Out"
-            aria-label="Sign Out"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-          </button>
-        </div>
-      </div>
+      <SidebarFooter 
+        email={email} 
+        initials={initials} 
+        isCollapsed={isCollapsed} 
+        onSignOut={handleSignOut} 
+      />
     </aside>
   );
 };

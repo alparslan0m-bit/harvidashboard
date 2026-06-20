@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import type { RecentStudent } from "../../../hooks/useDashboard";
 import { formatDate } from "../../../lib/utils";
 import { DataTable } from "../../shared/DataTable";
-import { SectionCard } from "../../shared/SectionCard";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardActions } from "../../shared/Card";
 import { Link } from "react-router";
 import type { ColumnDef } from "@tanstack/react-table";
 
@@ -73,25 +73,29 @@ export const RecentStudentsTable: React.FC<RecentStudentsTableProps> = ({
   const visibleStudents = useMemo(() => students.slice(0, 5), [students]);
 
   return (
-    <SectionCard
-      title="Recent Students"
-      description="Latest registrations and recent performance"
-      actions={actions}
-      className="p-0 flex flex-col h-auto"
-    >
-      <div className="px-5 pt-3 pb-3">
-        <DataTable
-          columns={columns}
-          data={visibleStudents}
-          pageCount={0}
-          currentPage={1}
-          onPageChange={() => {}}
-          emptyStateTitle="No recent students"
-          emptyStateDescription="New student registration records are currently empty."
-          emptyStateIcon="Users"
-        />
-      </div>
-    </SectionCard>
+    <Card className="flex flex-col h-auto">
+      <CardHeader>
+        <div className="space-y-1 min-w-0">
+          <CardTitle>Recent Students</CardTitle>
+          <CardDescription>Latest registrations and recent performance</CardDescription>
+        </div>
+        <CardActions>{actions}</CardActions>
+      </CardHeader>
+      <CardContent className="p-0">
+        <div className="px-5 pt-3 pb-3">
+          <DataTable
+            columns={columns}
+            data={visibleStudents}
+            pageCount={0}
+            currentPage={1}
+            onPageChange={() => {}}
+            emptyStateTitle="No recent students"
+            emptyStateDescription="New student registration records are currently empty."
+            emptyStateIcon="Users"
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -20,7 +20,7 @@ export const ErrorView: React.FC<ErrorViewProps> = ({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-center p-8 bg-card border border-destructive/20 rounded-xl max-w-md mx-auto text-center shadow-sm",
+        "flex flex-col items-center justify-center p-8 bg-card border border-destructive/20 rounded-[8px] max-w-md mx-auto text-center",
         className
       )}
     >

@@ -2,7 +2,7 @@ import React from "react";
 import { cn } from "../../lib/utils";
 import { TrendBadge } from "./TrendBadge";
 
-interface MetricCardProps {
+export interface MetricCardProps {
   title: string;
   value: string | number;
   description?: string;

@@ -1,7 +1,7 @@
 import React from "react";
 import { Download } from "lucide-react";
 import { cn } from "../../lib/utils";
-import { SectionCard } from "./SectionCard";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardActions } from "./Card";
 import { toast } from "sonner";
 
 interface ChartCardProps {
@@ -71,16 +71,18 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   );
 
   return (
-    <SectionCard
-      title={title}
-      description={description}
-      actions={actions || undefined}
-      className={cn(heightClassName, "flex flex-col justify-between overflow-hidden", className)}
-    >
-      <div className="flex-1 w-full relative min-h-0">
+    <Card className={cn(heightClassName, "flex flex-col justify-between overflow-hidden", className)}>
+      <CardHeader>
+        <div className="space-y-1 min-w-0">
+          <CardTitle>{title}</CardTitle>
+          {description && <CardDescription>{description}</CardDescription>}
+        </div>
+        {actions && <CardActions>{actions}</CardActions>}
+      </CardHeader>
+      <CardContent className="flex-1 p-4 w-full relative min-h-0">
         {children}
-      </div>
-    </SectionCard>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -15,7 +15,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   const IconComponent = Lucide[icon] as React.ComponentType<any>;
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 text-center rounded-xl bg-muted/20">
+    <div className="flex flex-col items-center justify-center p-8 text-center rounded-[8px] bg-muted/20">
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted text-foreground/60 mb-4 select-none">
         {IconComponent && <IconComponent className="h-6 w-6" />}
       </div>

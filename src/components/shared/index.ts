@@ -13,7 +13,7 @@ export { LiveIndicator } from "./LiveIndicator";
 export { MetricCard } from "./MetricCard";
 export { NotificationBell } from "./NotificationBell";
 export { PageHeader } from "./PageHeader";
-export { SectionCard } from "./SectionCard";
+export * from "./Card";
 export { default as SlideOver } from "./SlideOver";
 export { StatusBadge } from "./StatusBadge";
 export { TrendBadge } from "./TrendBadge";
