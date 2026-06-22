@@ -43,7 +43,6 @@ export const Users: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="User Accounts"
-        description="Configure student permissions, details, and access control."
         actions={
           <UserExportMenu
             exporting={exporting}
@@ -73,7 +72,11 @@ export const Users: React.FC = () => {
         pageSize={PAGE_SIZE}
       />
 
-      <UserDetailPanel userId={selectedUserId} isOpen={isPanelOpen} onClose={handleClosePanel} />
+      <UserDetailPanel
+        userId={selectedUserId}
+        isOpen={isPanelOpen}
+        onClose={handleClosePanel}
+      />
     </div>
   );
 };

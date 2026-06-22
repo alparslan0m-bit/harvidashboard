@@ -43,7 +43,6 @@ export const Feedback: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="Feedback Log"
-        description="Process, audit, and archive reports submitted by students"
         actions={
           selectedIds.size > 0 ? (
             <FeedbackBulkActions
@@ -55,7 +54,11 @@ export const Feedback: React.FC = () => {
         }
       />
 
-      <FeedbackTabs activeTab={activeTab} tabs={tabs} onTabChange={handleTabChange} />
+      <FeedbackTabs
+        activeTab={activeTab}
+        tabs={tabs}
+        onTabChange={handleTabChange}
+      />
 
       <DataTable
         columns={customColumns}

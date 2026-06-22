@@ -47,10 +47,7 @@ export const Purchases: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Monetization Ledger"
-        description="Monitor mobile app transactions, payments, and refunds"
-      />
+      <PageHeader title="Monetization Ledger" />
 
       <DisputedAlertBanner count={disputedCount} />
 

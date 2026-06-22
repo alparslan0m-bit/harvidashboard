@@ -13,7 +13,6 @@ export const Import: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="CSV Question Importer"
-        description="Bulk upload quiz curriculum and MCQs from spreadsheet"
         actions={
           <button
             onClick={wizard.handleDownloadTemplate}

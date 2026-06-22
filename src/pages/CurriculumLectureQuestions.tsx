@@ -106,7 +106,6 @@ export const CurriculumLectureQuestions: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title={`Lecture Questions — ${lectureName}`}
-        description="Manage questions for this lecture in a dedicated curriculum page."
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <button

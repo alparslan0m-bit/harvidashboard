@@ -112,16 +112,10 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="relative -mx-4 -mt-4 mb-6 sm:-mx-5 sm:-mt-5 lg:-mx-6 lg:-mt-6 px-4 py-8 sm:px-5 sm:py-10 lg:px-6 lg:py-12 border-b border-border bg-card overflow-hidden">
-        <div className="absolute inset-0 z-0 bg-vercel-mesh opacity-20 dark:opacity-10 pointer-events-none mix-blend-multiply dark:mix-blend-screen" />
-        <div className="relative z-10">
-          <PageHeader
-            title="Dashboard Overview"
-            actions={headerActions}
-            className="mb-0"
-          />
-        </div>
-      </div>
+      <PageHeader
+        title="Dashboard Overview"
+        actions={headerActions}
+      />
 
       <KPIGrid cards={kpiCards} compact className="gap-3" />
 
