@@ -12,7 +12,7 @@ import {
   useCurriculumStats,
 } from "../hooks/useCurriculum";
 import PageHeader from "../components/shared/PageHeader";
-import MetricCard from "../components/shared/MetricCard";
+       
 import KPIGrid from "../components/shared/KPIGrid";
 import {
   Calendar,
