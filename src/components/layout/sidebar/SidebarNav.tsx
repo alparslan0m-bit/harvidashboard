@@ -37,7 +37,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ groups, isCollapsed, onC
         >
           <h2
             className={cn(
-              "px-3 text-xs font-semibold tracking-wide text-muted-foreground font-heading",
+              "px-3.5 text-[10px] font-bold tracking-widest text-muted-foreground/60 font-heading uppercase",
               isCollapsed && "lg:hidden"
             )}
           >
@@ -53,17 +53,17 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ groups, isCollapsed, onC
                   onClick={() => onClose()}
                   className={({ isActive }) =>
                     cn(
-                      "flex items-center text-sm font-medium rounded-lg transition-colors focus-ring border-l-2",
+                      "group flex items-center text-sm font-medium rounded-xl transition-all duration-200 focus-ring",
                       isCollapsed
-                        ? "lg:justify-center lg:px-0 lg:py-2.5 gap-3 px-3 py-2.5"
-                        : "gap-3 px-3 py-2.5",
+                        ? "lg:justify-center lg:px-0 lg:py-2.5 gap-3 px-3.5 py-2.5"
+                        : "gap-3 px-3.5 py-2.5",
                       isActive
-                        ? "bg-muted/40 text-foreground font-semibold border-primary"
-                        : "text-muted-foreground border-transparent hover:bg-muted/50 hover:text-foreground"
+                        ? "bg-primary text-primary-foreground font-semibold shadow-xs"
+                        : "text-muted-foreground hover:bg-muted/65 hover:text-foreground"
                     )
                   }
                 >
-                  <item.icon className="h-4 w-4 shrink-0" aria-hidden />
+                  <item.icon className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:scale-105" aria-hidden />
                   <span className={cn("truncate", isCollapsed && "lg:hidden")}>
                     {item.name}
                   </span>

@@ -56,7 +56,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           {/* Theme Toggle */}
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="relative p-2 rounded-md bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
+            className="relative p-2 rounded-xl bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
             aria-label="Toggle theme"
           >
             <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-foreground" />

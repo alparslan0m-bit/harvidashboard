@@ -42,7 +42,7 @@ export const NotificationBell: React.FC = () => {
     <Popover.Root>
       <Popover.Trigger asChild>
         <button
-          className="relative p-2 rounded-lg bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
+          className="relative p-2 rounded-xl bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
           aria-label="View notifications"
         >
           <Bell className="h-4 w-4 text-foreground" />
@@ -57,7 +57,7 @@ export const NotificationBell: React.FC = () => {
 
       <Popover.Portal>
         <Popover.Content
-          className="z-50 w-72 rounded-lg border border-border bg-card p-4 shadow-xl focus:outline-none select-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+          className="z-50 w-72 rounded-xl border border-border bg-card p-4 shadow-xl focus:outline-none select-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
           align="end"
           sideOffset={8}
         >
@@ -82,7 +82,7 @@ export const NotificationBell: React.FC = () => {
                     onClick={() => {
                       navigate("/feedback");
                     }}
-                    className="w-full flex items-start gap-3 p-2 rounded-lg hover:bg-accent transition text-left group"
+                    className="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-accent transition text-left group"
                   >
                     <MessageSquare className="h-4 w-4 text-primary mt-0.5 shrink-0" />
                     <div>
@@ -101,7 +101,7 @@ export const NotificationBell: React.FC = () => {
                     onClick={() => {
                       navigate("/purchases");
                     }}
-                    className="w-full flex items-start gap-3 p-2 rounded-lg hover:bg-accent transition text-left group"
+                    className="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-accent transition text-left group"
                   >
                     <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
                     <div>

@@ -53,7 +53,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
 
         <button
           onClick={onSignOut}
-          className="p-1 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors focus-ring shrink-0"
+          className="p-1.5 rounded-xl hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all duration-200 focus-ring shrink-0"
           title="Sign Out"
           aria-label="Sign Out"
         >
