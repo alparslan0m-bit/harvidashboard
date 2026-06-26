@@ -98,6 +98,34 @@ export const Curriculum: React.FC = () => {
     <div className="space-y-6">
       <PageHeader title="Curriculum Management" />
 
+      {/* Horizontal KPIs Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <MetricCard
+          title="Academic Years"
+          value={isLoadingStats ? "..." : stats.yearsCount}
+          icon={<Calendar />}
+          compact
+        />
+        <MetricCard
+          title="Course Modules"
+          value={isLoadingStats ? "..." : stats.modulesCount}
+          icon={<BookOpen />}
+          compact
+        />
+        <MetricCard
+          title="Subjects"
+          value={isLoadingStats ? "..." : stats.subjectsCount}
+          icon={<Bookmark />}
+          compact
+        />
+        <MetricCard
+          title="Lectures"
+          value={isLoadingStats ? "..." : stats.lecturesCount}
+          icon={<FileText />}
+          compact
+        />
+      </div>
+
       {/* Page-level Interactive Breadcrumbs */}
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-card px-4 py-2.5 rounded-[8px] border border-border shadow-xs w-fit">
         <span
@@ -156,40 +184,9 @@ export const Curriculum: React.FC = () => {
         )}
       </div>
 
-      {/* Grid Layout: Active workspace panel on the left, compact stats cards on the right side */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
-        {/* Workspace Panel */}
-        <div className="lg:col-span-3 w-full order-last lg:order-first">
-          {renderActivePanel()}
-        </div>
-
-        {/* Stats Bar on the side (vertical stack) */}
-        <div className="lg:col-span-1 flex flex-col gap-3.5">
-          <MetricCard
-            title="Academic Years"
-            value={isLoadingStats ? "..." : stats.yearsCount}
-            icon={<Calendar />}
-            compact
-          />
-          <MetricCard
-            title="Course Modules"
-            value={isLoadingStats ? "..." : stats.modulesCount}
-            icon={<BookOpen />}
-            compact
-          />
-          <MetricCard
-            title="Subjects"
-            value={isLoadingStats ? "..." : stats.subjectsCount}
-            icon={<Bookmark />}
-            compact
-          />
-          <MetricCard
-            title="Lectures"
-            value={isLoadingStats ? "..." : stats.lecturesCount}
-            icon={<FileText />}
-            compact
-          />
-        </div>
+      {/* Workspace Panel */}
+      <div className="w-full">
+        {renderActivePanel()}
       </div>
     </div>
   );
