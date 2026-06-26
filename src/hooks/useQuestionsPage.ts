@@ -64,5 +64,3 @@ export function useQuestionsPage() {
     clearDelete: () => setDeleteQuestionId(null),
   };
 }
-
-

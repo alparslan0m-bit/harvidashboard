@@ -9,7 +9,6 @@ export const STALE_TIMES = {
   feedback: 10 * 1000,
   questions: 30 * 1000,
   analytics: 30 * 1000,
-  notifications: 15 * 1000,
   users: 10 * 1000,
 } as const;
 

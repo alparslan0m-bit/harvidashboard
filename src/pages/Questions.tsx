@@ -95,5 +95,3 @@ export const Questions: React.FC = () => {
 };
 
 export default Questions;
-
-
