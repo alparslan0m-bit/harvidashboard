@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
   HelpCircle,
-  ExternalLink,
   Image as ImageIcon,
   Check,
   Plus,
@@ -123,13 +122,6 @@ export const CurriculumLectureQuestions: React.FC = () => {
               <Plus className="h-4 w-4" />
               Add Question
             </button>
-            <Link
-              to={`/questions?lectureId=${encodeURIComponent(lectureId)}`}
-              className="inline-flex items-center gap-2 rounded-md border px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent transition"
-            >
-              <ExternalLink className="h-4 w-4" />
-              Open in Question Bank
-            </Link>
           </div>
         }
       />
@@ -266,7 +258,7 @@ export const CurriculumLectureQuestions: React.FC = () => {
           setSelectedQuestion(null);
           refetch();
         }}
-        initialLectureId={lectureId}
+        fixedLectureId={lectureId}
       />
 
       <ConfirmDialog

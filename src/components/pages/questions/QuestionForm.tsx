@@ -1,16 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useQuestionMutations } from "@/hooks/useQuestions";
-import { useQuestionFormCascade } from "@/hooks/useQuestionFormCascade";
 import {
   questionFormSchema,
   type QuestionFormValues,
 } from "@/schemas/questionFormSchema";
 import { SlideOver } from "@/components/shared/SlideOver";
 import type { Question } from "@/types/database";
-import { QuestionFormCascadeSelects } from "./QuestionFormCascadeSelects";
 import { QuestionFormImageField } from "./QuestionFormImageField";
 import { QuestionFormOptions } from "./QuestionFormOptions";
 
@@ -18,14 +16,15 @@ interface QuestionFormProps {
   question: Question | null;
   isOpen: boolean;
   onClose: () => void;
-  initialLectureId?: string | null;
+  /** The lecture this question belongs to. */
+  fixedLectureId?: string | null;
 }
 
 export const QuestionForm: React.FC<QuestionFormProps> = ({
   question,
   isOpen,
   onClose,
-  initialLectureId,
+  fixedLectureId,
 }) => {
   const { createQuestion, updateQuestion } = useQuestionMutations();
 
@@ -57,29 +56,34 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
   const currentCorrectIndex = watch("correct_answer_index");
   const watchImageUrl = watch("image_url");
 
-  const {
-    years,
-    modules,
-    subjects,
-    lectures,
-    selYear,
-    selModule,
-    selSubject,
-    handleYearChange,
-    handleModuleChange,
-    handleSubjectChange,
-  } = useQuestionFormCascade({
-    question,
-    isOpen,
-    initialLectureId,
-    reset,
-    setValue,
-  });
+  useEffect(() => {
+    if (!isOpen || !fixedLectureId) return;
+
+    if (question) {
+      reset({
+        lecture_id: fixedLectureId,
+        text: question.text,
+        image_url: question.image_url || "",
+        options: question.options,
+        correct_answer_index: question.correct_answer_index,
+        explanation: question.explanation || "",
+      });
+    } else {
+      reset({
+        lecture_id: fixedLectureId,
+        text: "",
+        image_url: "",
+        options: ["", "", "", ""],
+        correct_answer_index: 0,
+        explanation: "",
+      });
+    }
+  }, [question, isOpen, fixedLectureId, reset]);
 
   const onSubmit = async (values: QuestionFormValues) => {
     try {
       const payload = {
-        lecture_id: values.lecture_id,
+        lecture_id: fixedLectureId!,
         text: values.text,
         image_url: values.image_url || null,
         options: values.options,
@@ -104,23 +108,6 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
       onSubmit={handleSubmit(onSubmit)}
       className="space-y-6 select-none pb-8"
     >
-      <QuestionFormCascadeSelects
-        years={years}
-        modules={modules}
-        subjects={subjects}
-        lectures={lectures}
-        selYear={selYear}
-        selModule={selModule}
-        selSubject={selSubject}
-        register={register}
-        errors={errors}
-        onYearChange={handleYearChange}
-        onModuleChange={handleModuleChange}
-        onSubjectChange={handleSubjectChange}
-      />
-
-      <hr className="border-border/40" />
-
       <div className="space-y-1.5">
         <label className="text-sm font-semibold text-foreground">
           Question Text
@@ -200,3 +187,5 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
 };
 
 export default QuestionForm;
+
+

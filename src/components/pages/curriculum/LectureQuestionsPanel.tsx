@@ -2,8 +2,8 @@ import React, { useMemo, useState } from "react";
 import { useLectureQuestions } from "../../../hooks/useCurriculum";
 import { useQuestionMutations } from "../../../hooks/useQuestions";
 import { SlideOver } from "../../shared/SlideOver";
-import { HelpCircle, ExternalLink, Image as ImageIcon, Check, Plus, Edit2, Trash2 } from "lucide-react";
-import { Link } from "react-router";
+import { HelpCircle, Image as ImageIcon, Check, Plus, Edit2, Trash2 } from "lucide-react";
+
 import CopyButton from "../../shared/CopyButton";
 import QuestionForm from "../../pages/questions/QuestionForm";
 import ConfirmDialog from "../../shared/ConfirmDialog";
@@ -67,23 +67,13 @@ export const LectureQuestionsPanel: React.FC<LectureQuestionsPanelProps> = ({
         title={`Lecture Questions — ${lectureName} ${questions.length > 0 ? `(${questions.length})` : ""}`}
         description="List of questions in this topic. Add, edit, or delete questions directly."
         footer={
-          <div className="flex items-center gap-2 justify-between w-full">
-            <button
-              onClick={handleCreate}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground hover:brightness-105 text-xs font-bold select-none shadow-sm transition-all cursor-pointer"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              <span>Add Question</span>
-            </button>
-            <Link
-              to={`/questions?lectureId=${lectureId}`}
-              onClick={onClose}
-              className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border text-foreground hover:bg-accent text-xs font-bold select-none transition-all"
-            >
-              <span>Open in Question Bank</span>
-              <ExternalLink className="h-3.5 w-3.5" />
-            </Link>
-          </div>
+          <button
+            onClick={handleCreate}
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-primary-foreground hover:brightness-105 text-xs font-bold select-none shadow-sm transition-all cursor-pointer"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span>Add Question</span>
+          </button>
         }
       >
         {isLoadingQuestions ? (
@@ -210,7 +200,7 @@ export const LectureQuestionsPanel: React.FC<LectureQuestionsPanelProps> = ({
             setSelectedQuestion(null);
             refetch();
           }}
-          initialLectureId={lectureId}
+          fixedLectureId={lectureId}
         />
       )}
 

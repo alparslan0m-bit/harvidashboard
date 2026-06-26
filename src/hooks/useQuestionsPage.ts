@@ -54,7 +54,6 @@ export function useQuestionsPage() {
     error,
     refetch,
     columns,
-    openCreate: () => { setSelectedQuestion(null); setIsFormOpen(true); },
     closeForm: () => { setIsFormOpen(false); setSelectedQuestion(null); },
     confirmDelete: async () => {
       if (deleteQuestionId) {
@@ -65,3 +64,5 @@ export function useQuestionsPage() {
     clearDelete: () => setDeleteQuestionId(null),
   };
 }
+
+

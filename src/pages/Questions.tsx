@@ -9,7 +9,7 @@ import {
   ConfirmDialog,
 } from "@/components/shared";
 import { QuestionForm } from "@/components/pages/questions/QuestionForm";
-import { Plus, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 
 export const Questions: React.FC = () => {
   const {
@@ -27,7 +27,6 @@ export const Questions: React.FC = () => {
     error,
     refetch,
     columns,
-    openCreate,
     closeForm,
     confirmDelete,
     clearDelete,
@@ -49,22 +48,13 @@ export const Questions: React.FC = () => {
       <PageHeader
         title="Question Bank"
         actions={
-          <div className="flex items-center gap-2">
-            <Link
-              to="/import"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md border text-sm font-semibold hover:bg-accent transition"
-            >
-              <Upload className="h-4 w-4" />
-              <span>Bulk Import</span>
-            </Link>
-            <button
-              onClick={openCreate}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-md bg-primary text-primary-foreground text-sm font-bold transition"
-            >
-              <Plus className="h-4 w-4" />
-              <span>Add Question</span>
-            </button>
-          </div>
+          <Link
+            to="/import"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-md border text-sm font-semibold hover:bg-accent transition"
+          >
+            <Upload className="h-4 w-4" />
+            <span>Bulk Import</span>
+          </Link>
         }
       />
 
@@ -88,7 +78,7 @@ export const Questions: React.FC = () => {
         question={selectedQuestion}
         isOpen={isFormOpen}
         onClose={closeForm}
-        initialLectureId={filters.lectureId}
+        fixedLectureId={selectedQuestion?.lecture_id}
       />
 
       <ConfirmDialog
@@ -105,3 +95,5 @@ export const Questions: React.FC = () => {
 };
 
 export default Questions;
+
+
