@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { PageHeader, ErrorView, KPIGrid } from "@/components/shared";
-import { AnalyticsDateFilter } from "@/components/pages/analytics/AnalyticsDateFilter";
+import { AnalyticsDateFilter, DATE_PRESETS } from "@/components/pages/analytics/AnalyticsDateFilter";
 import { AnalyticsChartsGrid } from "@/components/pages/analytics/AnalyticsChartsGrid";
 import { DailyQuizzesChart } from "@/components/pages/dashboard/DailyQuizzesChart";
 import { UserGrowthChart } from "@/components/pages/dashboard/UserGrowthChart";
@@ -11,6 +11,18 @@ import { FileText, Users, DollarSign, HelpCircle } from "lucide-react";
 
 const formatDateISO = (d: Date) => d.toISOString().split("T")[0];
 
+/** Check if the current from/to dates match a preset exactly. */
+function detectPreset(fromDate: string, toDate: string): number | null {
+  const todayStr = formatDateISO(new Date());
+  if (toDate !== todayStr) return null;
+  for (const preset of DATE_PRESETS) {
+    const start = new Date();
+    start.setDate(start.getDate() - preset.days);
+    if (formatDateISO(start) === fromDate) return preset.days;
+  }
+  return null;
+}
+
 export const Analytics: React.FC = () => {
   const [fromDate, setFromDate] = useState(() => {
     const d = new Date();
@@ -18,8 +30,14 @@ export const Analytics: React.FC = () => {
     return formatDateISO(d);
   });
   const [toDate, setToDate] = useState(() => formatDateISO(new Date()));
+  const [activePreset, setActivePreset] = useState<number | null>(30);
 
-  const { data, isLoading, error, refetch } = useAnalytics(fromDate, toDate);
+  const isInvalid = fromDate > toDate;
+
+  const { data, isLoading, error, refetch } = useAnalytics(
+    isInvalid ? "" : fromDate,
+    isInvalid ? "" : toDate,
+  );
 
   const applyPreset = useCallback((days: number) => {
     const end = new Date();
@@ -27,7 +45,20 @@ export const Analytics: React.FC = () => {
     start.setDate(start.getDate() - days);
     setFromDate(formatDateISO(start));
     setToDate(formatDateISO(end));
+    setActivePreset(days);
   }, []);
+
+  const handleFromDateChange = useCallback((value: string) => {
+    setFromDate(value);
+    // Auto-detect if the new dates match a preset
+    const todayStr = formatDateISO(new Date());
+    setActivePreset(detectPreset(value, toDate) ?? null);
+  }, [toDate]);
+
+  const handleToDateChange = useCallback((value: string) => {
+    setToDate(value);
+    setActivePreset(detectPreset(fromDate, value) ?? null);
+  }, [fromDate]);
 
   const kpiCards = useMemo(
     () => [
@@ -94,9 +125,10 @@ export const Analytics: React.FC = () => {
       <AnalyticsDateFilter
         fromDate={fromDate}
         toDate={toDate}
-        onFromDateChange={setFromDate}
-        onToDateChange={setToDate}
+        onFromDateChange={handleFromDateChange}
+        onToDateChange={handleToDateChange}
         onPreset={applyPreset}
+        activePreset={activePreset}
       />
       <KPIGrid cards={kpiCards} compact />
       <AnalyticsChartsGrid
@@ -105,11 +137,11 @@ export const Analytics: React.FC = () => {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <DailyQuizzesChart data={data?.dailyQuizzes || []} />
-        <UserGrowthChart data={data?.userGrowth} />
+        <DailyQuizzesChart data={data?.dailyQuizzes || []} fromDate={fromDate} toDate={toDate} />
+        <UserGrowthChart data={data?.userGrowth} fromDate={fromDate} toDate={toDate} />
       </div>
 
-      <RevenueChart data={data?.revenue} />
+      <RevenueChart data={data?.revenue} fromDate={fromDate} toDate={toDate} />
     </div>
   );
 };

@@ -12,13 +12,21 @@ import { ChartCard } from "../../shared/ChartCard";
 
 interface UserGrowthChartProps {
   data?: { month: string; users: number }[];
+  fromDate?: string;
+  toDate?: string;
 }
 
-export const UserGrowthChart: React.FC<UserGrowthChartProps> = ({ data = [] }) => {
+function formatRange(from?: string, to?: string): string {
+  if (!from || !to) return "Cumulative user registrations over the last 6 months";
+  const fmt = (d: string) => new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return `Cumulative registrations — ${fmt(from)} to ${fmt(to)}`;
+}
+
+export const UserGrowthChart: React.FC<UserGrowthChartProps> = ({ data = [], fromDate, toDate }) => {
   return (
     <ChartCard
       title="User Growth"
-      description="Cumulative user registrations over the last 6 months"
+      description={formatRange(fromDate, toDate)}
       data={data}
       filename="user_growth"
     >

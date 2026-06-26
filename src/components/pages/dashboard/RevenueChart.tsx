@@ -12,13 +12,21 @@ import { ChartCard } from "../../shared/ChartCard";
 
 interface RevenueChartProps {
   data?: { month: string; revenue: number }[];
+  fromDate?: string;
+  toDate?: string;
 }
 
-export const RevenueChart: React.FC<RevenueChartProps> = ({ data = [] }) => {
+function formatRange(from?: string, to?: string): string {
+  if (!from || !to) return "Monthly revenue breakdown for the last 6 months";
+  const fmt = (d: string) => new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return `Revenue breakdown — ${fmt(from)} to ${fmt(to)}`;
+}
+
+export const RevenueChart: React.FC<RevenueChartProps> = ({ data = [], fromDate, toDate }) => {
   return (
     <ChartCard
       title="Revenue Overview"
-      description="Monthly revenue breakdown for the last 6 months"
+      description={formatRange(fromDate, toDate)}
       data={data}
       filename="revenue_data"
     >

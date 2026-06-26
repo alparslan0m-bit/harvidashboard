@@ -134,10 +134,10 @@ export function useAnalytics(fromDate: string, toDate: string) {
 
         const allUsers = await listAllAuthUsers("Analytics");
         const [dailyQuizzes, revenue] = await Promise.all([
-          fetchDailyQuizzes(),
-          fetchRevenueGrowth(),
+          fetchDailyQuizzes(fromDate, toDate),
+          fetchRevenueGrowth(fromDate, toDate),
         ]);
-        const userGrowth = fetchUserGrowth(allUsers);
+        const userGrowth = fetchUserGrowth(allUsers, fromDate, toDate);
 
         return {
           dailyActiveUsers,

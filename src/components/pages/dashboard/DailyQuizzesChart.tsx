@@ -13,9 +13,17 @@ import { ChartCard } from "../../shared/ChartCard";
 
 interface DailyQuizzesChartProps {
   data: { name: string; quizzes: number }[];
+  fromDate?: string;
+  toDate?: string;
 }
 
-export const DailyQuizzesChart: React.FC<DailyQuizzesChartProps> = ({ data }) => {
+function formatRange(from?: string, to?: string): string {
+  if (!from || !to) return "Volume of quiz attempts over the last 7 days";
+  const fmt = (d: string) => new Date(d + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return `Quiz attempts — ${fmt(from)} to ${fmt(to)}`;
+}
+
+export const DailyQuizzesChart: React.FC<DailyQuizzesChartProps> = ({ data, fromDate, toDate }) => {
   // Compute average quiz value
   const avgValue = data.length > 0
     ? Math.round((data.reduce((acc, d) => acc + d.quizzes, 0) / data.length) * 10) / 10
@@ -24,7 +32,7 @@ export const DailyQuizzesChart: React.FC<DailyQuizzesChartProps> = ({ data }) =>
   return (
     <ChartCard
       title="Daily Quizzes Completed"
-      description="Volume of quiz attempts over the last 7 days"
+      description={formatRange(fromDate, toDate)}
       data={data}
       filename="daily_quizzes"
     >

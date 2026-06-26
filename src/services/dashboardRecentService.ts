@@ -6,58 +6,86 @@ interface QuizDayActivity {
   quizzes: number;
 }
 
-export async function fetchDailyQuizzes(): Promise<{ name: string; quizzes: number }[]> {
-  const past7Days: QuizDayActivity[] = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    past7Days.push({ date: d.toISOString().split("T")[0], quizzes: 0 });
-  }
+/**
+ * Fetches daily quiz counts. When fromDate/toDate are provided, scopes
+ * the query to that range and generates a bucket per day. Falls back to
+ * the last 7 days when omitted (Dashboard compatibility).
+ */
+export async function fetchDailyQuizzes(
+  fromDate?: string,
+  toDate?: string,
+): Promise<{ name: string; quizzes: number }[]> {
+  const hasRange = fromDate && toDate;
 
-  const start7DaysAgo = new Date();
-  start7DaysAgo.setDate(start7DaysAgo.getDate() - 6);
-  start7DaysAgo.setHours(0, 0, 0, 0);
+  const startDate = hasRange ? new Date(fromDate) : (() => { const d = new Date(); d.setDate(d.getDate() - 6); return d; })();
+  const endDate = hasRange ? new Date(toDate) : new Date();
+  startDate.setHours(0, 0, 0, 0);
+  endDate.setHours(23, 59, 59, 999);
+
+  // Build day buckets
+  const days: QuizDayActivity[] = [];
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    days.push({ date: d.toISOString().split("T")[0], quizzes: 0 });
+  }
 
   const { data: quizData, error } = await supabaseAdmin
     .from("quiz_results")
     .select("created_at")
-    .gte("created_at", start7DaysAgo.toISOString());
+    .gte("created_at", startDate.toISOString())
+    .lte("created_at", endDate.toISOString());
   if (error) throw new Error(`[Dashboard.dailyQuizzes] ${error.message}`);
 
   quizData.forEach((row) => {
     const dateStr = new Date(row.created_at).toISOString().split("T")[0];
-    const found = past7Days.find((day) => day.date === dateStr);
+    const found = days.find((day) => day.date === dateStr);
     if (found) found.quizzes++;
   });
 
-  return past7Days.map((day) => ({
+  return days.map((day) => ({
     name: new Date(day.date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
     quizzes: day.quizzes,
   }));
 }
 
-export async function fetchRevenueGrowth(): Promise<{ month: string; revenue: number }[]> {
-  const startOf6MonthsAgo = new Date();
-  startOf6MonthsAgo.setMonth(startOf6MonthsAgo.getMonth() - 5);
-  startOf6MonthsAgo.setDate(1);
-  startOf6MonthsAgo.setHours(0, 0, 0, 0);
+/**
+ * Fetches monthly revenue. When fromDate/toDate are provided, scopes
+ * the query and month buckets to that range. Falls back to the last
+ * 6 months when omitted.
+ */
+export async function fetchRevenueGrowth(
+  fromDate?: string,
+  toDate?: string,
+): Promise<{ month: string; revenue: number }[]> {
+  const hasRange = fromDate && toDate;
+
+  const startOf = hasRange
+    ? (() => { const d = new Date(fromDate); d.setDate(1); d.setHours(0, 0, 0, 0); return d; })()
+    : (() => { const d = new Date(); d.setMonth(d.getMonth() - 5); d.setDate(1); d.setHours(0, 0, 0, 0); return d; })();
+  const endOf = hasRange ? new Date(toDate) : new Date();
+  endOf.setHours(23, 59, 59, 999);
 
   const { data: revenueData, error } = await supabaseAdmin
     .from("purchases")
     .select("amount_cents, created_at")
     .eq("status", "active")
-    .gte("created_at", startOf6MonthsAgo.toISOString());
+    .gte("created_at", startOf.toISOString())
+    .lte("created_at", endOf.toISOString());
   if (error) throw new Error(`[Dashboard.revenueGrowth] ${error.message}`);
 
-  const months = Array.from({ length: 6 }, (_, i) => {
-    const d = new Date();
-    d.setMonth(d.getMonth() - (5 - i));
-    return {
-      key: `${d.getFullYear()}-${d.getMonth()}`,
-      name: d.toLocaleDateString("en-US", { month: "short" }),
-      revenue: 0,
-    };
-  });
+  // Build month buckets spanning the range
+  const months: { key: string; name: string; revenue: number }[] = [];
+  const cursor = new Date(startOf);
+  while (cursor <= endOf) {
+    const key = `${cursor.getFullYear()}-${cursor.getMonth()}`;
+    if (!months.find((m) => m.key === key)) {
+      months.push({
+        key,
+        name: cursor.toLocaleDateString("en-US", { month: "short", year: "2-digit" }),
+        revenue: 0,
+      });
+    }
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
 
   revenueData?.forEach((r) => {
     const d = new Date(r.created_at);
@@ -71,21 +99,35 @@ export async function fetchRevenueGrowth(): Promise<{ month: string; revenue: nu
   return months.map((m) => ({ month: m.name, revenue: m.revenue }));
 }
 
+/**
+ * Computes cumulative user growth by month. When fromDate/toDate are
+ * provided, scopes the month buckets to that range. Falls back to the
+ * last 6 months when omitted.
+ */
 export function fetchUserGrowth(
   allUsers: Awaited<ReturnType<typeof listAllAuthUsers>>,
+  fromDate?: string,
+  toDate?: string,
 ): { month: string; users: number }[] {
-  const months = Array.from({ length: 6 }, (_, i) => {
-    const d = new Date();
-    d.setMonth(d.getMonth() - (5 - i));
-    d.setMonth(d.getMonth() + 1);
-    d.setDate(0);
-    d.setHours(23, 59, 59, 999);
-    return {
-      dateObj: d,
-      name: d.toLocaleDateString("en-US", { month: "short" }),
+  const hasRange = fromDate && toDate;
+
+  const startOf = hasRange
+    ? (() => { const d = new Date(fromDate); d.setDate(1); return d; })()
+    : (() => { const d = new Date(); d.setMonth(d.getMonth() - 5); d.setDate(1); return d; })();
+  const endOf = hasRange ? new Date(toDate) : new Date();
+
+  // Build month-end buckets spanning the range
+  const months: { dateObj: Date; name: string; users: number }[] = [];
+  const cursor = new Date(startOf);
+  while (cursor <= endOf) {
+    const monthEnd = new Date(cursor.getFullYear(), cursor.getMonth() + 1, 0, 23, 59, 59, 999);
+    months.push({
+      dateObj: monthEnd,
+      name: monthEnd.toLocaleDateString("en-US", { month: "short", year: "2-digit" }),
       users: 0,
-    };
-  });
+    });
+    cursor.setMonth(cursor.getMonth() + 1);
+  }
 
   months.forEach((m) => {
     m.users = allUsers.filter((u) => new Date(u.created_at).getTime() <= m.dateObj.getTime()).length;
