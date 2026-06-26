@@ -19,4 +19,5 @@ export interface DataTableProps<TData> {
   onSortingChange?: (sorting: SortingState) => void;
   rowSelection?: Record<string, boolean>;
   onRowSelectionChange?: (updater: any) => void;
+  storageKey?: string;
 }

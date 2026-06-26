@@ -11,6 +11,27 @@ import { DataTableHeader } from "./DataTable/DataTableHeader";
 import { DataTableBody } from "./DataTable/DataTableBody";
 import { DataTablePagination } from "./DataTable/DataTablePagination";
 
+function getColumnVisibilityStorageKey<TData>(
+  columns: DataTableProps<TData>["columns"],
+  storageKey?: string
+): string {
+  if (storageKey) return `datatable_visibility_${storageKey}`;
+
+  const key = columns
+    .map((col) => {
+      if (typeof col === "object" && col !== null) {
+        if ("id" in col && col.id) return String(col.id);
+        if ("accessorKey" in col && col.accessorKey) return String(col.accessorKey);
+        if (typeof col.header === "string") return col.header;
+      }
+      return "";
+    })
+    .filter(Boolean)
+    .join("_");
+
+  return key ? `datatable_visibility_${key}` : "";
+}
+
 export function DataTable<TData>({
   columns,
   data,
@@ -29,8 +50,22 @@ export function DataTable<TData>({
   onSortingChange,
   rowSelection,
   onRowSelectionChange,
+  storageKey,
 }: DataTableProps<TData>) {
-  const [columnVisibility, setColumnVisibility] = React.useState<Record<string, boolean>>({});
+  const [columnVisibility, setColumnVisibility] = React.useState<Record<string, boolean>>(() => {
+    const key = getColumnVisibilityStorageKey(columns, storageKey);
+    if (key) {
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        try {
+          return JSON.parse(saved);
+        } catch (e) {
+          console.error("Error parsing saved column visibility", e);
+        }
+      }
+    }
+    return {};
+  });
 
   const table = useReactTable({
     data,
@@ -46,7 +81,19 @@ export function DataTable<TData>({
       sorting,
       rowSelection,
     },
-    onColumnVisibilityChange: setColumnVisibility,
+    onColumnVisibilityChange: (updaterOrValue) => {
+      setColumnVisibility((old) => {
+        const next =
+          typeof updaterOrValue === "function"
+            ? updaterOrValue(old)
+            : updaterOrValue;
+        const key = getColumnVisibilityStorageKey(columns, storageKey);
+        if (key) {
+          localStorage.setItem(key, JSON.stringify(next));
+        }
+        return next;
+      });
+    },
     onSortingChange: onSortingChange as any,
     onRowSelectionChange: onRowSelectionChange,
     enableRowSelection: !!onRowSelectionChange,
