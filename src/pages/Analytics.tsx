@@ -51,7 +51,6 @@ export const Analytics: React.FC = () => {
   const handleFromDateChange = useCallback((value: string) => {
     setFromDate(value);
     // Auto-detect if the new dates match a preset
-    const todayStr = formatDateISO(new Date());
     setActivePreset(detectPreset(value, toDate) ?? null);
   }, [toDate]);
 
