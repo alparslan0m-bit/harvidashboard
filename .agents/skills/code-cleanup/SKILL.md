@@ -5,7 +5,7 @@ description: Use this skill whenever the user asks to clean up, audit, or tidy a
 
 # Code Cleanup: Dead, Redundant & Deprecated Code Removal
 
-A disciplined, whole-repo workflow for the finding and safely removing code that no longer
+A disciplined, whole-repo workflow for finding and safely removing code that no longer
 earns its place: unused functions/files, duplicate logic, dead feature flags, stale
 comments, unused dependencies, and abandoned legacy paths.
 
