@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  LineChart, Line, BarChart, Bar, PieChart, Pie, Cell,
+  LineChart, Line, PieChart, Pie, Cell,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
 } from "recharts";
 import { ChartCard } from "@/components/shared/ChartCard";
@@ -16,15 +16,11 @@ const tooltipStyle = {
 
 interface AnalyticsChartsGridProps {
   dailyActiveUsers?: { name: string; count: number }[];
-  scoreDistribution?: { range: string; count: number }[];
-  topLecturesScore?: { name: string; average: number }[];
   purchaseBreakdown?: { name: string; value: number }[];
 }
 
 export const AnalyticsChartsGrid: React.FC<AnalyticsChartsGridProps> = ({
   dailyActiveUsers,
-  scoreDistribution,
-  topLecturesScore,
   purchaseBreakdown,
 }) => (
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 select-none">
@@ -44,37 +40,6 @@ export const AnalyticsChartsGrid: React.FC<AnalyticsChartsGridProps> = ({
       )}
     </ChartCard>
 
-    <ChartCard title="Quiz Score Distribution" description="Grade performance density buckets" data={scoreDistribution} filename="score_distribution">
-      {!scoreDistribution?.length ? (
-        <EmptyChart description="No scores recorded in this period" />
-      ) : (
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={scoreDistribution} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} className="stroke-muted" />
-            <XAxis dataKey="range" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis fontSize={12} tickLine={false} axisLine={false} allowDecimals={false} />
-            <Tooltip contentStyle={tooltipStyle} />
-            <Bar dataKey="count" fill="var(--color-chart-2)" radius={[4, 4, 0, 0]} maxBarSize={48} />
-          </BarChart>
-        </ResponsiveContainer>
-      )}
-    </ChartCard>
-
-    <ChartCard title="Top 10 Lectures by Average Score" description="Easiest chapters ranked" data={topLecturesScore} filename="top_lectures_score">
-      {!topLecturesScore?.length ? (
-        <EmptyChart description="No lecture statistics available" />
-      ) : (
-        <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={topLecturesScore} layout="vertical" margin={{ top: 5, right: 10, left: 20, bottom: 0 }}>
-            <CartesianGrid strokeDasharray="3 3" horizontal={false} className="stroke-muted" />
-            <XAxis type="number" fontSize={12} tickLine={false} axisLine={false} />
-            <YAxis dataKey="name" type="category" fontSize={12} tickLine={false} axisLine={false} width={100} />
-            <Tooltip contentStyle={tooltipStyle} />
-            <Bar dataKey="average" fill="var(--color-chart-3)" radius={[0, 4, 4, 0]} maxBarSize={26} />
-          </BarChart>
-        </ResponsiveContainer>
-      )}
-    </ChartCard>
 
     <ChartCard title="Purchase Status Breakdown" description="Transactions state density" data={purchaseBreakdown} filename="purchase_breakdown">
       {!purchaseBreakdown?.length ? (

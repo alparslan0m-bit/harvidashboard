@@ -88,9 +88,30 @@ function computeUsersTrend(allUsers: Awaited<ReturnType<typeof listAllAuthUsers>
   return lastMonthUsers > 0 ? ((thisMonthUsers - lastMonthUsers) / lastMonthUsers) * 100 : 0;
 }
 
+async function fetchAdminAuditLogs(allUsers: Awaited<ReturnType<typeof listAllAuthUsers>>) {
+  const { data, error } = await supabaseAdmin
+    .from("admin_audit_logs")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(100);
+
+  if (error) {
+    console.error("[Dashboard.fetchAdminAuditLogs]", error);
+    return [];
+  }
+
+  return (data || []).map((log: any) => {
+    const adminUser = allUsers.find((u) => u.id === log.admin_id);
+    return {
+      ...log,
+      admin_name: adminUser?.user_metadata?.full_name || adminUser?.email || "Unknown Admin",
+    };
+  });
+}
+
 export async function fetchDashboardData(): Promise<DashboardData> {
   const allUsers = await listAllAuthUsers("Dashboard");
-  const [quizTrends, revenue, averageQuizScore, dailyQuizzes, topLectures, recentStudents, recentPurchases, revenueData] =
+  const [quizTrends, revenue, averageQuizScore, dailyQuizzes, topLectures, recentStudents, recentPurchases, revenueData, adminAuditLogs] =
     await Promise.all([
       fetchQuizTrends(),
       fetchRevenueTrend(),
@@ -100,6 +121,7 @@ export async function fetchDashboardData(): Promise<DashboardData> {
       fetchRecentStudents(allUsers),
       fetchRecentPurchases(allUsers),
       fetchRevenueGrowth(),
+      fetchAdminAuditLogs(allUsers),
     ]);
 
   const userGrowth = fetchUserGrowth(allUsers);
@@ -114,6 +136,6 @@ export async function fetchDashboardData(): Promise<DashboardData> {
       revenueTrend: revenue.revenueTrend,
       averageQuizScore,
     },
-    recentData: { dailyQuizzes, topLectures, recentStudents, recentPurchases, userGrowth, revenue: revenueData },
+    recentData: { dailyQuizzes, topLectures, recentStudents, recentPurchases, userGrowth, revenue: revenueData, adminAuditLogs },
   };
 }

@@ -38,6 +38,19 @@ export interface RecentPurchase {
   date: string;
 }
 
+export interface AdminAuditLog {
+  id: string;
+  admin_id: string;
+  admin_name: string;
+  action_type: string;
+  entity_type: string;
+  entity_id: string;
+  lecture_id?: string;
+  lecture_name?: string;
+  details: any;
+  created_at: string;
+}
+
 export interface DashboardData {
   stats: DashboardStats;
   recentData: {
@@ -47,5 +60,6 @@ export interface DashboardData {
     recentPurchases: RecentPurchase[];
     userGrowth: { month: string; users: number }[];
     revenue: { month: string; revenue: number }[];
+    adminAuditLogs: AdminAuditLog[];
   };
 }

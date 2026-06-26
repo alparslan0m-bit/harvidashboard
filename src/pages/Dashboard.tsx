@@ -1,10 +1,8 @@
 import React from "react";
 import { useDashboard } from "@/hooks/useDashboard";
 import { useDashboardRealtime } from "@/hooks/useDashboardRealtime";
-import { DailyQuizzesChart } from "@/components/pages/dashboard/DailyQuizzesChart";
-import { TopLecturesChart } from "@/components/pages/dashboard/TopLecturesChart";
-import { UserGrowthChart } from "@/components/pages/dashboard/UserGrowthChart";
-import { RevenueChart } from "@/components/pages/dashboard/RevenueChart";
+import { AdminActivityList } from "@/components/pages/dashboard/AdminActivityList";
+
 import {
   PageHeader,
   KPIGrid,
@@ -112,21 +110,15 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <PageHeader
-        title="Dashboard Overview"
-        actions={headerActions}
-      />
+      <PageHeader title="Dashboard Overview" actions={headerActions} />
 
       <KPIGrid cards={kpiCards} compact className="gap-3" />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <DailyQuizzesChart data={recentData?.dailyQuizzes || []} />
-        <TopLecturesChart data={recentData?.topLectures || []} />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <UserGrowthChart data={recentData?.userGrowth} />
-        <RevenueChart data={recentData?.revenue} />
+      <div className="grid grid-cols-1 mt-6">
+        <h3 className="text-sm font-semibold tracking-tight text-foreground mb-4">
+          Admin Activity Feed
+        </h3>
+        <AdminActivityList logs={recentData?.adminAuditLogs || []} />
       </div>
     </div>
   );

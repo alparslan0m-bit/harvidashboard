@@ -3,6 +3,10 @@ import { useAnalytics } from "@/hooks/useAnalytics";
 import { PageHeader, ErrorView, KPIGrid } from "@/components/shared";
 import { AnalyticsDateFilter } from "@/components/pages/analytics/AnalyticsDateFilter";
 import { AnalyticsChartsGrid } from "@/components/pages/analytics/AnalyticsChartsGrid";
+import { useDashboard } from "@/hooks/useDashboard";
+import { DailyQuizzesChart } from "@/components/pages/dashboard/DailyQuizzesChart";
+import { UserGrowthChart } from "@/components/pages/dashboard/UserGrowthChart";
+import { RevenueChart } from "@/components/pages/dashboard/RevenueChart";
 import { formatCurrency } from "@/lib/utils";
 import { FileText, Users, DollarSign, HelpCircle } from "lucide-react";
 
@@ -17,6 +21,8 @@ export const Analytics: React.FC = () => {
   const [toDate, setToDate] = useState(() => formatDateISO(new Date()));
 
   const { data, isLoading, error, refetch } = useAnalytics(fromDate, toDate);
+  const dashboardQuery = useDashboard();
+  const recentData = dashboardQuery.recentData;
 
   const applyPreset = useCallback((days: number) => {
     const end = new Date();
@@ -98,10 +104,17 @@ export const Analytics: React.FC = () => {
       <KPIGrid cards={kpiCards} compact />
       <AnalyticsChartsGrid
         dailyActiveUsers={data?.dailyActiveUsers}
-        scoreDistribution={data?.scoreDistribution}
-        topLecturesScore={data?.topLecturesScore}
         purchaseBreakdown={data?.purchaseBreakdown}
       />
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-6">
+        <DailyQuizzesChart data={recentData?.dailyQuizzes || []} />
+        <UserGrowthChart data={recentData?.userGrowth} />
+      </div>
+
+      <div className="mt-4">
+        <RevenueChart data={recentData?.revenue} />
+      </div>
     </div>
   );
 };
