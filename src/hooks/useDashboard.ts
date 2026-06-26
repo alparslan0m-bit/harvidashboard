@@ -2,14 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { STALE_TIMES } from "@/lib/constants";
 import { fetchDashboardData } from "@/services/dashboardService";
 
-export type {
-  DashboardStats,
-  QuizDayActivity,
-  TopLecture,
-  RecentStudent,
-  RecentPurchase,
-  DashboardData,
-} from "@/types/dashboard";
+export type { DashboardStats, DashboardData, AdminAuditLog } from "@/types/dashboard";
 
 export function useDashboard() {
   const dashboardQuery = useQuery({

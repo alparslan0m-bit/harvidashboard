@@ -94,5 +94,3 @@ export const DailyQuizzesChart: React.FC<DailyQuizzesChartProps> = ({ data }) =>
     </ChartCard>
   );
 };
-
-export default DailyQuizzesChart;

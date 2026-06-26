@@ -1,14 +1,6 @@
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { listAllAuthUsers } from "@/services/authService";
 import type { DashboardData } from "@/types/dashboard";
-import {
-  fetchDailyQuizzes,
-  fetchTopLectures,
-  fetchRecentStudents,
-  fetchRecentPurchases,
-  fetchUserGrowth,
-  fetchRevenueGrowth,
-} from "./dashboardRecentService";
 
 function monthBoundaries() {
   const firstDayOfMonth = new Date();
@@ -111,20 +103,12 @@ async function fetchAdminAuditLogs(allUsers: Awaited<ReturnType<typeof listAllAu
 
 export async function fetchDashboardData(): Promise<DashboardData> {
   const allUsers = await listAllAuthUsers("Dashboard");
-  const [quizTrends, revenue, averageQuizScore, dailyQuizzes, topLectures, recentStudents, recentPurchases, revenueData, adminAuditLogs] =
-    await Promise.all([
-      fetchQuizTrends(),
-      fetchRevenueTrend(),
-      fetchAverageScore(),
-      fetchDailyQuizzes(),
-      fetchTopLectures(),
-      fetchRecentStudents(allUsers),
-      fetchRecentPurchases(allUsers),
-      fetchRevenueGrowth(),
-      fetchAdminAuditLogs(allUsers),
-    ]);
-
-  const userGrowth = fetchUserGrowth(allUsers);
+  const [quizTrends, revenue, averageQuizScore, adminAuditLogs] = await Promise.all([
+    fetchQuizTrends(),
+    fetchRevenueTrend(),
+    fetchAverageScore(),
+    fetchAdminAuditLogs(allUsers),
+  ]);
 
   return {
     stats: {
@@ -136,6 +120,6 @@ export async function fetchDashboardData(): Promise<DashboardData> {
       revenueTrend: revenue.revenueTrend,
       averageQuizScore,
     },
-    recentData: { dailyQuizzes, topLectures, recentStudents, recentPurchases, userGrowth, revenue: revenueData, adminAuditLogs },
+    recentData: { adminAuditLogs },
   };
 }

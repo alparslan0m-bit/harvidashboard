@@ -74,5 +74,3 @@ export const UserGrowthChart: React.FC<UserGrowthChartProps> = ({ data = [] }) =
     </ChartCard>
   );
 };
-
-export default UserGrowthChart;

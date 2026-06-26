@@ -40,7 +40,6 @@ export const AnalyticsChartsGrid: React.FC<AnalyticsChartsGridProps> = ({
       )}
     </ChartCard>
 
-
     <ChartCard title="Purchase Status Breakdown" description="Transactions state density" data={purchaseBreakdown} filename="purchase_breakdown">
       {!purchaseBreakdown?.length ? (
         <EmptyChart description="No purchases logged in this range" />
