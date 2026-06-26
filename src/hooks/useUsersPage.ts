@@ -20,8 +20,6 @@ export function useUsersPage() {
     setPage(1);
   }, []);
 
-
-
   const columns = useMemo(() => createUserColumns(), []);
 
   return {

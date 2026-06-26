@@ -7,14 +7,12 @@ import { useLayout } from "../../context/LayoutContext";
 
 interface PageHeaderProps {
   title: string;
-  description?: string;
   actions?: React.ReactNode;
   className?: string;
 }
 
 export const PageHeader: React.FC<PageHeaderProps> = ({
   title,
-  description: _description,
   actions,
   className,
 }) => {
