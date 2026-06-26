@@ -71,11 +71,15 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
     if (!isOpen || !fixedLectureId) return;
 
     if (question) {
+      const paddedOptions = [...question.options];
+      while (paddedOptions.length < 4) {
+        paddedOptions.push("");
+      }
       reset({
         lecture_id: fixedLectureId,
         text: question.text,
         image_url: question.image_url || "",
-        options: question.options,
+        options: paddedOptions,
         correct_answer_index: question.correct_answer_index,
         explanation: question.explanation || "",
       });
@@ -142,14 +146,28 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-150"
+                  className="inline-flex items-center justify-center rounded-xl border border-input bg-background px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-muted transition-all duration-200"
                 >
-                  <X className="h-4 w-4" />
-                  <span className="hidden sm:inline">Close</span>
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  form="question-form"
+                  disabled={isSubmitting}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-105 disabled:opacity-50"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <span className="h-3 w-3 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    "Save Question"
+                  )}
                 </button>
               </div>
             </div>
@@ -158,108 +176,83 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
           {/* ── Body ── */}
           <div className="flex-1 overflow-hidden">
             <div className="h-full grid grid-cols-1 lg:grid-cols-5">
-              {/* ── Left: Form ── */}
-              <div className="lg:col-span-3 overflow-y-auto border-r border-border/40">
+              {/* ── Left: Form Editor ── */}
+              <div className="lg:col-span-3 overflow-y-auto border-r border-border/40 p-6">
                 <form
                   id="question-form"
                   onSubmit={handleSubmit(onSubmit)}
-                  className="max-w-5xl mx-auto px-6 py-5 grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 select-none"
+                  className="max-w-3xl mx-auto space-y-5 select-none"
                 >
-                  {/* Left Column */}
-                  <div className="space-y-4">
-                    {/* Section 1 — Question Text */}
-                    <section className="space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 text-primary text-[10px] font-bold">
-                          1
-                        </span>
-                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                          <FileText className="h-3.5 w-3.5 text-muted-foreground" />
-                          Question Text
-                        </label>
-                      </div>
-                      <textarea
-                        {...register("text")}
-                        rows={3}
-                        className="w-full rounded-xl border border-input bg-card px-3.5 py-2 min-h-[80px] text-sm text-foreground placeholder-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow duration-200 resize-y"
-                        placeholder="e.g. What is the pathognomonic murmur heard in Mitral Stenosis?"
-                      />
-                      {errors.text && (
-                        <p className="text-xs text-red-500">
-                          {errors.text.message}
-                        </p>
-                      )}
-                    </section>
+                  {/* Section 1 — Question Text */}
+                  <section className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">
+                      <FileText className="h-3.5 w-3.5 text-primary" />
+                      Question Text
+                    </label>
+                    <textarea
+                      {...register("text")}
+                      rows={3}
+                      className="w-full rounded-xl border border-input bg-card px-3.5 py-2 min-h-[80px] text-sm text-foreground placeholder-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow duration-200 resize-y"
+                      placeholder="e.g. What is the pathognomonic murmur heard in Mitral Stenosis?"
+                    />
+                    {errors.text && (
+                      <p className="text-xs text-red-500">
+                        {errors.text.message}
+                      </p>
+                    )}
+                  </section>
 
-                    {/* Section 2 — Image */}
-                    <section className="space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 text-primary text-[10px] font-bold">
-                          2
-                        </span>
-                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                          <ImageIcon className="h-3.5 w-3.5 text-muted-foreground" />
-                          Image
-                          <span className="text-[10px] font-normal text-muted-foreground/75 normal-case">
-                            (Optional)
-                          </span>
-                        </span>
-                      </div>
-                      <QuestionFormImageField
-                        register={register}
-                        errors={errors}
-                        watchImageUrl={watchImageUrl}
-                        hidePreview={true}
-                      />
-                    </section>
-                  </div>
+                  {/* Section 2 — Image */}
+                  <section className="space-y-1.5">
+                    <span className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">
+                      <ImageIcon className="h-3.5 w-3.5 text-primary" />
+                      Image
+                      <span className="text-[10px] font-normal text-muted-foreground/75 normal-case">
+                        (Optional)
+                      </span>
+                    </span>
+                    <QuestionFormImageField
+                      register={register}
+                      errors={errors}
+                      watchImageUrl={watchImageUrl}
+                      hidePreview={true}
+                      hideLabel={true}
+                    />
+                  </section>
 
-                  {/* Right Column */}
-                  <div className="space-y-4">
-                    {/* Section 3 — Answer Options */}
-                    <section className="space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 text-primary text-[10px] font-bold">
-                          3
-                        </span>
-                        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                          <ListChecks className="h-3.5 w-3.5 text-muted-foreground" />
-                          Answer Options
-                        </span>
-                      </div>
-                      <QuestionFormOptions
-                        fields={fields}
-                        currentCorrectIndex={currentCorrectIndex}
-                        register={register}
-                        setValue={setValue}
-                        append={append}
-                        remove={remove}
-                        errors={errors}
-                      />
-                    </section>
+                  {/* Section 3 — Answer Options */}
+                  <section className="space-y-1.5">
+                    <span className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">
+                      <ListChecks className="h-3.5 w-3.5 text-primary" />
+                      Answer Options
+                    </span>
+                    <QuestionFormOptions
+                      fields={fields}
+                      currentCorrectIndex={currentCorrectIndex}
+                      register={register}
+                      setValue={setValue}
+                      append={append}
+                      remove={remove}
+                      errors={errors}
+                    />
+                  </section>
 
-                    {/* Section 4 — Explanation */}
-                    <section className="space-y-1.5">
-                      <div className="flex items-center gap-2">
-                        <span className="flex h-5 w-5 items-center justify-center rounded-md bg-primary/10 text-primary text-[10px] font-bold">
-                          4
-                        </span>
-                        <label className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
-                          <MessageSquareText className="h-3.5 w-3.5 text-muted-foreground" />
-                          Explanation
-                          <span className="text-[10px] font-normal text-muted-foreground/75 normal-case">
-                            (Optional)
-                          </span>
-                        </label>
-                      </div>
-                      <textarea
-                        {...register("explanation")}
-                        rows={2}
-                        className="w-full rounded-xl border border-input bg-card px-3.5 py-2 min-h-[60px] text-sm text-foreground placeholder-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow duration-200 resize-y"
-                        placeholder="Provide context explaining why the selected answer is correct."
-                      />
-                    </section>
-                  </div>
+                  {/* Section 4 — Explanation */}
+                  <section className="space-y-1.5">
+                    <label className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">
+                      <MessageSquareText className="h-3.5 w-3.5 text-primary" />
+                      Explanation
+                      <span className="text-[10px] font-normal text-muted-foreground/75 normal-case">
+                        (Optional)
+                      </span>
+                    </label>
+                    <textarea
+                      {...register("explanation")}
+                      rows={2}
+                      className="w-full rounded-xl border border-input bg-card px-3.5 py-2 min-h-[60px] text-sm text-foreground placeholder-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow duration-200 resize-y"
+                      placeholder="Provide context explaining why the selected answer is correct."
+                    />
+                  </section>
                 </form>
               </div>
 
@@ -275,33 +268,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
             </div>
           </div>
 
-          {/* ── Footer ── */}
-          <div className="border-t border-border/60 bg-card px-6 py-3">
-            <div className="max-w-2xl flex items-center gap-3">
-              <button
-                type="submit"
-                form="question-form"
-                disabled={isSubmitting}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-primary px-5 py-2 text-sm font-bold text-primary-foreground shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-105 disabled:opacity-50"
-              >
-                {isSubmitting ? (
-                  <>
-                    <span className="h-3.5 w-3.5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    Saving...
-                  </>
-                ) : (
-                  "Save Question"
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={onClose}
-                className="inline-flex items-center justify-center rounded-xl border border-input bg-background px-4 py-2 text-sm font-semibold text-foreground hover:bg-muted transition-all duration-200"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
+
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -27,7 +27,7 @@ export function QuestionFormOptions({
 }: QuestionFormOptionsProps) {
   return (
     <div className="space-y-2">
-      <div className="space-y-1.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
         {fields.map((field, idx) => {
           const isCorrect = currentCorrectIndex === idx;
           return (

@@ -7,6 +7,7 @@ interface QuestionFormImageFieldProps {
   errors: FieldErrors<QuestionFormValues>;
   watchImageUrl?: string;
   hidePreview?: boolean;
+  hideLabel?: boolean;
 }
 
 export function QuestionFormImageField({
@@ -14,16 +15,19 @@ export function QuestionFormImageField({
   errors,
   watchImageUrl,
   hidePreview,
+  hideLabel,
 }: QuestionFormImageFieldProps) {
   const isFormValid = watchImageUrl && watchImageUrl.startsWith("http");
 
   return (
     <div className="space-y-2">
       <div className="space-y-1">
-        <label className="text-sm font-semibold text-foreground flex items-center gap-1.5">
-          <ImageIcon className="h-3.5 w-3.5 text-muted-foreground" />
-          <span>Image URL (Optional)</span>
-        </label>
+        {!hideLabel && (
+          <label className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+            <ImageIcon className="h-3.5 w-3.5 text-muted-foreground" />
+            <span>Image URL (Optional)</span>
+          </label>
+        )}
         <input
           type="text"
           {...register("image_url")}

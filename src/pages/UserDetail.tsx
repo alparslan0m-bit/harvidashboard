@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { ArrowLeft } from "lucide-react";
-import { ConfirmDialog, ErrorView } from "@/components/shared";
+import { ConfirmDialog, ErrorView, PageHeader } from "@/components/shared";
 import { UserDetailProfile, UserDetailStatsGrid } from "@/components/pages/users/UserDetailProfile";
 import { UserDetailQuizHistory, UserDetailPurchases } from "@/components/pages/users/UserDetailTables";
 import { UserDetailDangerZone } from "@/components/pages/users/UserDetailDangerZone";
@@ -62,18 +62,23 @@ export const UserDetail: React.FC = () => {
     );
   }
 
+  const headerActions = (
+    <button
+      type="button"
+      onClick={handleBack}
+      className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-foreground hover:bg-accent transition focus-ring"
+    >
+      <ArrowLeft className="h-3.5 w-3.5" />
+      Back to Users
+    </button>
+  );
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={handleBack}
-          className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-semibold text-foreground hover:bg-accent transition focus-ring"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Back to Users
-        </button>
-      </div>
+      <PageHeader
+        title={user ? `User Profile: ${user.email}` : "User Profile"}
+        actions={headerActions}
+      />
 
       {isLoading ? (
         <div className="space-y-4 animate-pulse">
