@@ -11,7 +11,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isCollapsed, onClo
   return (
     <div
       className={cn(
-        "h-14 border-b border-border flex items-center shrink-0",
+        "h-16 sm:h-[72px] lg:h-20 border-b border-border flex items-center shrink-0",
         isCollapsed ? "lg:justify-center lg:px-0 px-5 justify-between" : "px-5 justify-between"
       )}
     >

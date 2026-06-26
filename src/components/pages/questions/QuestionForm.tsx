@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import * as Dialog from "@radix-ui/react-dialog";
 import {
-  X,
   FileText,
   Image as ImageIcon,
   ListChecks,
