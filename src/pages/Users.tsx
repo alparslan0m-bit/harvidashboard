@@ -3,7 +3,7 @@ import { UserFilters } from "@/components/pages/users/UserFilters";
 import { DataTable } from "@/components/shared/DataTable";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ErrorView } from "@/components/shared/ErrorView";
-import { UserExportMenu } from "@/components/pages/users/UserExportMenu";
+
 import { useUsersPage } from "@/hooks/useUsersPage";
 import { PAGE_SIZE } from "@/lib/constants";
 
@@ -13,14 +13,12 @@ export const Users: React.FC = () => {
     setPage,
     search,
     filter,
-    exporting,
     data,
     isLoading,
     error,
     refetch,
     handleSearchChange,
     handleFilterChange,
-    handleExportCSV,
     columns,
   } = useUsersPage();
 
@@ -39,15 +37,6 @@ export const Users: React.FC = () => {
     <div className="space-y-6">
       <PageHeader
         title="User Accounts"
-        actions={
-          <UserExportMenu
-            exporting={exporting}
-            isLoading={isLoading}
-            hasUsers={!!data?.users?.length}
-            onExportCurrentPage={() => handleExportCSV(true)}
-            onExportAll={() => handleExportCSV(false)}
-          />
-        }
       />
 
       <UserFilters

@@ -1,14 +1,12 @@
 import { useState, useMemo, useCallback } from "react";
 import { useUsers } from "@/hooks/useUsers";
 import { createUserColumns } from "@/components/pages/users/userColumns";
-import { exportUsersCsv } from "@/utils/export/exportUsersCsv";
-import { toast } from "sonner";
+
 
 export function useUsersPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
-  const [exporting, setExporting] = useState(false);
 
   const { data, isLoading, error, refetch } = useUsers(page, search, filter);
 
@@ -22,16 +20,7 @@ export function useUsersPage() {
     setPage(1);
   }, []);
 
-  const handleExportCSV = async (currentPageOnly: boolean) => {
-    setExporting(true);
-    try {
-      await exportUsersCsv(currentPageOnly, data);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to export CSV file");
-    } finally {
-      setExporting(false);
-    }
-  };
+
 
   const columns = useMemo(() => createUserColumns(), []);
 
@@ -40,14 +29,12 @@ export function useUsersPage() {
     setPage,
     search,
     filter,
-    exporting,
     data,
     isLoading,
     error,
     refetch,
     handleSearchChange,
     handleFilterChange,
-    handleExportCSV,
     columns,
   };
 }
