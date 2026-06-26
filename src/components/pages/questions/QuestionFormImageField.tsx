@@ -6,12 +6,14 @@ interface QuestionFormImageFieldProps {
   register: UseFormRegister<QuestionFormValues>;
   errors: FieldErrors<QuestionFormValues>;
   watchImageUrl?: string;
+  hidePreview?: boolean;
 }
 
 export function QuestionFormImageField({
   register,
   errors,
   watchImageUrl,
+  hidePreview,
 }: QuestionFormImageFieldProps) {
   const isFormValid = watchImageUrl && watchImageUrl.startsWith("http");
 
@@ -33,7 +35,7 @@ export function QuestionFormImageField({
         )}
       </div>
 
-      {isFormValid && (
+      {isFormValid && !hidePreview && (
         <div className="rounded-xl border-2 border-dashed border-border/50 bg-muted/10 p-3 text-center transition-colors hover:bg-muted/20">
           <p className="inline-flex items-center gap-1 text-xs text-muted-foreground mb-2">
             <ImageIcon className="h-3 w-3" />
