@@ -10,7 +10,7 @@ interface PageHeaderProps {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({
   title,
-  description,
+  description: _description,
   actions,
   className,
 }) => {

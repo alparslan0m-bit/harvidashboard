@@ -8,8 +8,6 @@ export function useUsersPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
-  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [exporting, setExporting] = useState(false);
 
   const { data, isLoading, error, refetch } = useUsers(page, search, filter);
@@ -24,11 +22,6 @@ export function useUsersPage() {
     setPage(1);
   }, []);
 
-  const handleViewUser = useCallback((id: string) => {
-    setSelectedUserId(id);
-    setIsPanelOpen(true);
-  }, []);
-
   const handleExportCSV = async (currentPageOnly: boolean) => {
     setExporting(true);
     try {
@@ -40,23 +33,13 @@ export function useUsersPage() {
     }
   };
 
-  const handleClosePanel = useCallback(() => {
-    setIsPanelOpen(false);
-    setSelectedUserId(null);
-  }, []);
-
-  const columns = useMemo(
-    () => createUserColumns({ handleViewUser }),
-    [handleViewUser]
-  );
+  const columns = useMemo(() => createUserColumns(), []);
 
   return {
     page,
     setPage,
     search,
     filter,
-    selectedUserId,
-    isPanelOpen,
     exporting,
     data,
     isLoading,
@@ -65,7 +48,6 @@ export function useUsersPage() {
     handleSearchChange,
     handleFilterChange,
     handleExportCSV,
-    handleClosePanel,
     columns,
   };
 }

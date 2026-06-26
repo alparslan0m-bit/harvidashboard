@@ -5,30 +5,55 @@ interface UserDetailDangerZoneProps {
   isAdmin: boolean;
   onGrantAdmin: () => void;
   onDelete: () => void;
+  isGranting?: boolean;
+  isDeleting?: boolean;
 }
 
 export const UserDetailDangerZone: React.FC<UserDetailDangerZoneProps> = ({
   isAdmin,
   onGrantAdmin,
   onDelete,
+  isGranting = false,
+  isDeleting = false,
 }) => (
-  <div className="space-y-2 border-t border-border/60 pt-6 select-none">
-    <h4 className="text-xs font-semibold uppercase tracking-wider text-red-500">Danger Zone Operations</h4>
-    <div className="flex gap-4">
+  <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-6 space-y-4 select-none">
+    <div>
+      <h4 className="text-sm font-bold uppercase tracking-wider text-destructive">
+        Admin & Danger Zone
+      </h4>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Privileged actions that affect account access and data. Proceed with caution.
+      </p>
+    </div>
+    <div className="flex flex-col sm:flex-row gap-3">
       {isAdmin ? (
-        <button disabled className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-muted text-muted-foreground border text-xs font-semibold cursor-not-allowed">
+        <button
+          type="button"
+          disabled
+          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-muted text-muted-foreground border border-border text-sm font-semibold cursor-not-allowed"
+        >
           <Check className="h-4 w-4 text-emerald-500" />
           <span>Already Admin</span>
         </button>
       ) : (
-        <button onClick={onGrantAdmin} className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-foreground text-background border text-xs font-semibold transition hover:bg-foreground/90">
+        <button
+          type="button"
+          onClick={onGrantAdmin}
+          disabled={isGranting || isDeleting}
+          className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-foreground text-background border text-sm font-semibold transition hover:bg-foreground/90 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
           <ShieldAlert className="h-4 w-4" />
-          <span>Grant Admin Access</span>
+          <span>{isGranting ? "Granting…" : "Grant Admin Access"}</span>
         </button>
       )}
-      <button onClick={onDelete} className="flex-1 inline-flex items-center justify-center gap-2 px-3 py-2 rounded-md bg-destructive text-white text-xs font-semibold transition">
+      <button
+        type="button"
+        onClick={onDelete}
+        disabled={isGranting || isDeleting}
+        className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-destructive text-destructive-foreground text-sm font-semibold transition hover:bg-destructive/90 disabled:opacity-50 disabled:cursor-not-allowed"
+      >
         <Trash2 className="h-4 w-4" />
-        <span>Permanently Delete</span>
+        <span>{isDeleting ? "Deleting…" : "Permanently Delete"}</span>
       </button>
     </div>
   </div>

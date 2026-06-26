@@ -1,7 +1,6 @@
 import React from "react";
 import { UserFilters } from "@/components/pages/users/UserFilters";
 import { DataTable } from "@/components/shared/DataTable";
-import { UserDetailPanel } from "@/components/pages/users/UserDetailPanel";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { ErrorView } from "@/components/shared/ErrorView";
 import { UserExportMenu } from "@/components/pages/users/UserExportMenu";
@@ -14,8 +13,6 @@ export const Users: React.FC = () => {
     setPage,
     search,
     filter,
-    selectedUserId,
-    isPanelOpen,
     exporting,
     data,
     isLoading,
@@ -24,7 +21,6 @@ export const Users: React.FC = () => {
     handleSearchChange,
     handleFilterChange,
     handleExportCSV,
-    handleClosePanel,
     columns,
   } = useUsersPage();
 
@@ -70,12 +66,6 @@ export const Users: React.FC = () => {
         isLoading={isLoading}
         totalCount={data?.totalCount || 0}
         pageSize={PAGE_SIZE}
-      />
-
-      <UserDetailPanel
-        userId={selectedUserId}
-        isOpen={isPanelOpen}
-        onClose={handleClosePanel}
       />
     </div>
   );

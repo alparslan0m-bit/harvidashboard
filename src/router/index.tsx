@@ -12,6 +12,7 @@ import { Import } from "../pages/Import";
 import { Purchases } from "../pages/Purchases";
 import { Feedback } from "../pages/Feedback";
 import { Analytics } from "../pages/Analytics";
+import { UserDetail } from "../pages/UserDetail";
 
 export const AppRouter: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ export const AppRouter: React.FC = () => {
         <Route element={<AppShell />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/users" element={<Users />} />
+          <Route path="/users/:userId" element={<UserDetail />} />
           <Route path="/curriculum" element={<Curriculum />} />
           <Route
             path="/curriculum/lecture/:lectureId"

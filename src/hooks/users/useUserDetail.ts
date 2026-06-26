@@ -104,10 +104,22 @@ export function useUserDetail(userId: string | null) {
     staleTime: 10 * 1000,
   });
 
+  const refetch = () => {
+    void userDetailQuery.refetch();
+    void quizHistoryQuery.refetch();
+    void purchasesQuery.refetch();
+  };
+
   return {
     user: userDetailQuery.data,
     quizHistory: quizHistoryQuery.data || [],
     purchases: purchasesQuery.data || [],
-    isLoading: userDetailQuery.isLoading || quizHistoryQuery.isLoading || purchasesQuery.isLoading,
+    isLoading:
+      userDetailQuery.isLoading ||
+      quizHistoryQuery.isLoading ||
+      purchasesQuery.isLoading,
+    error:
+      userDetailQuery.error ?? quizHistoryQuery.error ?? purchasesQuery.error,
+    refetch,
   };
 }

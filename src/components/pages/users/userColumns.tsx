@@ -2,12 +2,9 @@ import { formatDate } from "@/lib/utils";
 import type { UserWithDetails } from "@/types/database";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Eye } from "lucide-react";
+import { Link } from "react-router";
 
-export interface UserColumnsParams {
-  handleViewUser: (id: string) => void;
-}
-
-export function createUserColumns({ handleViewUser }: UserColumnsParams): ColumnDef<UserWithDetails>[] {
+export function createUserColumns(): ColumnDef<UserWithDetails>[] {
   return [
     {
       id: "avatar",
@@ -83,14 +80,14 @@ export function createUserColumns({ handleViewUser }: UserColumnsParams): Column
       id: "actions",
       header: "Actions",
       cell: ({ row }) => (
-        <button
-          onClick={() => handleViewUser(row.original.id)}
+        <Link
+          to={`/users/${row.original.id}`}
           className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-border text-xs font-semibold text-foreground hover:bg-accent hover:text-accent-foreground transition cursor-pointer"
           aria-label="View Student Details"
         >
           <Eye className="h-3.5 w-3.5" />
           <span>View</span>
-        </button>
+        </Link>
       ),
     },
   ];
