@@ -77,7 +77,6 @@ export const Dashboard: React.FC = () => {
       trend: stats
         ? { value: stats.revenueTrend, label: "vs last month" }
         : null,
-      featured: true,
     },
     {
       title: "Average Quiz Score",
@@ -105,7 +104,7 @@ export const Dashboard: React.FC = () => {
     <div className="space-y-6">
       <PageHeader title="Dashboard Overview" actions={headerActions} />
 
-      <KPIGrid cards={kpiCards} compact className="gap-3" />
+      <KPIGrid cards={kpiCards} compact colorful className="gap-3" />
 
       <div className="grid grid-cols-1 mt-6">
         <h3 className="text-sm font-semibold tracking-tight text-foreground mb-4">

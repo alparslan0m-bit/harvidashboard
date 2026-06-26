@@ -121,6 +121,7 @@ export const Analytics: React.FC = () => {
   return (
     <div className="space-y-6">
       <PageHeader title="System Analytics" />
+      <KPIGrid cards={kpiCards} compact colorful />
       <AnalyticsDateFilter
         fromDate={fromDate}
         toDate={toDate}
@@ -129,7 +130,6 @@ export const Analytics: React.FC = () => {
         onPreset={applyPreset}
         activePreset={activePreset}
       />
-      <KPIGrid cards={kpiCards} compact />
       <AnalyticsChartsGrid
         dailyActiveUsers={data?.dailyActiveUsers}
         purchaseBreakdown={data?.purchaseBreakdown}

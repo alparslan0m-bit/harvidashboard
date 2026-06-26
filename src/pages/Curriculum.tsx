@@ -13,6 +13,7 @@ import {
 } from "../hooks/useCurriculum";
 import PageHeader from "../components/shared/PageHeader";
 import MetricCard from "../components/shared/MetricCard";
+import KPIGrid from "../components/shared/KPIGrid";
 import {
   Calendar,
   BookOpen,
@@ -99,32 +100,17 @@ export const Curriculum: React.FC = () => {
       <PageHeader title="Curriculum Management" />
 
       {/* Horizontal KPIs Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <MetricCard
-          title="Academic Years"
-          value={isLoadingStats ? "..." : stats.yearsCount}
-          icon={<Calendar />}
-          compact
-        />
-        <MetricCard
-          title="Course Modules"
-          value={isLoadingStats ? "..." : stats.modulesCount}
-          icon={<BookOpen />}
-          compact
-        />
-        <MetricCard
-          title="Subjects"
-          value={isLoadingStats ? "..." : stats.subjectsCount}
-          icon={<Bookmark />}
-          compact
-        />
-        <MetricCard
-          title="Lectures"
-          value={isLoadingStats ? "..." : stats.lecturesCount}
-          icon={<FileText />}
-          compact
-        />
-      </div>
+      <KPIGrid 
+        cards={[
+          { title: "Academic Years", value: isLoadingStats ? "..." : stats.yearsCount, icon: <Calendar /> },
+          { title: "Course Modules", value: isLoadingStats ? "..." : stats.modulesCount, icon: <BookOpen /> },
+          { title: "Subjects", value: isLoadingStats ? "..." : stats.subjectsCount, icon: <Bookmark /> },
+          { title: "Lectures", value: isLoadingStats ? "..." : stats.lecturesCount, icon: <FileText /> },
+        ]}
+        compact 
+        colorful 
+        className="gap-4" 
+      />
 
       {/* Page-level Interactive Breadcrumbs */}
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-card px-4 py-2.5 rounded-[8px] border border-border shadow-xs w-fit">
