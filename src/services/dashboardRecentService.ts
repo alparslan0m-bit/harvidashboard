@@ -111,6 +111,33 @@ export function fetchUserGrowth(
 ): { month: string; users: number }[] {
   const hasRange = fromDate && toDate;
 
+  // Group by day if the range is 90 days or less
+  const isDaily = hasRange && (new Date(toDate!).getTime() - new Date(fromDate!).getTime()) <= 90 * 24 * 60 * 60 * 1000;
+
+  if (isDaily) {
+    const startDate = new Date(fromDate!);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(toDate!);
+    endDate.setHours(23, 59, 59, 999);
+
+    const days: { dateObj: Date; name: string; users: number }[] = [];
+    for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+      const dayEnd = new Date(d);
+      dayEnd.setHours(23, 59, 59, 999);
+      days.push({
+        dateObj: dayEnd,
+        name: dayEnd.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+        users: 0,
+      });
+    }
+
+    days.forEach((m) => {
+      m.users = allUsers.filter((u) => new Date(u.created_at).getTime() <= m.dateObj.getTime()).length;
+    });
+
+    return days.map((m) => ({ month: m.name, users: m.users }));
+  }
+
   const startOf = hasRange
     ? (() => { const d = new Date(fromDate); d.setDate(1); return d; })()
     : (() => { const d = new Date(); d.setMonth(d.getMonth() - 5); d.setDate(1); return d; })();
