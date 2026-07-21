@@ -34,8 +34,7 @@ export function useAnalytics(fromDate: string, toDate: string) {
           .from("quiz_results")
           .select("user_id, created_at")
           .gte("created_at", startIso)
-          .lte("created_at", endIso)
-          .abortSignal(signal);
+          .lte("created_at", endIso);
         if (dauError) {
           throw new Error(`[Analytics.dailyActiveUsers] ${dauError.message}`);
         }
@@ -68,8 +67,7 @@ export function useAnalytics(fromDate: string, toDate: string) {
           .from("quiz_results")
           .select("score")
           .gte("created_at", startIso)
-          .lte("created_at", endIso)
-          .abortSignal(signal);
+          .lte("created_at", endIso);
         if (scoreError) {
           throw new Error(`[Analytics.scoreData] ${scoreError.message}`);
         }
@@ -78,8 +76,7 @@ export function useAnalytics(fromDate: string, toDate: string) {
           .from("purchases")
           .select("status")
           .gte("created_at", startIso)
-          .lte("created_at", endIso)
-          .abortSignal(signal);
+          .lte("created_at", endIso);
         if (purError) {
           throw new Error(`[Analytics.purchaseBreakdown] ${purError.message}`);
         }
@@ -101,8 +98,7 @@ export function useAnalytics(fromDate: string, toDate: string) {
           .from("profiles")
           .select("id", { count: "exact", head: true })
           .gte("updated_at", startIso)
-          .lte("updated_at", endIso)
-          .abortSignal(signal);
+          .lte("updated_at", endIso);
         if (newUsersError) {
           throw new Error(`[Analytics.newUsersStats] ${newUsersError.message}`);
         }
@@ -112,8 +108,7 @@ export function useAnalytics(fromDate: string, toDate: string) {
           .select("amount_cents")
           .eq("status", "active")
           .gte("created_at", startIso)
-          .lte("created_at", endIso)
-          .abortSignal(signal);
+          .lte("created_at", endIso);
         if (revError) {
           throw new Error(`[Analytics.revenueStats] ${revError.message}`);
         }
@@ -124,8 +119,7 @@ export function useAnalytics(fromDate: string, toDate: string) {
           .from("quiz_results")
           .select("total_questions")
           .gte("created_at", startIso)
-          .lte("created_at", endIso)
-          .abortSignal(signal);
+          .lte("created_at", endIso);
         if (ansError) {
           throw new Error(`[Analytics.questionsAnsweredStats] ${ansError.message}`);
         }

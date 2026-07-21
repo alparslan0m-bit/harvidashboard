@@ -4,19 +4,12 @@ import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { useSubjectsAndLectures } from "@/hooks/curriculum";
 import { buildReorderPayload } from "@/utils/reorder";
 import type { SubjectWithLectures } from "@/types/curriculum";
-import { formatCurrency } from "@/lib/utils";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import EmptyState from "@/components/shared/EmptyState";
 import { CurriculumPanelShell } from "./shared/CurriculumPanelShell";
 import { CurriculumPanelHeaderWithBack } from "./shared/CurriculumPanelHeaderWithBack";
 import { SortableCurriculumRow } from "./shared/SortableCurriculumRow";
-import {
-  PricingFormOverlay,
-  emptyPricingForm,
-  moduleToPricingForm,
-  pricingFormToPayload,
-  type PricingFormState,
-} from "./shared/PricingFormFields";
+import { InlineNameEditor } from "./shared/InlineNameEditor";
 import { useSortableSensors } from "./shared/useSortableSensors";
 import { usePanelKeyboard } from "./shared/usePanelKeyboard";
 
@@ -29,8 +22,7 @@ interface SubjectsPanelProps {
 
 function subjectSubtitle(subj: SubjectWithLectures) {
   const count = subj.lectures?.length ?? 0;
-  const price = subj.is_free ? "Free" : formatCurrency(subj.price_cents);
-  return `${count} ${count === 1 ? "lecture" : "lectures"} · ${price}`;
+  return `${count} ${count === 1 ? "lecture" : "lectures"}`;
 }
 
 export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
@@ -43,7 +35,7 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
     useSubjectsAndLectures(selectedModuleId);
   const sensors = useSortableSensors();
 
-  const [form, setForm] = useState<PricingFormState>(emptyPricingForm());
+  const [subjectName, setSubjectName] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
@@ -52,13 +44,13 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
 
   const openCreate = useCallback(() => {
     setEditingId(null);
-    setForm(emptyPricingForm());
+    setSubjectName("");
     setIsFormOpen(true);
   }, []);
 
   const openEdit = useCallback((subj: SubjectWithLectures) => {
     setEditingId(subj.id);
-    setForm(moduleToPricingForm(subj));
+    setSubjectName(subj.name);
     setIsFormOpen(true);
   }, []);
 
@@ -76,6 +68,13 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
     onCancelEdit: () => setIsFormOpen(false),
     onClearFocus: onBack,
   });
+
+  const saveSubject = async () => {
+    if (!subjectName.trim()) return;
+    if (editingId) await updateSubject({ id: editingId, name: subjectName.trim() });
+    else await createSubject({ name: subjectName.trim() });
+    setIsFormOpen(false);
+  };
 
   if (!selectedModuleId) {
     return (
@@ -102,19 +101,13 @@ export const SubjectsPanel: React.FC<SubjectsPanelProps> = ({
       />
 
       {isFormOpen && (
-        <PricingFormOverlay
-          title={editingId ? "Edit Subject" : "Create Subject"}
-          form={form}
-          onChange={(patch) => setForm((f) => ({ ...f, ...patch }))}
-          onSave={async () => {
-            if (!form.name.trim()) return;
-            const payload = pricingFormToPayload(form);
-            if (editingId) await updateSubject({ id: editingId, ...payload });
-            else await createSubject(payload);
-            setIsFormOpen(false);
-          }}
+        <InlineNameEditor
+          value={subjectName}
+          onChange={setSubjectName}
+          onSave={saveSubject}
           onCancel={() => setIsFormOpen(false)}
-          namePlaceholder="e.g. Cardiology"
+          placeholder="e.g. Cardiology"
+          ariaLabel="Subject name"
         />
       )}
 

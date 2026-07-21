@@ -72,7 +72,7 @@ export const UserDetailPurchases: React.FC<{ purchases: PurchaseWithDetails[] }>
             <thead className="bg-muted/30 text-muted-foreground border-b uppercase text-xs font-semibold">
               <tr>
                 <th scope="col" className="px-5 py-3">
-                  Unlocked Item
+                  Unlocked Module
                 </th>
                 <th scope="col" className="px-5 py-3">
                   Amount
@@ -89,7 +89,7 @@ export const UserDetailPurchases: React.FC<{ purchases: PurchaseWithDetails[] }>
               {purchases.map((p) => (
                 <tr key={p.id} className="hover:bg-muted/20 transition-colors">
                   <td className="px-5 py-3 font-medium">
-                    {p.modules?.name || p.subjects?.name || "Premium Item"}
+                    {p.modules?.name || "Module Access"}
                   </td>
                   <td className="px-5 py-3 font-semibold tabular-nums">
                     {formatCurrency(p.amount_cents)}

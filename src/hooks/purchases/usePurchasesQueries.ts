@@ -5,7 +5,7 @@ import { PAGE_SIZE, STALE_TIMES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
 import { listAllAuthUsers } from "@/services/authService";
 import type { PurchaseListItem, PurchasesPageData } from "@/types/api";
-import type { Module, Subject } from "@/types/database";
+import type { Module } from "@/types/database";
 
 export function usePurchases(
   page: number,
@@ -25,7 +25,7 @@ export function usePurchases(
 
         let query = supabaseAdmin
           .from("purchases")
-          .select("*, modules(name), subjects(name)", { count: "exact" });
+          .select("*, modules(name)", { count: "exact" });
 
         if (status && status !== "all") query = query.eq("status", status);
         if (fromDate) query = query.gte("created_at", `${fromDate}T00:00:00Z`);
@@ -53,7 +53,6 @@ export function usePurchases(
               ...p,
               profiles: profiles.find((pr) => pr.id === p.user_id) || null,
               modules: p.modules as Module | null,
-              subjects: p.subjects as Subject | null,
               userEmail: authUser?.email || "N/A",
             });
           });

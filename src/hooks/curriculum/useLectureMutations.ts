@@ -12,10 +12,14 @@ export function useLectureMutations(moduleId: string | null) {
     queryClient.invalidateQueries({ queryKey: QUERY_KEYS.subjects(moduleId) });
 
   const createLectureMutation = useMutation({
-    mutationFn: async (payload: { subjectId: string; name: string }) => {
+    mutationFn: async (payload: { subjectId: string; name: string; is_free?: boolean }) => {
       const { data, error } = await supabaseAdmin
         .from("lectures")
-        .insert({ subject_id: payload.subjectId, name: payload.name })
+        .insert({
+          subject_id: payload.subjectId,
+          name: payload.name,
+          is_free: payload.is_free ?? false,
+        })
         .select()
         .single();
       if (error) throw error;
@@ -29,10 +33,14 @@ export function useLectureMutations(moduleId: string | null) {
   });
 
   const updateLectureMutation = useMutation({
-    mutationFn: async (payload: { id: string; name: string }) => {
+    mutationFn: async (payload: { id: string; name?: string; is_free?: boolean }) => {
+      const updateData: Record<string, unknown> = {};
+      if (payload.name !== undefined) updateData.name = payload.name;
+      if (payload.is_free !== undefined) updateData.is_free = payload.is_free;
+
       const { data, error } = await supabaseAdmin
         .from("lectures")
-        .update({ name: payload.name })
+        .update(updateData)
         .eq("id", payload.id)
         .select()
         .single();

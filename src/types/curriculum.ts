@@ -8,12 +8,17 @@ export type SubjectWithLectures = Subject & { lectures: Lecture[] };
 
 export type ReorderPayload = { id: string; order_index: number };
 
-export interface CurriculumFormPayload {
+export interface CurriculumModulePayload {
   name: string;
-  is_free: boolean;
   price_cents: number;
 }
 
-export interface CurriculumUpdatePayload extends CurriculumFormPayload {
-  id: string;
+export interface CurriculumSubjectPayload {
+  name: string;
+}
+
+export interface CurriculumLecturePayload {
+  subjectId: string;
+  name: string;
+  is_free?: boolean;
 }

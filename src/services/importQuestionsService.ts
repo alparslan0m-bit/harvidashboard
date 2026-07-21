@@ -71,7 +71,7 @@ export async function importQuestions(
           } else {
             const { data: newM, error: mErr } = await supabaseAdmin
               .from("modules")
-              .insert({ year_id: yearId, name: mName, is_free: true })
+              .insert({ year_id: yearId, name: mName, price_cents: 0 })
               .select("id")
               .single();
             if (mErr) throw mErr;
@@ -96,7 +96,7 @@ export async function importQuestions(
           } else {
             const { data: newS, error: sErr } = await supabaseAdmin
               .from("subjects")
-              .insert({ module_id: moduleId, name: sName, is_free: true })
+              .insert({ module_id: moduleId, name: sName })
               .select("id")
               .single();
             if (sErr) throw sErr;

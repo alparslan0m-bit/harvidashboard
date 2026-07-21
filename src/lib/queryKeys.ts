@@ -20,6 +20,10 @@ export const QUERY_KEYS = {
     "summary",
     { fromDate, toDate, searchSessionId },
   ],
+  accessCodes: (moduleId: string, statusFilter: string, batchId: string) => [
+    "accessCodes",
+    { moduleId, statusFilter, batchId },
+  ],
   feedback: (page: number, status: string) => ["feedback", { page, status }],
   feedbackUnreadCount: ["feedback", "unread-count"],
   analytics: (days: number) => ["analytics", { days }],

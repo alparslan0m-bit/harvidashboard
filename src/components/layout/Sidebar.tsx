@@ -6,6 +6,7 @@ import {
   HelpCircle,
   FileDown,
   ShoppingBag,
+  KeyRound,
   MessageSquare,
   BarChart3,
 } from "lucide-react";
@@ -36,6 +37,7 @@ const navGroups: NavGroup[] = [
     label: "Commerce",
     items: [
       { name: "Purchases", href: "/purchases", icon: ShoppingBag },
+      { name: "Access Codes", href: "/access-codes", icon: KeyRound },
     ],
   },
   {

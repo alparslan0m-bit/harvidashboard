@@ -79,7 +79,7 @@ export function useUserDetail(userId: string | null) {
       if (!userId) return [];
       const { data, error } = await supabaseAdmin
         .from("purchases")
-        .select("id, user_id, status, amount_cents, currency, created_at, module_id, subject_id, modules(name), subjects(name), payment_id, payment_session_id, provider, updated_at")
+        .select("id, user_id, status, amount_cents, currency, created_at, module_id, modules(name), payment_id, payment_session_id, provider, updated_at")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (error) throw new Error(`[Users.userPurchases] ${error.message}`);
@@ -87,7 +87,6 @@ export function useUserDetail(userId: string | null) {
         id: row.id,
         user_id: row.user_id,
         module_id: row.module_id,
-        subject_id: row.subject_id,
         status: row.status,
         amount_cents: row.amount_cents,
         currency: row.currency,
@@ -97,7 +96,6 @@ export function useUserDetail(userId: string | null) {
         created_at: row.created_at,
         updated_at: row.updated_at,
         modules: row.modules as unknown as PurchaseWithDetails["modules"],
-        subjects: row.subjects as unknown as PurchaseWithDetails["subjects"],
       }));
     },
     enabled: !!userId,

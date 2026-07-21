@@ -40,8 +40,8 @@ export interface Module {
   name: string;
   external_id: string;
   order_index: number;
-  is_free: boolean;
   price_cents: number;
+  external_price_id?: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -52,8 +52,6 @@ export interface Subject {
   name: string;
   external_id: string;
   order_index: number;
-  is_free: boolean;
-  price_cents: number;
   created_at: string;
   updated_at: string;
 }
@@ -64,6 +62,7 @@ export interface Lecture {
   name: string;
   external_id: string;
   order_index: number;
+  is_free: boolean;
   created_at: string;
   updated_at: string;
 }
@@ -94,23 +93,40 @@ export interface QuizResult {
 export interface Purchase {
   id: string;
   user_id: string;
-  module_id: string | null;
-  subject_id: string | null;
-  status: 'pending' | 'active' | 'failed' | 'refunded' | 'disputed';
+  module_id: string;
+  status: "pending" | "active" | "failed" | "refunded" | "disputed";
   amount_cents: number;
   currency: string;
   payment_id: string | null;
   payment_session_id: string | null;
   provider: string;
+  store_transaction_id?: string | null;
+  store?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+export interface AccessCode {
+  id: string;
+  code: string;
+  module_id: string;
+  batch_id: string | null;
+  redeemed_by: string | null;
+  redeemed_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+}
+
+export interface AccessCodeWithDetails extends AccessCode {
+  modules?: Module | null;
+  redeemer_email?: string | null;
 }
 
 export interface Feedback {
   id: string;
   user_id: string | null;
   content: string;
-  status: 'new' | 'read' | 'resolved' | 'archived';
+  status: "new" | "read" | "resolved" | "archived";
   metadata: Record<string, unknown>;
   created_at: string;
 }
@@ -136,7 +152,6 @@ export interface UserWithDetails {
 export interface PurchaseWithDetails extends Purchase {
   profiles?: Profile | null;
   modules?: Module | null;
-  subjects?: Subject | null;
 }
 
 export interface QuizResultWithLecture extends QuizResult {

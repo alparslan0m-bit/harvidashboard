@@ -5,7 +5,7 @@ import { STALE_TIMES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
 import { toast } from "sonner";
 import type { SubjectWithLectures } from "@/types/curriculum";
-import { normalizePricePayload, reorderItems } from "./reorderItems";
+import { reorderItems } from "./reorderItems";
 
 export function useSubjects(moduleId: string | null) {
   const queryClient = useQueryClient();
@@ -41,11 +41,11 @@ export function useSubjects(moduleId: string | null) {
   });
 
   const createSubjectMutation = useMutation({
-    mutationFn: async (payload: { name: string; is_free: boolean; price_cents: number }) => {
+    mutationFn: async (payload: { name: string }) => {
       if (!moduleId) throw new Error("No Module selected");
       const { data, error } = await supabaseAdmin
         .from("subjects")
-        .insert({ module_id: moduleId, ...normalizePricePayload(payload) })
+        .insert({ module_id: moduleId, name: payload.name })
         .select()
         .single();
       if (error) throw error;
@@ -59,10 +59,10 @@ export function useSubjects(moduleId: string | null) {
   });
 
   const updateSubjectMutation = useMutation({
-    mutationFn: async (payload: { id: string; name: string; is_free: boolean; price_cents: number }) => {
+    mutationFn: async (payload: { id: string; name: string }) => {
       const { data, error } = await supabaseAdmin
         .from("subjects")
-        .update(normalizePricePayload(payload))
+        .update({ name: payload.name })
         .eq("id", payload.id)
         .select()
         .single();

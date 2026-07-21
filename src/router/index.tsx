@@ -10,6 +10,7 @@ import { CurriculumLectureQuestions } from "../pages/CurriculumLectureQuestions"
 import { Questions } from "../pages/Questions";
 import { Import } from "../pages/Import";
 import { Purchases } from "../pages/Purchases";
+import { AccessCodes } from "../pages/AccessCodes";
 import { Feedback } from "../pages/Feedback";
 import { Analytics } from "../pages/Analytics";
 import { UserDetail } from "../pages/UserDetail";
@@ -33,6 +34,7 @@ export const AppRouter: React.FC = () => {
           <Route path="/questions" element={<Questions />} />
           <Route path="/import" element={<Import />} />
           <Route path="/purchases" element={<Purchases />} />
+          <Route path="/access-codes" element={<AccessCodes />} />
           <Route path="/feedback" element={<Feedback />} />
           <Route path="/analytics" element={<Analytics />} />
         </Route>

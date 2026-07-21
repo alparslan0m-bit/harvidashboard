@@ -2,10 +2,44 @@ import { Link } from "react-router";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import { formatCurrency, formatDateTime } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
-import { User, CornerUpLeft } from "lucide-react";
+import { User, CornerUpLeft, Smartphone, Key, ShieldCheck } from "lucide-react";
 
 export interface PurchaseColumnsParams {
   setRefundPurchaseId: (id: string) => void;
+}
+
+function renderProviderBadge(provider: string) {
+  const p = (provider || "").toLowerCase();
+  if (p === "apple_iap") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+        <Smartphone className="h-3 w-3" />
+        Apple IAP
+      </span>
+    );
+  }
+  if (p === "google_play") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-semibold bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+        <Smartphone className="h-3 w-3" />
+        Google Play
+      </span>
+    );
+  }
+  if (p === "code") {
+    return (
+      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-semibold bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20">
+        <Key className="h-3 w-3" />
+        Access Code
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-semibold bg-muted text-muted-foreground border border-border">
+      <ShieldCheck className="h-3 w-3" />
+      {provider || "Manual"}
+    </span>
+  );
 }
 
 export function createPurchaseColumns({
@@ -21,10 +55,10 @@ export function createPurchaseColumns({
     },
     {
       id: "itemName",
-      header: "Unlocked Item",
+      header: "Unlocked Module",
       cell: ({ row }) => {
-        const item = row.original.modules?.name || row.original.subjects?.name || "Premium Access";
-        return <span className="text-foreground">{item}</span>;
+        const item = row.original.modules?.name || "Module Access";
+        return <span className="font-medium text-foreground">{item}</span>;
       },
     },
     {
@@ -49,15 +83,13 @@ export function createPurchaseColumns({
     {
       accessorKey: "provider",
       header: "Provider",
-      cell: ({ row }) => (
-        <span className="capitalize text-muted-foreground">{row.original.provider}</span>
-      ),
+      cell: ({ row }) => renderProviderBadge(row.original.provider),
     },
     {
       accessorKey: "payment_id",
-      header: "Payment ID",
+      header: "Payment Ref",
       cell: ({ row }) => (
-        <span className="text-muted-foreground font-mono select-all">
+        <span className="text-muted-foreground font-mono text-xs select-all">
           {row.original.payment_id || "N/A"}
         </span>
       ),
