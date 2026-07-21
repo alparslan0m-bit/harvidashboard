@@ -135,7 +135,7 @@ export const ModulesPanel: React.FC<ModulesPanelProps> = ({
                     key={mod.id}
                     id={mod.id}
                     name={mod.name}
-                    subtitle={`${mod.subjectsCount} subjects${mod.is_free ? " · Free" : ` · ${formatCurrency(mod.price_cents)}`}`}
+                    subtitle={`${mod.subjectsCount} subjects${mod.price_cents === 0 ? " · Free" : ` · ${formatCurrency(mod.price_cents)}`}`}
                     isFocused={focusedId === mod.id}
                     onFocus={() => setFocusedId(mod.id)}
                     onSelect={() => onSelectModule(mod.id)}

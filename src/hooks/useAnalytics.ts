@@ -25,7 +25,7 @@ export interface AnalyticsData {
 export function useAnalytics(fromDate: string, toDate: string) {
   const query = useQuery({
     queryKey: [...QUERY_KEYS.analytics(30), fromDate, toDate],
-    queryFn: async ({ signal }): Promise<AnalyticsData> => {
+    queryFn: async (): Promise<AnalyticsData> => {
       try {
         const startIso = `${fromDate}T00:00:00Z`;
         const endIso = `${toDate}T23:59:59Z`;

@@ -66,15 +66,16 @@ export function pricingFormToPayload(form: PricingFormState) {
   return {
     name: form.name.trim(),
     is_free: form.isFree,
-    price_cents: Math.round(parseFloat(form.priceDollars || "0") * 100),
+    price_cents: form.isFree ? 0 : Math.round(parseFloat(form.priceDollars || "0") * 100),
   };
 }
 
-export function moduleToPricingForm(mod: { name: string; is_free: boolean; price_cents: number }): PricingFormState {
+export function moduleToPricingForm(mod: { name: string; price_cents: number }): PricingFormState {
+  const isFree = (mod.price_cents || 0) === 0;
   return {
     name: mod.name,
-    isFree: mod.is_free,
-    priceDollars: String(mod.price_cents / 100),
+    isFree,
+    priceDollars: String((mod.price_cents || 0) / 100),
   };
 }
 

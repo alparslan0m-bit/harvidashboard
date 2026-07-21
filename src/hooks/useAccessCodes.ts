@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import type { AccessCodeWithDetails, Module } from "@/types/database";
 
 export function useAccessCodes(moduleId: string, statusFilter: string, searchBatch: string) {
-  const queryClient = useQueryClient();
-
   const accessCodesQuery = useQuery({
     queryKey: QUERY_KEYS.accessCodes(moduleId, statusFilter, searchBatch),
     queryFn: async (): Promise<AccessCodeWithDetails[]> => {
