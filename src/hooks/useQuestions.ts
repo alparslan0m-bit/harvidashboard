@@ -160,7 +160,7 @@ export function useQuestionMutations() {
     ) => {
       const { data, error } = await supabaseAdmin
         .from("questions")
-        .insert(payload)
+        .insert({ ...payload, external_id: crypto.randomUUID() })
         .select()
         .single();
       if (error) throw error;

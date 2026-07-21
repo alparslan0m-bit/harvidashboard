@@ -147,6 +147,7 @@ export async function importQuestions(
           options: optionsArray,
           correct_answer_index: parseInt(rowData.correct_answer_index, 10),
           explanation: rowData.explanation?.trim() || null,
+          external_id: crypto.randomUUID(),
         });
 
         if (qErr) throw qErr;
