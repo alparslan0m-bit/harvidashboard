@@ -31,8 +31,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({
 
   const checkAdminPrivilege = (user: User | null): boolean => {
     if (!user) return false;
-    const role =
-      user.app_metadata?.role || (user as any).raw_app_meta_data?.role;
+    const role = user.app_metadata?.role;
     return role === "admin";
   };
 
@@ -51,6 +50,8 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({
           supabase.auth.signOut().then(() => {
             setCurrentUser(null);
             setIsAdmin(false);
+            setIsLoading(false);
+          }).catch(() => {
             setIsLoading(false);
           });
         } else {
@@ -72,7 +73,7 @@ export const AdminAuthProvider: React.FC<{ children: ReactNode }> = ({
         setIsAdmin(hasAdmin);
 
         if (!hasAdmin) {
-          await supabase.auth.signOut();
+          await supabase.auth.signOut().catch(console.error);
           setCurrentUser(null);
           setIsAdmin(false);
         }

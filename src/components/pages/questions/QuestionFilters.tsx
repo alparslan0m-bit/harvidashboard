@@ -27,50 +27,90 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
   const [lectures, setLectures] = useState<{ id: string; name: string }[]>([]);
 
   useEffect(() => {
-    supabaseAdmin
-      .from("years")
-      .select("id, name")
-      .order("name", { ascending: true })
-      .then(({ data }) => setYears(data || []));
+    let isMounted = true;
+    const fetchYears = async () => {
+      try {
+        const { data, error } = await supabaseAdmin
+          .from("years")
+          .select("id, name")
+          .order("name", { ascending: true });
+        if (error) throw error;
+        if (isMounted) setYears(data || []);
+      } catch (err) {
+        console.error("Failed to load years:", err);
+      }
+    };
+    fetchYears();
+    return () => { isMounted = false; };
   }, []);
 
   useEffect(() => {
+    let isMounted = true;
     if (filters.yearId) {
-      supabaseAdmin
-        .from("modules")
-        .select("id, name")
-        .eq("year_id", filters.yearId)
-        .order("order_index", { ascending: true })
-        .then(({ data }) => setModules(data || []));
+      const fetchModules = async () => {
+        try {
+          const { data, error } = await supabaseAdmin
+            .from("modules")
+            .select("id, name")
+            .eq("year_id", filters.yearId)
+            .order("order_index", { ascending: true });
+          if (error) throw error;
+          if (isMounted) setModules(data || []);
+        } catch (err) {
+          console.error("Failed to load modules:", err);
+        }
+      };
+      fetchModules();
     } else {
       setModules([]);
     }
+    return () => { isMounted = false; };
   }, [filters.yearId]);
 
   useEffect(() => {
+    let isMounted = true;
     if (filters.moduleId) {
-      supabaseAdmin
-        .from("subjects")
-        .select("id, name")
-        .eq("module_id", filters.moduleId)
-        .order("order_index", { ascending: true })
-        .then(({ data }) => setSubjects(data || []));
+      const fetchSubjects = async () => {
+        try {
+          const { data, error } = await supabaseAdmin
+            .from("subjects")
+            .select("id, name")
+            .eq("module_id", filters.moduleId)
+            .order("order_index", { ascending: true });
+          if (error) throw error;
+          if (isMounted) setSubjects(data || []);
+        } catch (err) {
+          console.error("Failed to load subjects:", err);
+        }
+      };
+      fetchSubjects();
     } else {
       setSubjects([]);
     }
+    return () => { isMounted = false; };
   }, [filters.moduleId]);
 
   useEffect(() => {
+    let isMounted = true;
     if (filters.subjectId) {
-      supabaseAdmin
-        .from("lectures")
-        .select("id, name")
-        .eq("subject_id", filters.subjectId)
-        .order("order_index", { ascending: true })
-        .then(({ data }) => setLectures(data || []));
+      const fetchLectures = async () => {
+        try {
+          const { data, error } = await supabaseAdmin
+            .from("lectures")
+            .select("id, name")
+            .eq("subject_id", filters.subjectId)
+            .order("order_index", { ascending: true });
+          if (error) throw error;
+          if (isMounted) setLectures(data || []);
+        } catch (err) {
+          console.error("Failed to load lectures:", err);
+        }
+      };
+      fetchLectures();
     } else {
       setLectures([]);
     }
+    return () => { isMounted = false; };
   }, [filters.subjectId]);
 
   const handleYearChange = (yearId: string) => {
