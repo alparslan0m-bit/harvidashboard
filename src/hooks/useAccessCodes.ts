@@ -75,6 +75,12 @@ export function useGenerateAccessCodes() {
         return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
       };
 
+      const generate6DigitCode = () => {
+        const arr = new Uint32Array(1);
+        crypto.getRandomValues(arr);
+        return (arr[0] % 1000000).toString().padStart(6, '0');
+      };
+
       const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
       const batchId = `batch_${generateHex(4).toLowerCase()}_${dateStr}`;
 
@@ -85,22 +91,26 @@ export function useGenerateAccessCodes() {
         expiresAt = d.toISOString();
       }
 
-      const toInsert = Array.from({ length: payload.count }).map(() => {
-        return {
-          code: generateHex(8).toUpperCase(),
-          module_id: payload.moduleId,
-          batch_id: batchId,
-          expires_at: expiresAt,
-        };
-      });
+      const toInsert: any[] = [];
+      const usedCodes = new Set<string>();
+
+      while (toInsert.length < payload.count) {
+        const rawCode = generate6DigitCode();
+        if (!usedCodes.has(rawCode)) {
+          usedCodes.add(rawCode);
+          toInsert.push({
+            code: rawCode,
+            module_id: payload.moduleId,
+            batch_id: batchId,
+            expires_at: expiresAt,
+          });
+        }
+      }
 
       const { error } = await supabaseAdmin.from("access_codes").insert(toInsert);
       if (error) throw error;
 
-      return toInsert.map((row) => {
-        const c = row.code;
-        return `${c.slice(0, 4)}-${c.slice(4, 8)}-${c.slice(8, 12)}-${c.slice(12, 16)}`;
-      });
+      return toInsert.map((row) => row.code);
     },
     onSuccess: () => {
       toast.success("Access codes batch generated successfully");
