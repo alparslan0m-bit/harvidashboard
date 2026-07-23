@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { supabase, supabaseAdmin } from "@/lib/supabaseAdmin";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import { STALE_TIMES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
@@ -66,7 +66,16 @@ export function useGenerateAccessCodes() {
       count: number;
       expiresDays?: number | null;
     }) => {
-      const { data, error } = await supabaseAdmin.rpc("admin_generate_codes", {
+      // Use the authenticated user's JWT for this RPC. The database function
+      // checks public.is_admin(), which reads the role from auth.jwt(). A
+      // service-role JWT has role=service_role rather than the admin user's
+      // app_metadata, so calling the RPC through supabaseAdmin is rejected.
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        throw new Error("Your admin session has expired. Please sign in again.");
+      }
+
+      const { data, error } = await supabase.rpc("admin_generate_codes", {
         p_target_id: payload.moduleId,
         p_count: payload.count,
         p_expires_days: payload.expiresDays ?? null,
