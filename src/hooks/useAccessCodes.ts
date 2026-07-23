@@ -135,3 +135,19 @@ export function useDeleteAccessCode() {
     onError: (err: unknown) => toast.error(getErrorMessage(err, "Failed to delete access code")),
   });
 }
+
+export function useDeleteMultipleAccessCodes() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (ids: string[]) => {
+      const { error } = await supabaseAdmin.from("access_codes").delete().in("id", ids);
+      if (error) throw error;
+    },
+    onSuccess: (_, ids) => {
+      toast.success(`${ids.length} access code(s) deleted successfully`);
+      queryClient.invalidateQueries({ queryKey: ["accessCodes"] });
+    },
+    onError: (err: unknown) => toast.error(getErrorMessage(err, "Failed to delete access codes")),
+  });
+}

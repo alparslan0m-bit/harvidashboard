@@ -6,7 +6,7 @@ import { ErrorView } from "@/components/shared/ErrorView";
 import { KPIGrid } from "@/components/shared/KPIGrid";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { DataTable } from "@/components/shared/DataTable";
-import { useAccessCodes, useGenerateAccessCodes, useDeleteAccessCode } from "@/hooks/useAccessCodes";
+import { useAccessCodes, useGenerateAccessCodes, useDeleteAccessCode, useDeleteMultipleAccessCodes } from "@/hooks/useAccessCodes";
 import { formatDate } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { AccessCodeWithDetails } from "@/types/database";
@@ -30,6 +30,7 @@ export const AccessCodes: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [batchSearch, setBatchSearch] = useState("");
   const [page, setPage] = useState(1);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   // Modals state
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
@@ -63,12 +64,29 @@ export const AccessCodes: React.FC = () => {
     batchSearch,
   );
 
+  const pageSize = 15;
+  const totalPages = Math.ceil(accessCodes.length / pageSize) || 1;
+  const paginatedData = accessCodes.slice((page - 1) * pageSize, page * pageSize);
+
   const generateMutation = useGenerateAccessCodes();
   const deleteMutation = useDeleteAccessCode();
+  const bulkDeleteMutation = useDeleteMultipleAccessCodes();
 
   const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this access code?")) {
       await deleteMutation.mutateAsync(id);
+      const next = new Set(selectedIds);
+      next.delete(id);
+      setSelectedIds(next);
+      refetch();
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (window.confirm(`Are you sure you want to delete ${selectedIds.size} access code(s)?`)) {
+      await bulkDeleteMutation.mutateAsync(Array.from(selectedIds));
+      setSelectedIds(new Set());
       refetch();
     }
   };
@@ -165,6 +183,43 @@ export const AccessCodes: React.FC = () => {
 
   const columns: ColumnDef<AccessCodeWithDetails>[] = useMemo(
     () => [
+      {
+        id: "select",
+        header: () => {
+          const isAllSelected = paginatedData.length > 0 && paginatedData.every((row) => selectedIds.has(row.id));
+          return (
+            <input
+              type="checkbox"
+              className="rounded border-gray-300 w-4 h-4 cursor-pointer"
+              checked={isAllSelected}
+              onChange={() => {
+                const next = new Set(selectedIds);
+                if (isAllSelected) {
+                  paginatedData.forEach((row) => next.delete(row.id));
+                } else {
+                  paginatedData.forEach((row) => next.add(row.id));
+                }
+                setSelectedIds(next);
+              }}
+              aria-label="Select all on page"
+            />
+          );
+        },
+        cell: ({ row }) => (
+          <input
+            type="checkbox"
+            className="rounded border-gray-300 w-4 h-4 cursor-pointer"
+            checked={selectedIds.has(row.original.id)}
+            onChange={() => {
+              const next = new Set(selectedIds);
+              if (next.has(row.original.id)) next.delete(row.original.id);
+              else next.add(row.original.id);
+              setSelectedIds(next);
+            }}
+            aria-label={`Select code ${row.original.code}`}
+          />
+        ),
+      },
       {
         accessorKey: "code",
         header: "Access Code",
@@ -286,7 +341,7 @@ export const AccessCodes: React.FC = () => {
         ),
       },
     ],
-    [copiedCodeId, deleteMutation.isPending]
+    [copiedCodeId, deleteMutation.isPending, selectedIds, paginatedData]
   );
 
   if (error) {
@@ -300,21 +355,29 @@ export const AccessCodes: React.FC = () => {
     );
   }
 
-  const pageSize = 15;
-  const totalPages = Math.ceil(accessCodes.length / pageSize) || 1;
-  const paginatedData = accessCodes.slice((page - 1) * pageSize, page * pageSize);
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <PageHeader title="Access Code Management" />
-        <button
-          onClick={() => setIsGenerateModalOpen(true)}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition shadow-sm"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Generate Batch Codes</span>
-        </button>
+        <div className="flex items-center gap-2">
+          {selectedIds.size > 0 && (
+            <button
+              onClick={handleBulkDelete}
+              disabled={bulkDeleteMutation.isPending}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-destructive text-destructive-foreground font-bold text-sm hover:bg-destructive/90 transition shadow-sm"
+            >
+              <Trash2 className="h-4 w-4" />
+              <span>Delete Selected ({selectedIds.size})</span>
+            </button>
+          )}
+          <button
+            onClick={() => setIsGenerateModalOpen(true)}
+            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition shadow-sm"
+          >
+            <Plus className="h-4 w-4" />
+            <span>Generate Batch Codes</span>
+          </button>
+        </div>
       </div>
 
       <KPIGrid cards={kpiCards} compact />
