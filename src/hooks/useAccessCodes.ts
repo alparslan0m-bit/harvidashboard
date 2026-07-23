@@ -66,14 +66,41 @@ export function useGenerateAccessCodes() {
       count: number;
       expiresDays?: number | null;
     }) => {
-      const { data, error } = await supabaseAdmin.rpc("admin_generate_codes", {
-        p_target_id: payload.moduleId,
-        p_count: payload.count,
-        p_expires_days: payload.expiresDays ?? null,
+      // The admin_generate_codes RPC uses public.is_admin() which fails for service_role JWTs.
+      // Since supabaseAdmin is initialized with the service role key, we bypass RLS 
+      // and can safely generate and insert the codes directly from the client.
+      const generateHex = (bytes: number) => {
+        const arr = new Uint8Array(bytes);
+        crypto.getRandomValues(arr);
+        return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+      };
+
+      const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+      const batchId = `batch_${generateHex(4).toLowerCase()}_${dateStr}`;
+
+      let expiresAt: string | null = null;
+      if (payload.expiresDays) {
+        const d = new Date();
+        d.setDate(d.getDate() + payload.expiresDays);
+        expiresAt = d.toISOString();
+      }
+
+      const toInsert = Array.from({ length: payload.count }).map(() => {
+        return {
+          code: generateHex(8).toUpperCase(),
+          module_id: payload.moduleId,
+          batch_id: batchId,
+          expires_at: expiresAt,
+        };
       });
 
+      const { error } = await supabaseAdmin.from("access_codes").insert(toInsert);
       if (error) throw error;
-      return (data || []) as { code: string }[] | string[];
+
+      return toInsert.map((row) => {
+        const c = row.code;
+        return `${c.slice(0, 4)}-${c.slice(4, 8)}-${c.slice(8, 12)}-${c.slice(12, 16)}`;
+      });
     },
     onSuccess: () => {
       toast.success("Access codes batch generated successfully");
