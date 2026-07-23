@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { QUERY_KEYS } from "@/lib/queryKeys";
 import { STALE_TIMES } from "@/lib/constants";
 import { fetchDashboardData } from "@/services/dashboardService";
 
@@ -6,7 +7,7 @@ export type { DashboardStats, DashboardData, AdminAuditLog } from "@/types/dashb
 
 export function useDashboard() {
   const dashboardQuery = useQuery({
-    queryKey: ["dashboard", "all-data"],
+    queryKey: QUERY_KEYS.dashboardAll,
     queryFn: fetchDashboardData,
     staleTime: STALE_TIMES.dashboard,
   });

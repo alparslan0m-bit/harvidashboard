@@ -47,11 +47,12 @@ export function usePurchases(
             if (profileError) throw new Error(`[Purchases.profilesQuery] ${profileError.message}`);
             profiles = profileData || [];
           }
+          const profilesMap = new Map(profiles.map(p => [p.id, p]));
           data.forEach((p) => {
             const authUser = authMap.get(p.user_id);
             purchasesWithDetails.push({
               ...p,
-              profiles: profiles.find((pr) => pr.id === p.user_id) || null,
+              profiles: profilesMap.get(p.user_id) || null,
               modules: p.modules as Module | null,
               userEmail: authUser?.email || "N/A",
             });

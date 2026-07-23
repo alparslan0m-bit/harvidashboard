@@ -62,7 +62,13 @@ async function fetchRevenueTrend() {
 }
 
 async function fetchAverageScore() {
-  const { data: scoreData, error } = await supabaseAdmin.from("quiz_results").select("score");
+  const ninetyDaysAgo = new Date();
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+  const { data: scoreData, error } = await supabaseAdmin
+    .from("quiz_results")
+    .select("score")
+    .gte("created_at", ninetyDaysAgo.toISOString())
+    .limit(10000);
   if (error) throw new Error(`[Dashboard.averageQuizScore] ${error.message}`);
   const avg = scoreData.length > 0 ? scoreData.reduce((acc, row) => acc + row.score, 0) / scoreData.length : 0;
   return Math.round(avg * 100) / 100;
@@ -92,8 +98,10 @@ async function fetchAdminAuditLogs(allUsers: Awaited<ReturnType<typeof listAllAu
     return [];
   }
 
+  const authMap = new Map(allUsers.map((u) => [u.id, u]));
+
   return (data || []).map((log: any) => {
-    const adminUser = allUsers.find((u) => u.id === log.admin_id);
+    const adminUser = authMap.get(log.admin_id);
     return {
       ...log,
       admin_name: adminUser?.user_metadata?.full_name || adminUser?.email || "Unknown Admin",

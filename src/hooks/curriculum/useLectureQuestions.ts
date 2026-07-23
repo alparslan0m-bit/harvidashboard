@@ -26,7 +26,7 @@ export function useLectureQuestions(lectureId: string | null) {
         ),
         correct_answer_index: row.correct_answer_index,
         explanation: row.explanation,
-        question_order: row.question_order || 0,
+        question_order: row.question_order ?? 0,
         created_at: row.created_at,
         updated_at: row.updated_at,
       })) as Question[];

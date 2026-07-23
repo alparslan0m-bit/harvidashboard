@@ -26,7 +26,7 @@ export async function importQuestions(
   for (let i = 0; i < totalValid; i += batchSize) {
     const batch = validRows.slice(i, i + batchSize);
 
-    const promises = batch.map(async ({ rowData, rowNumber }) => {
+    for (const { rowData, rowNumber } of batch) {
       try {
         const yName = rowData.year_name.trim();
         const mName = rowData.module_name.trim();
@@ -156,9 +156,7 @@ export async function importQuestions(
         const message = err instanceof Error ? err.message : "Unknown error";
         callbacks.onError({ row: rowNumber, error: message });
       }
-    });
-
-    await Promise.all(promises);
+    }
 
     const progressPercent = Math.min(Math.round(((i + batch.length) / totalValid) * 100), 100);
     callbacks.onProgress(progressPercent);

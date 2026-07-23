@@ -1,4 +1,5 @@
 export const QUERY_KEYS = {
+  dashboardAll: ["dashboard", "all-data"],
   dashboardStats: ["dashboard", "stats"],
   dashboardRecentActivity: ["dashboard", "recent-activity"],
   users: (page: number, search: string, filter: string) => ["users", { page, search, filter }],

@@ -1,6 +1,7 @@
 import React from "react";
 import { Search } from "lucide-react";
 import { cn } from "../../../lib/utils";
+import { USER_FILTER_OPTIONS } from "../../../lib/constants";
 
 interface UserFiltersProps {
   search: string;
@@ -15,13 +16,6 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
   filter,
   onFilterChange,
 }) => {
-  const presets = [
-    { value: "all", label: "Total Users" },
-    { value: "active_streak", label: "Active Streak" },
-    { value: "has_purchases", label: "Has Purchases" },
-    { value: "inactive_30_days", label: "Inactive 30d" },
-  ];
-
   return (
     <div className="flex flex-col md:flex-row gap-3 items-center justify-between bg-muted/30 border border-border px-4 py-3 rounded-xl shadow-sm select-none">
       {/* Search Input */}
@@ -42,7 +36,7 @@ export const UserFilters: React.FC<UserFiltersProps> = ({
         <span className="text-sm uppercase font-semibold text-foreground/70 tracking-wide mr-1">
           Filter:
         </span>
-        {presets.map((preset) => (
+        {USER_FILTER_OPTIONS.map((preset) => (
           <button
             key={preset.value}
             onClick={() => onFilterChange(preset.value)}

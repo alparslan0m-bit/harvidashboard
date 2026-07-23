@@ -1,1 +1,1 @@
-export { listAllAuthUsers, buildAuthUserEmailMap } from "./authService";
+export { listAllAuthUsers } from "./authService";

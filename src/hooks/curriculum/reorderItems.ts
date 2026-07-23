@@ -5,9 +5,10 @@ type TableName = "years" | "modules" | "subjects" | "lectures";
 
 export async function reorderItems(table: TableName, items: ReorderPayload[]): Promise<void> {
   await Promise.all(
-    items.map((item) =>
-      supabaseAdmin.from(table).update({ order_index: item.order_index }).eq("id", item.id),
-    ),
+    items.map(async (item) => {
+      const { error } = await supabaseAdmin.from(table).update({ order_index: item.order_index }).eq("id", item.id);
+      if (error) throw new Error(error.message);
+    })
   );
 }
 

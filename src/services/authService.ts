@@ -28,12 +28,3 @@ export async function listAllAuthUsers(context: string): Promise<User[]> {
   return allUsers;
 }
 
-export function buildAuthUserEmailMap(users: User[]): Map<string, string> {
-  const map = new Map<string, string>();
-  for (const user of users) {
-    if (user.email) {
-      map.set(user.id, user.email);
-    }
-  }
-  return map;
-}

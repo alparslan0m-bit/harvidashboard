@@ -93,14 +93,19 @@ export function useImportWizard() {
     setImportProgress(0);
     setImportErrorLog([]);
 
-    const summary = await importQuestions(validRows, {
-      onProgress: setImportProgress,
-      onError: (entry) => setImportErrorLog((prev) => [...prev, entry]),
-    });
+    try {
+      const summary = await importQuestions(validRows, {
+        onProgress: setImportProgress,
+        onError: (entry) => setImportErrorLog((prev) => [...prev, entry]),
+      });
 
-    setImportSummary(summary);
-    setIsImporting(false);
-    toast.success("Import process completed!");
+      setImportSummary(summary);
+      toast.success("Import process completed!");
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : "Failed to complete import process.");
+    } finally {
+      setIsImporting(false);
+    }
   };
 
   const handleReset = () => {

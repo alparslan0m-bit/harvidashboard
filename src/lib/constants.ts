@@ -35,5 +35,5 @@ export const USER_FILTER_OPTIONS = [
   { value: "all", label: "Total Users" },
   { value: "active_streak", label: "Active Streak" },
   { value: "has_purchases", label: "Has Purchases" },
-  { value: "inactive_30d", label: "Inactive 30d" },
+  { value: "inactive_30_days", label: "Inactive 30d" },
 ] as const;

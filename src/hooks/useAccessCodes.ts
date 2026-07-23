@@ -93,18 +93,46 @@ export function useGenerateAccessCodes() {
 
       const toInsert: any[] = [];
       const usedCodes = new Set<string>();
+      let attempts = 0;
+      const MAX_ATTEMPTS = 50;
 
-      while (toInsert.length < payload.count) {
-        const rawCode = generate6DigitCode();
-        if (!usedCodes.has(rawCode)) {
-          usedCodes.add(rawCode);
-          toInsert.push({
-            code: rawCode,
-            module_id: payload.moduleId,
-            batch_id: batchId,
-            expires_at: expiresAt,
-          });
+      while (toInsert.length < payload.count && attempts < MAX_ATTEMPTS) {
+        attempts++;
+        const needed = payload.count - toInsert.length;
+        const proposed: string[] = [];
+        
+        // Ensure we don't infinite loop inside here either
+        let localAttempts = 0;
+        while (proposed.length < needed && localAttempts < needed * 10) {
+          localAttempts++;
+          const rawCode = generate6DigitCode();
+          if (!usedCodes.has(rawCode)) {
+            usedCodes.add(rawCode);
+            proposed.push(rawCode);
+          }
         }
+
+        const { data: existing } = await supabaseAdmin
+          .from("access_codes")
+          .select("code")
+          .in("code", proposed);
+          
+        const existingSet = new Set((existing || []).map((r: any) => r.code));
+        
+        for (const code of proposed) {
+          if (!existingSet.has(code)) {
+            toInsert.push({
+              code,
+              module_id: payload.moduleId,
+              batch_id: batchId,
+              expires_at: expiresAt,
+            });
+          }
+        }
+      }
+
+      if (toInsert.length < payload.count) {
+        throw new Error("Failed to generate enough unique access codes. Code space might be saturated.");
       }
 
       const { error } = await supabaseAdmin.from("access_codes").insert(toInsert);

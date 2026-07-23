@@ -53,8 +53,10 @@ export function useFeedback(page: number, status: string) {
             profiles = profileData || [];
           }
 
+          const profilesMap = new Map(profiles.map(p => [p.id, p]));
+
           data.forEach((f) => {
-            const profile = profiles.find((p) => p.id === f.user_id) || null;
+            const profile = profilesMap.get(f.user_id) || null;
             const authUser = f.user_id ? authMap.get(f.user_id) : null;
             resolvedFeedback.push({
               ...f,

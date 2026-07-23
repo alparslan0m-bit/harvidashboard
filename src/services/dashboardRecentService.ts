@@ -35,9 +35,10 @@ export async function fetchDailyQuizzes(
     .lte("created_at", endDate.toISOString());
   if (error) throw new Error(`[Dashboard.dailyQuizzes] ${error.message}`);
 
+  const daysMap = new Map(days.map(d => [d.date, d]));
   quizData.forEach((row) => {
     const dateStr = new Date(row.created_at).toISOString().split("T")[0];
-    const found = days.find((day) => day.date === dateStr);
+    const found = daysMap.get(dateStr);
     if (found) found.quizzes++;
   });
 
@@ -87,10 +88,11 @@ export async function fetchRevenueGrowth(
     cursor.setMonth(cursor.getMonth() + 1);
   }
 
+  const monthsMap = new Map(months.map(m => [m.key, m]));
   revenueData?.forEach((r) => {
     const d = new Date(r.created_at);
     const key = `${d.getFullYear()}-${d.getMonth()}`;
-    const month = months.find((m) => m.key === key);
+    const month = monthsMap.get(key);
     if (month) {
       month.revenue += (r.amount_cents || 0) / 100;
     }
@@ -131,8 +133,17 @@ export function fetchUserGrowth(
       });
     }
 
+    const sortedUsers = [...allUsers].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+    let userIndex = 0;
+    let runningCount = 0;
+
     days.forEach((m) => {
-      m.users = allUsers.filter((u) => new Date(u.created_at).getTime() <= m.dateObj.getTime()).length;
+      const targetTime = m.dateObj.getTime();
+      while (userIndex < sortedUsers.length && new Date(sortedUsers[userIndex].created_at).getTime() <= targetTime) {
+        runningCount++;
+        userIndex++;
+      }
+      m.users = runningCount;
     });
 
     return days.map((m) => ({ month: m.name, users: m.users }));
@@ -156,8 +167,17 @@ export function fetchUserGrowth(
     cursor.setMonth(cursor.getMonth() + 1);
   }
 
+  const sortedUsers = [...allUsers].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+  let userIndex = 0;
+  let runningCount = 0;
+
   months.forEach((m) => {
-    m.users = allUsers.filter((u) => new Date(u.created_at).getTime() <= m.dateObj.getTime()).length;
+    const targetTime = m.dateObj.getTime();
+    while (userIndex < sortedUsers.length && new Date(sortedUsers[userIndex].created_at).getTime() <= targetTime) {
+      runningCount++;
+      userIndex++;
+    }
+    m.users = runningCount;
   });
 
   return months.map((m) => ({ month: m.name, users: m.users }));

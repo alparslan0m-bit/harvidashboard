@@ -27,10 +27,13 @@ export function useFeedbackPage() {
 
   const handleDelete = async () => {
     if (deleteId) {
-      await deleteFeedback(deleteId);
-      setDeleteId(null);
-      if (expandedRowId === deleteId) {
-        setExpandedRowId(null);
+      try {
+        await deleteFeedback(deleteId);
+      } finally {
+        setDeleteId(null);
+        if (expandedRowId === deleteId) {
+          setExpandedRowId(null);
+        }
       }
     }
   };
