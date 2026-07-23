@@ -357,28 +357,30 @@ export const AccessCodes: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <PageHeader title="Access Code Management" />
-        <div className="flex items-center gap-2">
-          {selectedIds.size > 0 && (
+      <PageHeader
+        title="Access Code Management"
+        actions={
+          <>
+            {selectedIds.size > 0 && (
+              <button
+                onClick={handleBulkDelete}
+                disabled={bulkDeleteMutation.isPending}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-destructive text-destructive-foreground font-bold text-sm hover:bg-destructive/90 transition shadow-sm"
+              >
+                <Trash2 className="h-4 w-4" />
+                <span>Delete Selected ({selectedIds.size})</span>
+              </button>
+            )}
             <button
-              onClick={handleBulkDelete}
-              disabled={bulkDeleteMutation.isPending}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-destructive text-destructive-foreground font-bold text-sm hover:bg-destructive/90 transition shadow-sm"
+              onClick={() => setIsGenerateModalOpen(true)}
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition shadow-sm"
             >
-              <Trash2 className="h-4 w-4" />
-              <span>Delete Selected ({selectedIds.size})</span>
+              <Plus className="h-4 w-4" />
+              <span>Generate Batch Codes</span>
             </button>
-          )}
-          <button
-            onClick={() => setIsGenerateModalOpen(true)}
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition shadow-sm"
-          >
-            <Plus className="h-4 w-4" />
-            <span>Generate Batch Codes</span>
-          </button>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       <KPIGrid cards={kpiCards} compact />
 
