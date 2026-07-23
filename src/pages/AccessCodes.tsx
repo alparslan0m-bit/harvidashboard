@@ -6,7 +6,7 @@ import { ErrorView } from "@/components/shared/ErrorView";
 import { KPIGrid } from "@/components/shared/KPIGrid";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { DataTable } from "@/components/shared/DataTable";
-import { useAccessCodes, useGenerateAccessCodes } from "@/hooks/useAccessCodes";
+import { useAccessCodes, useGenerateAccessCodes, useDeleteAccessCode } from "@/hooks/useAccessCodes";
 import { formatDate } from "@/lib/utils";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { AccessCodeWithDetails } from "@/types/database";
@@ -22,6 +22,7 @@ import {
   Clock,
   Tag,
   BookOpen,
+  Trash2,
 } from "lucide-react";
 
 export const AccessCodes: React.FC = () => {
@@ -63,6 +64,14 @@ export const AccessCodes: React.FC = () => {
   );
 
   const generateMutation = useGenerateAccessCodes();
+  const deleteMutation = useDeleteAccessCode();
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm("Are you sure you want to delete this access code?")) {
+      await deleteMutation.mutateAsync(id);
+      refetch();
+    }
+  };
 
   // KPIs calculation
   const kpiCards = useMemo(() => {
@@ -259,8 +268,25 @@ export const AccessCodes: React.FC = () => {
           );
         },
       },
+      {
+        id: "actions",
+        header: "",
+        cell: ({ row }) => (
+          <div className="flex items-center justify-end">
+            <button
+              onClick={() => handleDelete(row.original.id)}
+              disabled={deleteMutation.isPending}
+              className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition"
+              title="Delete Code"
+              aria-label="Delete access code"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
+          </div>
+        ),
+      },
     ],
-    [copiedCodeId]
+    [copiedCodeId, deleteMutation.isPending]
   );
 
   if (error) {

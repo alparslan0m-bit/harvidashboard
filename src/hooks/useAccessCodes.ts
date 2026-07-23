@@ -119,3 +119,19 @@ export function useGenerateAccessCodes() {
     onError: (err: unknown) => toast.error(getErrorMessage(err, "Failed to generate access codes")),
   });
 }
+
+export function useDeleteAccessCode() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabaseAdmin.from("access_codes").delete().eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Access code deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["accessCodes"] });
+    },
+    onError: (err: unknown) => toast.error(getErrorMessage(err, "Failed to delete access code")),
+  });
+}
