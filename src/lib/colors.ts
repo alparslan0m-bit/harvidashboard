@@ -45,20 +45,20 @@ export const darkPalette = {
 } as const;
 
 export const chartColors = {
-  sky: "#0ea5e9",
-  emerald: "#10b981",
-  amber: "#f59e0b",
-  violet: "#8b5cf6",
-  pink: "#ec4899",
+  blue: "#0070F3",
+  teal: "#50E3C2",
+  amber: "#F5A623",
+  magenta: "#FF0080",
+  purple: "#7928CA",
 } as const;
 
 export const yearGradients = {
-  sky: ["#0ea5e9", "#0284c7"],
-  emerald: ["#10b981", "#059669"],
-  amber: ["#f59e0b", "#d97706"],
-  violet: ["#8b5cf6", "#7c3aed"],
-  pink: ["#ec4899", "#db2777"],
-  teal: ["#14b8a6", "#0d9488"],
+  blue: ["#0070F3", "#0050C7"],
+  teal: ["#50E3C2", "#14B8A6"],
+  amber: ["#F5A623", "#D97706"],
+  magenta: ["#FF0080", "#DB2777"],
+  purple: ["#7928CA", "#5B21B6"],
+  tealAlt: ["#14b8a6", "#0d9488"],
 } as const;
 
 export const borderRadius = 24;

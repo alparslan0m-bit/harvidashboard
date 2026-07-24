@@ -41,7 +41,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
             <div
               className={cn(
                 "h-8 w-8 rounded-md flex items-center justify-center shrink-0 [&_svg]:h-4 [&_svg]:w-4 transition-transform duration-200 group-hover:scale-110",
-                featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-gradient-to-br from-muted to-muted/50 text-muted-foreground shadow-sm"
+                featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-gradient-to-br from-muted to-muted/50 text-muted-foreground shadow-sm hover:scale-105"
               )}
             >
               {icon}
@@ -67,7 +67,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           <div
             className={cn(
               "h-10 w-10 rounded-[6px] flex items-center justify-center shrink-0 [&_svg]:h-5 [&_svg]:w-5 transition-transform duration-200 group-hover:scale-110",
-              featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-gradient-to-br from-muted to-muted/50 text-muted-foreground shadow-sm"
+              featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-gradient-to-br from-muted to-muted/50 text-muted-foreground shadow-sm hover:scale-105"
             )}
           >
             {icon}

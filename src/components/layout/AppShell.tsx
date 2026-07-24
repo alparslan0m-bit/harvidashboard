@@ -45,7 +45,7 @@ const AppShellContent: React.FC = () => {
       {/* Main Workspace Area */}
       <div className="flex flex-1 flex-col overflow-hidden relative">
         <main className="flex-1 overflow-y-auto p-4 sm:p-5 lg:p-6">
-          <div className="mx-auto max-w-[1400px]">
+          <div className="mx-auto max-w-[1400px] space-y-6">
             <ErrorBoundary fallbackMessage="This page encountered an error">
               <Outlet />
             </ErrorBoundary>

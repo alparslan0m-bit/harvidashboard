@@ -102,9 +102,9 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <PageHeader title="Dashboard Overview" actions={headerActions} />
+      <PageHeader title="Dashboard Overview" actions={headerActions} className="page-header-gradient" />
 
-      <KPIGrid cards={kpiCards} compact className="gap-4" />
+      <KPIGrid cards={kpiCards} compact colorful className="gap-4" />
 
       <div className="grid grid-cols-1">
         <h3 className="text-[12px] font-mono uppercase text-muted-foreground mb-4">

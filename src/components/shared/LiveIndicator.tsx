@@ -17,12 +17,12 @@ export const LiveIndicator: React.FC<LiveIndicatorProps> = ({
         className
       )}
     >
-      <div className="relative flex h-2 w-2 items-center justify-center">
+      <div className="relative flex h-3 w-3 items-center justify-center">
         <span
           className={cn(
-            "relative inline-flex h-2 w-2 rounded-full",
+            "relative inline-flex h-2.5 w-2.5 rounded-full transition-all duration-300",
             active
-              ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-[0_0_8px_rgba(52,211,153,0.25)]"
+              ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-[0_0_10px_rgba(52,211,153,0.25)] animate-glowPulse"
               : "bg-muted-foreground/30"
           )}
         ></span>
