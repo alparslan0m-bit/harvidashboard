@@ -51,6 +51,14 @@ const ENTITY_ICONS: Record<string, React.ElementType> = {
   questions: HelpCircle,
 };
 
+const ENTITY_COLORS: Record<string, string> = {
+  years: "bg-gradient-to-br from-blue-500/20 to-blue-600/10 text-blue-500 border border-blue-500/20",
+  modules: "bg-gradient-to-br from-indigo-500/20 to-indigo-600/10 text-indigo-500 border border-indigo-500/20",
+  subjects: "bg-gradient-to-br from-purple-500/20 to-purple-600/10 text-purple-500 border border-purple-500/20",
+  lectures: "bg-gradient-to-br from-fuchsia-500/20 to-fuchsia-600/10 text-fuchsia-500 border border-fuchsia-500/20",
+  questions: "bg-gradient-to-br from-rose-500/20 to-rose-600/10 text-rose-500 border border-rose-500/20",
+};
+
 function getDisplayDate(dateStr: string) {
   const d = new Date(dateStr);
   if (isToday(d)) return "Today";
@@ -152,11 +160,12 @@ export const AdminActivityList: React.FC<AdminActivityListProps> = ({ logs }) =>
   return (
     <div className="space-y-6">
       {dailyGroups.map((dayGroup) => (
-        <div key={dayGroup.dateStr} className="space-y-3">
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground ml-1">
+        <div key={dayGroup.dateStr} className="space-y-3 relative pl-5 before:absolute before:left-0 before:top-2 before:bottom-0 before:w-px before:bg-gradient-to-b before:from-border before:to-transparent">
+          <div className="absolute left-[-4px] top-2 h-2 w-2 rounded-full bg-primary ring-4 ring-background shadow-sm" />
+          <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground ml-1 mb-4">
             {dayGroup.displayDate}
           </h4>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-3">
             {dayGroup.groups.map((group) => {
               const Icon = ENTITY_ICONS[group.entity_type] ?? Activity;
               const summary = buildActivitySummary(group);
@@ -165,10 +174,10 @@ export const AdminActivityList: React.FC<AdminActivityListProps> = ({ logs }) =>
                 <div
                   key={group.id}
                   onClick={() => setSelectedGroup(group)}
-                  className="group relative flex items-center justify-between rounded-xl border border-border bg-card p-3 shadow-sm hover:shadow-md hover:border-primary/40 transition-all cursor-pointer"
+                  className="group relative flex items-center justify-between rounded-xl border border-border bg-card p-3 shadow-sm hover:shadow-md hover:border-primary/40 transition-all cursor-pointer animate-fade-in-up hover-lift overflow-hidden before:absolute before:inset-y-0 before:left-0 before:w-[3px] before:bg-gradient-to-b before:from-primary before:to-chart-5 before:opacity-0 hover:before:opacity-100 before:transition-opacity"
                 >
                   <div className="flex items-center gap-3 min-w-0">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                    <div className={cn("flex h-9 w-9 shrink-0 items-center justify-center rounded-full shadow-sm", ENTITY_COLORS[group.entity_type] || "bg-gradient-to-br from-primary/20 to-primary/5 text-primary border border-primary/20")}>
                       <Icon className="h-4 w-4" />
                     </div>
                     <p className="text-sm text-muted-foreground leading-relaxed">
@@ -194,7 +203,7 @@ export const AdminActivityList: React.FC<AdminActivityListProps> = ({ logs }) =>
                 <div className="border-b border-border px-6 py-5">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-start gap-3 min-w-0">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                      <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-sm", ENTITY_COLORS[selectedGroup.entity_type] || "bg-gradient-to-br from-primary/20 to-primary/5 text-primary border border-primary/20")}>
                         {React.createElement(selectedIcon, { className: "h-5 w-5" })}
                       </div>
                       <div className="min-w-0 space-y-1">

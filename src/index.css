@@ -138,6 +138,129 @@
   background: var(--color-muted-foreground);
 }
 
+/* ─── Animation Keyframes ─── */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 4px 1px currentColor; }
+  50% { box-shadow: 0 0 10px 3px currentColor; }
+}
+
+@keyframes subtleBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+/* ─── Animation Utilities ─── */
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease both;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Stagger delays for sequential reveals */
+.stagger-1 { animation-delay: 0ms; }
+.stagger-2 { animation-delay: 60ms; }
+.stagger-3 { animation-delay: 120ms; }
+.stagger-4 { animation-delay: 180ms; }
+.stagger-5 { animation-delay: 240ms; }
+.stagger-6 { animation-delay: 300ms; }
+
+/* ─── Glassmorphism ─── */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+}
+.dark .glass {
+  background: rgba(17, 17, 17, 0.75);
+}
+
+/* ─── Hover Lift ─── */
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+.dark .hover-lift:hover {
+  box-shadow: 0 8px 24px -8px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* ─── Card Glow ─── */
+.card-glow {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.card-glow:hover {
+  box-shadow: 0 0 0 1px rgba(0, 112, 243, 0.15), 0 4px 16px -4px rgba(0, 112, 243, 0.1);
+}
+.dark .card-glow:hover {
+  box-shadow: 0 0 0 1px rgba(0, 112, 243, 0.25), 0 4px 16px -4px rgba(0, 112, 243, 0.15);
+}
+
+/* ─── Table Row Hover ─── */
+.table-row {
+  transition: background-color 0.15s ease;
+}
+.table-row:hover {
+  background-color: rgba(0, 112, 243, 0.03);
+}
+.dark .table-row:hover {
+  background-color: rgba(0, 112, 243, 0.06);
+}
+
+/* ─── Shimmer Button Effect ─── */
+.shimmer-hover {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-hover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.shimmer-hover:hover::after {
+  opacity: 1;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ─── Gradient Text ─── */
+.text-gradient {
+  background: linear-gradient(135deg, var(--color-chart-1), var(--color-chart-5));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 .transition-all-200 {
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -157,7 +280,7 @@
 }
 
 .bg-vercel-mesh {
-  background-image: radial-gradient(at 0% 0%, rgba(0, 124, 240, 0.4) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(121, 40, 202, 0.4) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(255, 0, 128, 0.4) 0px, transparent 50%), radial-gradient(at 0% 100%, rgba(255, 77, 77, 0.4) 0px, transparent 50%);
+  background-image: radial-gradient(at 0% 0%, rgba(0, 124, 240, 0.4) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(121, 40, 202, 0.4) 0px, transparent 50%), radial-gradient(at 50% 50%, rgba(80, 227, 194, 0.25) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(255, 0, 128, 0.4) 0px, transparent 50%), radial-gradient(at 0% 100%, rgba(255, 77, 77, 0.4) 0px, transparent 50%);
   background-size: 100% 100%;
   background-repeat: no-repeat;
   filter: blur(80px);

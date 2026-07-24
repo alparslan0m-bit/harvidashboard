@@ -11,7 +11,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isCollapsed, onClo
   return (
     <div
       className={cn(
-        "h-16 sm:h-[72px] lg:h-20 border-b border-border bg-card flex items-center shrink-0",
+        "h-16 sm:h-[72px] lg:h-20 border-b border-border/60 flex items-center shrink-0",
         isCollapsed ? "lg:justify-center lg:px-0 px-5 justify-between" : "px-5 justify-between"
       )}
     >
@@ -21,7 +21,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isCollapsed, onClo
           isCollapsed ? "lg:justify-center gap-0" : "gap-2"
         )}
       >
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shrink-0">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary via-chart-5 to-chart-4 text-primary-foreground shrink-0 shadow-md shadow-primary/20">
           <Shield className="h-4 w-4" />
         </div>
         <span

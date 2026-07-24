@@ -35,8 +35,10 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
           )}
           title={isCollapsed ? email : undefined}
         >
-          <div className="h-9 w-9 rounded-full bg-primary flex items-center justify-center text-sm font-bold text-primary-foreground shrink-0 uppercase">
-            {initials}
+          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary via-chart-5 to-chart-4 p-[2px] shrink-0">
+            <div className="h-full w-full rounded-full bg-card flex items-center justify-center text-sm font-bold text-foreground uppercase">
+              {initials}
+            </div>
           </div>
           <div className={cn("flex flex-col min-w-0", isCollapsed && "lg:hidden")}>
             <span
@@ -53,7 +55,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
 
         <button
           onClick={onSignOut}
-          className="p-1.5 rounded-xl hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all duration-200 focus-ring shrink-0"
+          className="p-1.5 rounded-xl hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all duration-200 hover:rotate-12 focus-ring shrink-0"
           title="Sign Out"
           aria-label="Sign Out"
         >

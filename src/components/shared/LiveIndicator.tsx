@@ -17,17 +17,19 @@ export const LiveIndicator: React.FC<LiveIndicatorProps> = ({
         className
       )}
     >
-      <span className="relative flex h-1.5 w-1.5">
+      <div className="relative flex h-2 w-2 items-center justify-center">
         {active && (
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
         )}
         <span
           className={cn(
-            "relative inline-flex rounded-full h-1.5 w-1.5",
-            active ? "bg-success" : "bg-muted-foreground"
+            "relative inline-flex h-2 w-2 rounded-full",
+            active 
+              ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-[glowPulse_2s_infinite]" 
+              : "bg-muted-foreground/30"
           )}
         ></span>
-      </span>
+      </div>
       <span className={active ? "text-success" : "text-muted-foreground"}>
         {active ? "Live" : "Offline"}
       </span>

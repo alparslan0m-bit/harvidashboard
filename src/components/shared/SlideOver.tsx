@@ -36,29 +36,34 @@ export const SlideOver: React.FC<SlideOverProps> = ({
           )}
         >
           {/* Header */}
-          <div className="flex items-center justify-between border-b bg-muted/20 px-6 py-4">
-            <div>
-              <Dialog.Title className="text-base font-semibold leading-6 text-foreground tracking-tight font-heading">
-                {title}
-              </Dialog.Title>
-              {description && (
-                <Dialog.Description className="mt-1 text-sm text-muted-foreground">
-                  {description}
-                </Dialog.Description>
-              )}
-            </div>
+          <div className="relative px-6 py-5 border-b border-border/60 glass shrink-0 overflow-hidden">
+            <div className="absolute inset-0 z-0 bg-vercel-mesh opacity-30 dark:opacity-20 pointer-events-none mix-blend-multiply dark:mix-blend-screen" />
+            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-primary/20 via-chart-5/20 to-transparent" />
             
-            <button
-              onClick={onClose}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition"
-              aria-label="Close panel"
-            >
-              <X className="h-4 w-4" />
-            </button>
+            <div className="relative z-10 flex items-center justify-between">
+              <div className="space-y-1 pr-6 min-w-0">
+                <Dialog.Title className="text-base font-semibold leading-6 text-foreground tracking-tight font-heading">
+                  {title}
+                </Dialog.Title>
+                {description && (
+                  <Dialog.Description className="mt-1 text-sm text-muted-foreground">
+                    {description}
+                  </Dialog.Description>
+                )}
+              </div>
+            
+              <button
+                onClick={onClose}
+                className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-accent-foreground transition"
+                aria-label="Close panel"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
           </div>
 
           {/* Body */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-5">
+          <div className="flex-1 overflow-y-auto p-6 animate-fade-in-up stagger-1">
             {children}
           </div>
 

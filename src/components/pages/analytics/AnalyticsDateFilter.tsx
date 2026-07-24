@@ -81,8 +81,8 @@ export const AnalyticsDateFilter: React.FC<AnalyticsDateFilterProps> = ({
                 onClick={() => onPreset(preset.days)}
                 className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all duration-200 focus-ring ${
                   isActive
-                    ? "bg-primary text-primary-foreground shadow-sm"
-                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                    ? "bg-gradient-to-r from-primary to-chart-5 text-primary-foreground shadow-[0_2px_10px_rgba(0,112,243,0.3)]"
+                    : "text-muted-foreground hover:bg-gradient-to-r hover:from-primary/10 hover:to-chart-5/10 hover:text-foreground"
                 }`}
                 aria-pressed={isActive}
                 title={`Last ${preset.name}`}

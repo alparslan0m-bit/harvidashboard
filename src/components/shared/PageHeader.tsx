@@ -22,11 +22,12 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   return (
     <div
       className={cn(
-        "relative -mx-4 -mt-4 mb-6 sm:-mx-5 sm:-mt-5 lg:-mx-6 lg:-mt-6 px-4 sm:px-5 lg:px-6 border-b border-border bg-card overflow-hidden flex flex-col justify-center h-16 sm:h-[72px] lg:h-20 shadow-sm shrink-0",
+        "relative -mx-4 -mt-4 mb-6 sm:-mx-5 sm:-mt-5 lg:-mx-6 lg:-mt-6 px-4 sm:px-5 lg:px-6 border-b border-border/60 glass overflow-hidden flex flex-col justify-center h-16 sm:h-[72px] lg:h-20 shadow-sm shrink-0",
         className,
       )}
     >
-      <div className="absolute inset-0 z-0 bg-vercel-mesh opacity-30 dark:opacity-20 pointer-events-none mix-blend-multiply dark:mix-blend-screen" />
+      <div className="absolute inset-0 z-0 bg-vercel-mesh opacity-40 dark:opacity-25 pointer-events-none mix-blend-multiply dark:mix-blend-screen" />
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-chart-1 via-chart-5 to-chart-4 opacity-60" />
       <div className="relative z-10 flex items-center justify-between w-full">
         {/* Left side: Mobile Menu + Page Title */}
         <div className="flex items-center gap-2.5 min-w-0">
@@ -54,7 +55,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
           {/* Theme Toggle */}
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="relative p-2 rounded-xl bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
+            className="relative p-2 rounded-xl bg-transparent hover:bg-muted/60 transition-all duration-300 focus-ring hover:rotate-12"
             aria-label="Toggle theme"
           >
             <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-foreground" />

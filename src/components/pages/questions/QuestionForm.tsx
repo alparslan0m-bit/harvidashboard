@@ -8,6 +8,7 @@ import {
   Image as ImageIcon,
   ListChecks,
   MessageSquareText,
+  Save,
 } from "lucide-react";
 import { useQuestionMutations } from "@/hooks/useQuestions";
 import {
@@ -127,8 +128,8 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
         <Dialog.Content className="fixed inset-0 z-50 flex flex-col bg-background focus:outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 duration-300">
           {/* ── Header ── */}
           <div className="relative border-b border-border/60 bg-card">
-            <div className="absolute inset-0 bg-vercel-mesh opacity-[0.03] pointer-events-none" />
-            <div className="relative flex items-center justify-between px-6 py-3.5">
+            <div className="absolute inset-0 z-0 bg-vercel-mesh opacity-50 dark:opacity-30 pointer-events-none mix-blend-multiply dark:mix-blend-screen" />
+            <div className="relative z-10 flex items-center justify-between px-6 py-3.5">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                   <FileText className="h-4 w-4" />
@@ -157,7 +158,7 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
                   type="submit"
                   form="question-form"
                   disabled={isSubmitting}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-105 disabled:opacity-50"
+                  className="relative inline-flex items-center justify-center gap-1.5 rounded-xl bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground shadow-sm transition-all duration-200 hover:shadow-md hover:brightness-105 disabled:opacity-50 overflow-hidden after:absolute after:inset-0 after:animate-shimmer after:bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent)]"
                 >
                   {isSubmitting ? (
                     <>
@@ -165,7 +166,10 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
                       Saving...
                     </>
                   ) : (
-                    "Save Question"
+                    <>
+                      <Save className="h-3.5 w-3.5" />
+                      Save Question
+                    </>
                   )}
                 </button>
               </div>
@@ -184,10 +188,12 @@ export const QuestionForm: React.FC<QuestionFormProps> = ({
                 >
                   {/* Section 1 — Question Text */}
                   <section className="space-y-1.5">
-                    <label className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">
-                      <FileText className="h-3.5 w-3.5 text-primary" />
-                      Question Text
-                    </label>
+                    <div className="flex items-center gap-2 mb-4 pb-2 border-b border-border/40">
+                      <div className="h-6 w-6 rounded-md flex items-center justify-center bg-gradient-to-br from-primary/20 to-chart-5/20 text-primary">
+                        <FileText className="h-3.5 w-3.5" />
+                      </div>
+                      <h3 className="text-sm font-semibold tracking-tight text-foreground font-heading">Question Content</h3>
+                    </div>
                     <textarea
                       {...register("text")}
                       rows={3}

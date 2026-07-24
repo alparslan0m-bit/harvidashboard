@@ -120,27 +120,40 @@ export const Analytics: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <PageHeader title="System Analytics" />
-      <KPIGrid cards={kpiCards} compact className="gap-4" />
-      <AnalyticsDateFilter
-        fromDate={fromDate}
-        toDate={toDate}
-        onFromDateChange={handleFromDateChange}
-        onToDateChange={handleToDateChange}
-        onPreset={applyPreset}
-        activePreset={activePreset}
-      />
-      <AnalyticsChartsGrid
-        dailyActiveUsers={data?.dailyActiveUsers}
-        purchaseBreakdown={data?.purchaseBreakdown}
-      />
+      <div className="animate-fade-in-up stagger-1">
+        <PageHeader title="System Analytics" />
+      </div>
+      
+      <div className="animate-fade-in-up stagger-2">
+        <KPIGrid cards={kpiCards} compact className="gap-4" />
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="animate-fade-in-up stagger-3">
+        <AnalyticsDateFilter
+          fromDate={fromDate}
+          toDate={toDate}
+          onFromDateChange={handleFromDateChange}
+          onToDateChange={handleToDateChange}
+          onPreset={applyPreset}
+          activePreset={activePreset}
+        />
+      </div>
+
+      <div className="animate-fade-in-up stagger-4">
+        <AnalyticsChartsGrid
+          dailyActiveUsers={data?.dailyActiveUsers}
+          purchaseBreakdown={data?.purchaseBreakdown}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 animate-fade-in-up stagger-5">
         <DailyQuizzesChart data={data?.dailyQuizzes || []} fromDate={fromDate} toDate={toDate} />
         <UserGrowthChart data={data?.userGrowth} fromDate={fromDate} toDate={toDate} />
       </div>
 
-      <RevenueChart data={data?.revenue} fromDate={fromDate} toDate={toDate} />
+      <div className="animate-fade-in-up stagger-6">
+        <RevenueChart data={data?.revenue} fromDate={fromDate} toDate={toDate} />
+      </div>
     </div>
   );
 };

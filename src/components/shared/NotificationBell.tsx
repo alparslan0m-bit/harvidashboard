@@ -49,7 +49,7 @@ export const NotificationBell: React.FC = () => {
           {totalNotifications > 0 && (
             <span className="absolute top-1 right-1 flex h-2 w-2 select-none">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)] animate-[glowPulse_2s_infinite]"></span>
             </span>
           )}
         </button>
@@ -57,7 +57,7 @@ export const NotificationBell: React.FC = () => {
 
       <Popover.Portal>
         <Popover.Content
-          className="z-50 w-72 rounded-xl border border-border bg-card p-4 shadow-xl focus:outline-none select-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
+          className="z-50 w-72 rounded-xl border border-border/60 glass p-4 shadow-xl focus:outline-none select-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out data-[state=open]:fade-in data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95"
           align="end"
           sideOffset={8}
         >
@@ -82,9 +82,9 @@ export const NotificationBell: React.FC = () => {
                     onClick={() => {
                       navigate("/feedback");
                     }}
-                    className="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-accent transition text-left group"
+                    className="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-gradient-to-r hover:from-primary/5 hover:to-transparent transition text-left group border-l-2 border-transparent hover:border-primary"
                   >
-                    <MessageSquare className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <MessageSquare className="h-4 w-4 text-primary mt-0.5 shrink-0 transition-transform group-hover:scale-110" />
                     <div>
                       <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                         Unread Student Feedback
@@ -101,9 +101,9 @@ export const NotificationBell: React.FC = () => {
                     onClick={() => {
                       navigate("/purchases");
                     }}
-                    className="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-accent transition text-left group"
+                    className="w-full flex items-start gap-3 p-2 rounded-xl hover:bg-gradient-to-r hover:from-red-500/5 hover:to-transparent transition text-left group border-l-2 border-transparent hover:border-red-500"
                   >
-                    <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+                    <AlertCircle className="h-4 w-4 text-red-500 mt-0.5 shrink-0 transition-transform group-hover:scale-110" />
                     <div>
                       <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
                         Disputed Transactions

@@ -58,12 +58,12 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ groups, isCollapsed, onC
                         ? "lg:justify-center lg:px-0 lg:py-2.5 gap-3 px-3.5 py-2.5"
                         : "gap-3 px-3.5 py-2.5",
                       isActive
-                        ? "bg-muted/40 text-foreground font-semibold before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px] before:bg-primary"
-                        : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+                        ? "bg-gradient-to-r from-primary/8 to-chart-5/5 text-foreground font-semibold before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[3px] before:rounded-full before:bg-gradient-to-b before:from-chart-1 before:to-chart-5"
+                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
                     )
                   }
                 >
-                  <item.icon className="h-4 w-4 shrink-0 transition-transform duration-200 group-hover:scale-105" aria-hidden />
+                  <item.icon className="h-4 w-4 shrink-0 transition-all duration-200 group-hover:scale-110 group-hover:text-chart-1" aria-hidden />
                   <span className={cn("truncate", isCollapsed && "lg:hidden")}>
                     {item.name}
                   </span>

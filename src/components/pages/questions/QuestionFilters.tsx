@@ -4,7 +4,7 @@ import type { QuestionFiltersState } from "../../../hooks/useQuestions";
 import { Search, X } from "lucide-react";
 
 const selectClass =
-  "w-full rounded-lg border border-input bg-background px-3 py-2 text-sm text-foreground outline-none appearance-none bg-[length:16px_16px] bg-[position:right_10px_center] bg-no-repeat transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')]";
+  "w-full rounded-xl border border-input bg-card px-3.5 py-2 text-sm text-foreground outline-none appearance-none bg-[length:16px_16px] bg-[position:right_12px_center] bg-no-repeat transition-all duration-200 focus:ring-2 focus:ring-primary/20 focus:border-primary bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%2394a3b8%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')]";
 
 const selectDisabledClass = "disabled:opacity-40 disabled:cursor-not-allowed disabled:bg-muted/30";
 
@@ -147,19 +147,23 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
   };
 
   return (
-    <div className="relative space-y-3 bg-muted/30 border border-border/60 p-4 rounded-xl shadow-sm select-none overflow-hidden">
-      {/* Top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-primary/40 via-primary/20 to-transparent" />
+    <div className="space-y-4 bg-card border border-border/40 p-5 rounded-xl shadow-sm">
+      <div className="flex items-center gap-2 mb-1">
+        <div className="h-6 w-6 rounded-md flex items-center justify-center bg-muted text-foreground">
+          <Search className="h-3.5 w-3.5" />
+        </div>
+        <h3 className="text-sm font-semibold tracking-tight text-foreground font-heading">Filters & Search</h3>
+      </div>
 
       {/* Cascading Select Selectors Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         {/* Year */}
         <div className="space-y-1.5">
-          <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">Year</label>
+          <label className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">Year</label>
           <select
             value={filters.yearId || ""}
             onChange={(e) => handleYearChange(e.target.value)}
-            className={`${selectClass}`}
+            className={`${selectClass} focus:shadow-[0_0_8px_rgba(0,112,243,0.3)]`}
             aria-label="Year Selector"
           >
             <option value="">All Years</option>
@@ -171,12 +175,12 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
 
         {/* Module */}
         <div className="space-y-1.5">
-          <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">Module</label>
+          <label className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">Module</label>
           <select
             value={filters.moduleId || ""}
             onChange={(e) => handleModuleChange(e.target.value)}
             disabled={!filters.yearId}
-            className={`${selectClass} ${selectDisabledClass}`}
+            className={`${selectClass} ${selectDisabledClass} focus:shadow-[0_0_8px_rgba(0,112,243,0.3)]`}
             aria-label="Module Selector"
           >
             <option value="">All Modules</option>
@@ -188,12 +192,12 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
 
         {/* Subject */}
         <div className="space-y-1.5">
-          <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">Subject</label>
+          <label className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">Subject</label>
           <select
             value={filters.subjectId || ""}
             onChange={(e) => handleSubjectChange(e.target.value)}
             disabled={!filters.moduleId}
-            className={`${selectClass} ${selectDisabledClass}`}
+            className={`${selectClass} ${selectDisabledClass} focus:shadow-[0_0_8px_rgba(0,112,243,0.3)]`}
             aria-label="Subject Selector"
           >
             <option value="">All Subjects</option>
@@ -205,12 +209,12 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
 
         {/* Lecture */}
         <div className="space-y-1.5">
-          <label className="text-xs uppercase font-bold text-muted-foreground tracking-wide">Lecture</label>
+          <label className="text-xs font-medium text-muted-foreground/80 flex items-center gap-1.5">Lecture</label>
           <select
             value={filters.lectureId || ""}
             onChange={(e) => handleLectureChange(e.target.value)}
             disabled={!filters.subjectId}
-            className={`${selectClass} ${selectDisabledClass}`}
+            className={`${selectClass} ${selectDisabledClass} focus:shadow-[0_0_8px_rgba(0,112,243,0.3)]`}
             aria-label="Lecture Selector"
           >
             <option value="">All Lectures</option>
@@ -228,14 +232,14 @@ export const QuestionFilters: React.FC<QuestionFiltersProps> = ({
           type="text"
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full rounded-lg border border-input bg-background pl-9 pr-9 py-2 text-sm text-foreground placeholder-muted-foreground outline-none shadow-xs focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all duration-200"
+          className="w-full rounded-xl border border-input bg-card pl-9 pr-9 py-2.5 text-sm text-foreground placeholder-muted-foreground outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-shadow duration-200"
           placeholder="Search question content text..."
           aria-label="Search Question Content"
         />
         {search && (
           <button
             onClick={() => onSearchChange("")}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-0.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
             aria-label="Clear search"
           >
             <X className="h-3.5 w-3.5" />

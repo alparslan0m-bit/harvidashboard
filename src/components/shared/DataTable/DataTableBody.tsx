@@ -52,12 +52,12 @@ export function DataTableBody<TData>({
           </td>
         </tr>
       ) : (
-        table.getRowModel().rows.map((row) => (
-          <tr key={row.id} className="table-row">
+        table.getRowModel().rows.map((row, idx) => (
+          <tr key={row.id} className={cn("table-row animate-fade-in-up", `stagger-${(idx % 6) + 1}`)}>
             {row.getVisibleCells().map((cell) => (
               <td
                 key={cell.id}
-                className="px-4 py-2.5 text-sm text-foreground align-middle overflow-hidden text-ellipsis whitespace-nowrap"
+                className="px-4 py-2.5 text-sm text-foreground align-middle overflow-hidden text-ellipsis whitespace-nowrap border-b border-border/50"
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>

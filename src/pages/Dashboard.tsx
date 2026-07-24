@@ -92,7 +92,7 @@ export const Dashboard: React.FC = () => {
       <button
         onClick={() => refetch()}
         disabled={isLoading}
-        className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-card px-4 py-1.5 text-xs font-semibold text-foreground transition hover:bg-muted disabled:opacity-60 focus-ring"
+        className="inline-flex items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-1.5 text-xs font-semibold text-foreground transition-all hover:bg-gradient-to-r hover:from-primary/10 hover:to-chart-5/10 hover:border-primary/30 disabled:opacity-60 focus-ring"
       >
         <RefreshCw className={cn("h-3.5 w-3.5", isLoading && "animate-spin")} />
         <span>{isLoading ? "Refreshing…" : "Refresh metrics"}</span>

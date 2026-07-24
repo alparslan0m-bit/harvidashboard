@@ -97,10 +97,13 @@ export const Curriculum: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-8 pb-8">
-      <PageHeader title="Curriculum Management" />
+      <div className="animate-fade-in-up stagger-1">
+        <PageHeader title="Curriculum Management" />
+      </div>
 
       {/* Horizontal KPIs Grid */}
-      <KPIGrid 
+      <div className="animate-fade-in-up stagger-2">
+        <KPIGrid 
         cards={[
           { title: "Academic Years", value: isLoadingStats ? "..." : stats.yearsCount, icon: <Calendar /> },
           { title: "Course Modules", value: isLoadingStats ? "..." : stats.modulesCount, icon: <BookOpen /> },
@@ -112,14 +115,16 @@ export const Curriculum: React.FC = () => {
         className="gap-4" 
       />
 
+      </div>
+
       {/* Page-level Interactive Breadcrumbs */}
-      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-card px-4 py-2.5 rounded-[8px] border border-border shadow-xs w-fit">
+      <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground bg-card px-4 py-2.5 rounded-[8px] border border-border/60 glass shadow-sm w-fit animate-fade-in-up stagger-3">
         <span
           className={cn(
             "transition-colors flex items-center gap-1",
             selectedYear || selectedModule || selectedSubject
               ? "hover:text-foreground cursor-pointer font-medium"
-              : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md",
+              : "text-primary font-semibold px-2 py-0.5 bg-gradient-to-r from-primary/10 to-chart-5/10 rounded-md shadow-sm",
           )}
           onClick={navigateToYears}
         >
@@ -134,7 +139,7 @@ export const Curriculum: React.FC = () => {
                 "transition-colors",
                 selectedModule || selectedSubject
                   ? "hover:text-foreground cursor-pointer font-medium"
-                  : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md",
+                  : "text-primary font-semibold px-2 py-0.5 bg-gradient-to-r from-primary/10 to-chart-5/10 rounded-md shadow-sm",
               )}
               onClick={() => navigateToModules(selectedYear.id)}
             >
@@ -148,7 +153,7 @@ export const Curriculum: React.FC = () => {
                     "transition-colors",
                     selectedSubject
                       ? "hover:text-foreground cursor-pointer font-medium"
-                      : "text-foreground font-semibold px-2 py-0.5 bg-muted rounded-md",
+                      : "text-primary font-semibold px-2 py-0.5 bg-gradient-to-r from-primary/10 to-chart-5/10 rounded-md shadow-sm",
                   )}
                   onClick={() =>
                     navigateToSubjects(selectedYear.id, selectedModule.id)
@@ -159,7 +164,7 @@ export const Curriculum: React.FC = () => {
                 {selectedSubject && (
                   <>
                     <ChevronRight className="h-3 w-3 text-muted-foreground/40" />
-                    <span className="font-semibold text-foreground px-2 py-0.5 bg-muted rounded-md">
+                    <span className="font-semibold text-primary px-2 py-0.5 bg-gradient-to-r from-primary/10 to-chart-5/10 rounded-md shadow-sm">
                       {selectedSubject.name}
                     </span>
                   </>
@@ -171,7 +176,7 @@ export const Curriculum: React.FC = () => {
       </div>
 
       {/* Workspace Panel */}
-      <div className="w-full">
+      <div className="w-full animate-fade-in-up stagger-4">
         {renderActivePanel()}
       </div>
     </div>

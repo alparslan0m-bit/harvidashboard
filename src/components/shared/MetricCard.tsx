@@ -11,6 +11,7 @@ export interface MetricCardProps {
   className?: string;
   compact?: boolean;
   featured?: boolean;
+  staggerIndex?: number;
 }
 
 export const MetricCard: React.FC<MetricCardProps> = ({
@@ -22,12 +23,14 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   className,
   compact = false,
   featured = false,
+  staggerIndex,
 }) => {
   const baseClasses = cn(
-    "relative overflow-hidden rounded-[8px] border shadow-[var(--shadow-card)] flex transition-all duration-200",
+    "relative overflow-hidden rounded-[8px] border shadow-[var(--shadow-card)] flex transition-all duration-200 hover-lift animate-fade-in-up",
+    staggerIndex !== undefined && `stagger-${(staggerIndex % 6) + 1}`,
     featured 
       ? "bg-primary text-primary-foreground border-transparent" 
-      : "bg-card border-border hover:border-foreground/20"
+      : "bg-card border-border hover:border-primary/20 hover:shadow-primary/5"
   );
 
   if (compact) {
@@ -37,8 +40,8 @@ export const MetricCard: React.FC<MetricCardProps> = ({
           {icon && (
             <div
               className={cn(
-                "h-8 w-8 rounded-md flex items-center justify-center shrink-0 [&_svg]:h-4 [&_svg]:w-4",
-                featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-muted/40 text-muted-foreground"
+                "h-8 w-8 rounded-md flex items-center justify-center shrink-0 [&_svg]:h-4 [&_svg]:w-4 transition-transform duration-200 group-hover:scale-110",
+                featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-gradient-to-br from-muted to-muted/50 text-muted-foreground shadow-sm"
               )}
             >
               {icon}
@@ -48,7 +51,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
             <span className={cn("text-[12px] font-mono uppercase block leading-tight", featured ? "text-primary-foreground/70" : "text-muted-foreground")}>
               {title}
             </span>
-            <div className={cn("text-2xl font-semibold tracking-tight tabular-nums leading-tight mt-1", featured ? "text-primary-foreground" : "text-foreground")}>
+            <div className={cn("text-2xl font-semibold tracking-tight tabular-nums leading-tight mt-1", featured ? "text-gradient" : "text-foreground")}>
               {value}
             </div>
           </div>
@@ -63,8 +66,8 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         {icon && (
           <div
             className={cn(
-              "h-10 w-10 rounded-[6px] flex items-center justify-center shrink-0 [&_svg]:h-5 [&_svg]:w-5",
-              featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-muted/40 text-muted-foreground"
+              "h-10 w-10 rounded-[6px] flex items-center justify-center shrink-0 [&_svg]:h-5 [&_svg]:w-5 transition-transform duration-200 group-hover:scale-110",
+              featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-gradient-to-br from-muted to-muted/50 text-muted-foreground shadow-sm"
             )}
           >
             {icon}
@@ -75,7 +78,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         </span>
       </div>
       <div className="mt-auto pt-3">
-        <div className={cn("text-[32px] leading-[40px] font-semibold tracking-[-1.28px] tabular-nums", featured ? "text-primary-foreground" : "text-foreground")}>
+        <div className={cn("text-[32px] leading-[40px] font-semibold tracking-[-1.28px] tabular-nums", featured ? "text-gradient" : "text-foreground")}>
           {value}
         </div>
         {(trend || description) && (

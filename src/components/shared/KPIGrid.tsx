@@ -37,6 +37,7 @@ export const KPIGrid: React.FC<KPIGridProps> = ({ cards, className, compact = fa
           className={cn(colorful ? KPI_COLORS[idx % KPI_COLORS.length] : "", card.className)}
           compact={compact}
           featured={card.featured}
+          staggerIndex={idx}
         />
       ))}
     </div>
