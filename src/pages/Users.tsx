@@ -34,7 +34,7 @@ export const Users: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-8 pb-8">
       <PageHeader
         title="User Accounts"
       />

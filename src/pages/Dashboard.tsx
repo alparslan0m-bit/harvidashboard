@@ -101,13 +101,13 @@ export const Dashboard: React.FC = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-8 pb-8">
       <PageHeader title="Dashboard Overview" actions={headerActions} />
 
-      <KPIGrid cards={kpiCards} compact colorful className="gap-3" />
+      <KPIGrid cards={kpiCards} compact className="gap-4" />
 
-      <div className="grid grid-cols-1 mt-6">
-        <h3 className="text-sm font-semibold tracking-tight text-foreground mb-4">
+      <div className="grid grid-cols-1">
+        <h3 className="text-[12px] font-mono uppercase text-muted-foreground mb-4">
           Admin Activity Feed
         </h3>
         <AdminActivityList logs={recentData?.adminAuditLogs || []} />

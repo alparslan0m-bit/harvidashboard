@@ -15,7 +15,7 @@ export const TrendBadge: React.FC<TrendBadgeProps> = ({ value, className }) => {
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-bold tracking-wide tabular-nums",
+        "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[12px] font-medium tracking-wide tabular-nums",
         isPositive
           ? "bg-success/10 text-success"
           : "bg-destructive/10 text-destructive",

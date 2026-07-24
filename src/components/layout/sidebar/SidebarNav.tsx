@@ -37,7 +37,7 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ groups, isCollapsed, onC
         >
           <h2
             className={cn(
-              "px-3.5 text-[10px] font-bold tracking-widest text-muted-foreground/60 font-heading uppercase",
+              "px-3.5 text-[12px] font-mono tracking-normal text-muted-foreground/60 uppercase",
               isCollapsed && "lg:hidden"
             )}
           >
@@ -53,13 +53,13 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ groups, isCollapsed, onC
                   onClick={() => onClose()}
                   className={({ isActive }) =>
                     cn(
-                      "group flex items-center text-sm font-medium rounded-xl transition-all duration-200 focus-ring",
+                      "group relative flex items-center text-sm font-medium rounded-[6px] transition-all duration-200 focus-ring overflow-hidden",
                       isCollapsed
                         ? "lg:justify-center lg:px-0 lg:py-2.5 gap-3 px-3.5 py-2.5"
                         : "gap-3 px-3.5 py-2.5",
                       isActive
-                        ? "bg-primary text-primary-foreground font-semibold shadow-xs"
-                        : "text-muted-foreground hover:bg-muted/65 hover:text-foreground"
+                        ? "bg-muted/40 text-foreground font-semibold before:absolute before:left-0 before:top-0 before:bottom-0 before:w-[3px] before:bg-primary"
+                        : "text-muted-foreground hover:bg-muted/40 hover:text-foreground"
                     )
                   }
                 >

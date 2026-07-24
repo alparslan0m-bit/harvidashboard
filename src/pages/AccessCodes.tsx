@@ -356,7 +356,7 @@ export const AccessCodes: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-8 pb-8">
       <PageHeader
         title="Access Code Management"
         actions={

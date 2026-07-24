@@ -57,7 +57,7 @@ export function DataTableBody<TData>({
             {row.getVisibleCells().map((cell) => (
               <td
                 key={cell.id}
-                className="px-4 py-2.5 text-foreground align-middle overflow-hidden text-ellipsis whitespace-nowrap"
+                className="px-4 py-2.5 text-sm text-foreground align-middle overflow-hidden text-ellipsis whitespace-nowrap"
               >
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </td>

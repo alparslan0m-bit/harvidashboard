@@ -74,7 +74,7 @@ export const UserDetail: React.FC = () => {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-8 pb-8">
       <PageHeader
         title={user ? `User Profile: ${user.email}` : "User Profile"}
         actions={headerActions}

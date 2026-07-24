@@ -119,9 +119,9 @@ export const Analytics: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-8 pb-8">
       <PageHeader title="System Analytics" />
-      <KPIGrid cards={kpiCards} compact colorful />
+      <KPIGrid cards={kpiCards} compact className="gap-4" />
       <AnalyticsDateFilter
         fromDate={fromDate}
         toDate={toDate}

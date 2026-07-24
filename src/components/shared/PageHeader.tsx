@@ -38,7 +38,7 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
             <Menu className="h-5 w-5" />
           </button>
           
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground font-heading truncate">
+          <h1 className="text-2xl sm:text-[32px] sm:leading-[40px] font-semibold tracking-[-1.28px] text-foreground truncate">
             {title}
           </h1>
         </div>

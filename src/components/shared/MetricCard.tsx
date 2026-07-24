@@ -24,10 +24,10 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   featured = false,
 }) => {
   const baseClasses = cn(
-    "relative overflow-hidden rounded-xl border shadow-card flex transition-all duration-200 hover:shadow-elevated",
+    "relative overflow-hidden rounded-[8px] border shadow-[var(--shadow-card)] flex transition-all duration-200",
     featured 
       ? "bg-primary text-primary-foreground border-transparent" 
-      : "bg-card border-border hover:border-primary/20"
+      : "bg-card border-border hover:border-foreground/20"
   );
 
   if (compact) {
@@ -45,10 +45,10 @@ export const MetricCard: React.FC<MetricCardProps> = ({
             </div>
           )}
           <div>
-            <span className={cn("text-xs font-semibold uppercase tracking-wider block leading-tight", featured ? "text-primary-foreground/70" : "text-muted-foreground")}>
+            <span className={cn("text-[12px] font-mono uppercase block leading-tight", featured ? "text-primary-foreground/70" : "text-muted-foreground")}>
               {title}
             </span>
-            <div className={cn("text-xl font-bold tracking-tight tabular-nums font-heading leading-tight mt-0.5", featured ? "text-primary-foreground" : "text-foreground")}>
+            <div className={cn("text-2xl font-semibold tracking-tight tabular-nums leading-tight mt-1", featured ? "text-primary-foreground" : "text-foreground")}>
               {value}
             </div>
           </div>
@@ -59,23 +59,23 @@ export const MetricCard: React.FC<MetricCardProps> = ({
 
   return (
     <div className={cn(baseClasses, "flex-col p-5 min-h-[120px]", className)}>
-      <div className="flex flex-col items-end">
+      <div className="flex flex-col items-start">
         {icon && (
           <div
             className={cn(
-              "h-10 w-10 rounded-lg flex items-center justify-center shrink-0 [&_svg]:h-5 [&_svg]:w-5",
+              "h-10 w-10 rounded-[6px] flex items-center justify-center shrink-0 [&_svg]:h-5 [&_svg]:w-5",
               featured ? "bg-primary-foreground/10 text-primary-foreground" : "bg-muted/40 text-muted-foreground"
             )}
           >
             {icon}
           </div>
         )}
-        <span className={cn("text-xs font-semibold uppercase tracking-wider mt-2 text-right", featured ? "text-primary-foreground/70" : "text-muted-foreground")}>
+        <span className={cn("text-[12px] font-mono uppercase mt-2 text-left", featured ? "text-primary-foreground/70" : "text-muted-foreground")}>
           {title}
         </span>
       </div>
       <div className="mt-auto pt-3">
-        <div className={cn("text-4xl font-bold tracking-tight tabular-nums font-heading", featured ? "text-primary-foreground" : "text-foreground")}>
+        <div className={cn("text-[32px] leading-[40px] font-semibold tracking-[-1.28px] tabular-nums", featured ? "text-primary-foreground" : "text-foreground")}>
           {value}
         </div>
         {(trend || description) && (
