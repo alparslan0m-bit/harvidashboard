@@ -42,14 +42,14 @@ export const NotificationBell: React.FC = () => {
     <Popover.Root>
       <Popover.Trigger asChild>
         <button
-          className="relative p-2 rounded-xl bg-transparent hover:bg-muted/60 transition-all duration-200 focus-ring"
+          className="relative p-2 rounded-2xl border border-border/40 bg-background/90 shadow-sm transition-all duration-200 hover:bg-muted/50 focus-ring"
           aria-label="View notifications"
         >
           <Bell className="h-4 w-4 text-foreground" />
           {totalNotifications > 0 && (
             <span className="absolute top-1 right-1 flex h-2 w-2 select-none">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)] animate-[glowPulse_2s_infinite]"></span>
+              <span className="absolute inset-0 rounded-full bg-red-400 opacity-80"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 shadow-[0_0_6px_rgba(239,68,68,0.8)]"></span>
             </span>
           )}
         </button>
@@ -62,7 +62,9 @@ export const NotificationBell: React.FC = () => {
           sideOffset={8}
         >
           <div className="flex items-center justify-between border-b pb-2 mb-3">
-            <h3 className="text-sm font-bold text-foreground tracking-tight font-heading">Notifications</h3>
+            <h3 className="text-sm font-bold text-foreground tracking-tight font-heading">
+              Notifications
+            </h3>
             <span className="text-xs bg-muted px-2 py-0.5 rounded-full font-semibold text-muted-foreground">
               {totalNotifications} Alert{totalNotifications === 1 ? "" : "s"}
             </span>
@@ -72,8 +74,12 @@ export const NotificationBell: React.FC = () => {
             {totalNotifications === 0 ? (
               <div className="py-6 flex flex-col items-center justify-center text-center">
                 <Check className="h-8 w-8 text-emerald-500 bg-emerald-500/10 p-1.5 rounded-full mb-2" />
-                <p className="text-sm font-semibold text-foreground">All clear!</p>
-                <p className="text-sm text-muted-foreground mt-0.5">No outstanding system alerts.</p>
+                <p className="text-sm font-semibold text-foreground">
+                  All clear!
+                </p>
+                <p className="text-sm text-muted-foreground mt-0.5">
+                  No outstanding system alerts.
+                </p>
               </div>
             ) : (
               <>
@@ -90,7 +96,8 @@ export const NotificationBell: React.FC = () => {
                         Unread Student Feedback
                       </p>
                       <p className="text-sm text-muted-foreground mt-0.5">
-                        There are {unreadFeedback} feedback submission{unreadFeedback === 1 ? "" : "s"} requiring attention.
+                        There are {unreadFeedback} feedback submission
+                        {unreadFeedback === 1 ? "" : "s"} requiring attention.
                       </p>
                     </div>
                   </button>
@@ -109,7 +116,9 @@ export const NotificationBell: React.FC = () => {
                         Disputed Transactions
                       </p>
                       <p className="text-sm text-muted-foreground mt-0.5">
-                        There are {disputedPurchases} transaction{disputedPurchases === 1 ? "" : "s"} flagged as disputed.
+                        There are {disputedPurchases} transaction
+                        {disputedPurchases === 1 ? "" : "s"} flagged as
+                        disputed.
                       </p>
                     </div>
                   </button>

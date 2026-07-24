@@ -19,12 +19,16 @@ interface SidebarNavProps {
   onClose: () => void;
 }
 
-export const SidebarNav: React.FC<SidebarNavProps> = ({ groups, isCollapsed, onClose }) => {
+export const SidebarNav: React.FC<SidebarNavProps> = ({
+  groups,
+  isCollapsed,
+  onClose,
+}) => {
   return (
     <nav
       className={cn(
         "flex-1 overflow-y-auto overflow-x-hidden py-5 space-y-5",
-        isCollapsed ? "lg:px-2 px-3" : "px-3"
+        isCollapsed ? "lg:px-2 px-3" : "px-3",
       )}
     >
       {groups.map((group, groupIdx) => (
@@ -32,18 +36,20 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ groups, isCollapsed, onC
           key={group.label}
           className={cn(
             "space-y-1.5",
-            isCollapsed && groupIdx > 0 && "lg:pt-1 lg:border-t lg:border-border"
+            isCollapsed &&
+              groupIdx > 0 &&
+              "lg:pt-1 lg:border-t lg:border-border",
           )}
         >
           <h2
             className={cn(
               "px-3.5 text-[12px] font-mono tracking-normal text-muted-foreground/60 uppercase",
-              isCollapsed && "lg:hidden"
+              isCollapsed && "lg:hidden",
             )}
           >
             {group.label}
           </h2>
-          <ul className="space-y-0.5">
+          <ul className="space-y-2">
             {group.items.map((item) => (
               <li key={item.name}>
                 <NavLink
@@ -53,17 +59,20 @@ export const SidebarNav: React.FC<SidebarNavProps> = ({ groups, isCollapsed, onC
                   onClick={() => onClose()}
                   className={({ isActive }) =>
                     cn(
-                      "group relative flex items-center text-sm font-medium rounded-[6px] transition-all duration-200 focus-ring overflow-hidden",
+                      "group relative flex items-center text-sm font-medium rounded-2xl transition-all duration-200 focus-ring overflow-hidden",
                       isCollapsed
-                        ? "lg:justify-center lg:px-0 lg:py-2.5 gap-3 px-3.5 py-2.5"
-                        : "gap-3 px-3.5 py-2.5",
+                        ? "lg:justify-center lg:px-0 lg:py-3 gap-3 px-3.5 py-2.5"
+                        : "gap-3 px-3.5 py-3",
                       isActive
-                        ? "bg-gradient-to-r from-primary/8 to-chart-5/5 text-foreground font-semibold before:absolute before:left-0 before:top-1 before:bottom-1 before:w-[3px] before:rounded-full before:bg-gradient-to-b before:from-chart-1 before:to-chart-5"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        ? "bg-linear-to-r from-primary/10 to-chart-5/10 text-foreground font-semibold shadow-sm shadow-primary/10 before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.75 before:rounded-full before:bg-linear-to-b before:from-chart-1 before:to-chart-5"
+                        : "text-muted-foreground hover:bg-muted/30 hover:text-foreground",
                     )
                   }
                 >
-                  <item.icon className="h-4 w-4 shrink-0 transition-all duration-200 group-hover:scale-110 group-hover:text-chart-1" aria-hidden />
+                  <item.icon
+                    className="h-4 w-4 shrink-0 transition-all duration-200 group-hover:scale-110 group-hover:text-chart-1"
+                    aria-hidden
+                  />
                   <span className={cn("truncate", isCollapsed && "lg:hidden")}>
                     {item.name}
                   </span>

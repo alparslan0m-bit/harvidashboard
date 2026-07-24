@@ -18,31 +18,35 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
   return (
     <div
       className={cn(
-        "border-t border-border bg-transparent shrink-0",
-        isCollapsed ? "lg:p-2 p-4" : "p-4"
+        "border-t border-border/10 bg-background/95 shrink-0 lg:rounded-br-4xl",
+        isCollapsed ? "lg:p-3 p-4" : "p-4",
       )}
     >
       <div
         className={cn(
           "flex items-center",
-          isCollapsed ? "lg:flex-col lg:gap-2 justify-between" : "justify-between gap-2.5"
+          isCollapsed
+            ? "lg:flex-col lg:gap-2 justify-between"
+            : "justify-between gap-2.5",
         )}
       >
         <div
           className={cn(
             "flex items-center min-w-0",
-            isCollapsed ? "lg:justify-center gap-0" : "gap-2.5"
+            isCollapsed ? "lg:justify-center gap-0" : "gap-2.5",
           )}
           title={isCollapsed ? email : undefined}
         >
-          <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary via-chart-5 to-chart-4 p-[2px] shrink-0">
+          <div className="h-9 w-9 rounded-full bg-linear-to-br from-primary via-chart-5 to-chart-4 p-0.5 shrink-0">
             <div className="h-full w-full rounded-full bg-card flex items-center justify-center text-sm font-bold text-foreground uppercase">
               {initials}
             </div>
           </div>
-          <div className={cn("flex flex-col min-w-0", isCollapsed && "lg:hidden")}>
+          <div
+            className={cn("flex flex-col min-w-0", isCollapsed && "lg:hidden")}
+          >
             <span
-              className="text-sm font-medium text-foreground truncate max-w-[100px]"
+              className="text-sm font-medium text-foreground truncate max-w-25"
               title={email}
             >
               {email}
@@ -55,7 +59,7 @@ export const SidebarFooter: React.FC<SidebarFooterProps> = ({
 
         <button
           onClick={onSignOut}
-          className="p-1.5 rounded-xl hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-all duration-200 hover:rotate-12 focus-ring shrink-0"
+          className="p-2 rounded-2xl border border-border/10 bg-background/90 text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 focus-ring shrink-0"
           title="Sign Out"
           aria-label="Sign Out"
         >

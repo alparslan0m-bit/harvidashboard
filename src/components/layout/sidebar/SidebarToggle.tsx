@@ -7,14 +7,17 @@ interface SidebarToggleProps {
   onToggleCollapse: () => void;
 }
 
-export const SidebarToggle: React.FC<SidebarToggleProps> = ({ isCollapsed, onToggleCollapse }) => {
+export const SidebarToggle: React.FC<SidebarToggleProps> = ({
+  isCollapsed,
+  onToggleCollapse,
+}) => {
   return (
     <div className={cn("hidden lg:block px-3 pb-2", isCollapsed && "px-2")}>
       <button
         onClick={onToggleCollapse}
         className={cn(
-          "flex items-center w-full rounded-xl border border-border text-muted-foreground hover:bg-gradient-to-r hover:from-primary/5 hover:to-chart-5/5 hover:text-foreground hover:border-primary/20 transition-all duration-200 focus-ring text-xs font-medium",
-          isCollapsed ? "justify-center p-2.5" : "gap-2 px-3 py-2"
+          "flex items-center w-full rounded-full border border-border/10 bg-background/95 text-muted-foreground hover:bg-muted/40 hover:text-foreground transition-all duration-200 focus-ring text-xs font-medium",
+          isCollapsed ? "justify-center p-3" : "gap-2 px-3 py-2.5",
         )}
         aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}

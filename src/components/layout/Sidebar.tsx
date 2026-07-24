@@ -73,37 +73,35 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const email = currentUser?.email || "admin@harvi.app";
-  const initials = email
-    .split("@")[0]
-    .slice(0, 2)
-    .toUpperCase();
+  const initials = email.split("@")[0].slice(0, 2).toUpperCase();
 
   return (
     <aside
       className={cn(
-        "fixed inset-y-0 left-0 z-40 border-r border-border glass text-foreground flex flex-col h-full transition-all duration-200 ease-in-out lg:static lg:translate-x-0",
+        "fixed inset-y-0 left-0 z-40 bg-background/80 backdrop-blur-xl text-foreground flex flex-col h-full overflow-hidden transition-all duration-300 ease-in-out shadow-sm ring-1 ring-border/10 lg:static lg:translate-x-0",
         isOpen ? "translate-x-0" : "-translate-x-full",
-        isCollapsed ? "w-[240px] lg:w-[72px]" : "w-[240px]"
+        isCollapsed ? "w-60 lg:w-18" : "w-60",
+        "lg:rounded-tr-[32px] lg:rounded-br-[32px]",
       )}
     >
       <SidebarHeader isCollapsed={isCollapsed} onClose={onClose} />
-      
-      <SidebarNav 
-        groups={navGroups} 
-        isCollapsed={isCollapsed} 
-        onClose={onClose} 
+
+      <SidebarNav
+        groups={navGroups}
+        isCollapsed={isCollapsed}
+        onClose={onClose}
       />
 
-      <SidebarToggle 
-        isCollapsed={isCollapsed} 
-        onToggleCollapse={onToggleCollapse} 
+      <SidebarToggle
+        isCollapsed={isCollapsed}
+        onToggleCollapse={onToggleCollapse}
       />
 
-      <SidebarFooter 
-        email={email} 
-        initials={initials} 
-        isCollapsed={isCollapsed} 
-        onSignOut={handleSignOut} 
+      <SidebarFooter
+        email={email}
+        initials={initials}
+        isCollapsed={isCollapsed}
+        onSignOut={handleSignOut}
       />
     </aside>
   );

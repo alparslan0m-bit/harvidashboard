@@ -7,18 +7,23 @@ interface SidebarHeaderProps {
   onClose: () => void;
 }
 
-export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isCollapsed, onClose }) => {
+export const SidebarHeader: React.FC<SidebarHeaderProps> = ({
+  isCollapsed,
+  onClose,
+}) => {
   return (
     <div
       className={cn(
-        "h-16 sm:h-[72px] lg:h-20 border-b border-border/60 flex items-center shrink-0",
-        isCollapsed ? "lg:justify-center lg:px-0 px-5 justify-between" : "px-5 justify-between"
+        "h-16 sm:h-[72px] lg:h-20 border-b border-border/10 bg-background/95 backdrop-blur-sm flex items-center shrink-0 lg:rounded-tr-[32px]",
+        isCollapsed
+          ? "lg:justify-center lg:px-0 px-5 justify-between"
+          : "px-5 justify-between",
       )}
     >
       <div
         className={cn(
           "flex items-center min-w-0",
-          isCollapsed ? "lg:justify-center gap-0" : "gap-2"
+          isCollapsed ? "lg:justify-center gap-0" : "gap-2",
         )}
       >
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary via-chart-5 to-chart-4 text-primary-foreground shrink-0 shadow-md shadow-primary/20">
@@ -27,7 +32,7 @@ export const SidebarHeader: React.FC<SidebarHeaderProps> = ({ isCollapsed, onClo
         <span
           className={cn(
             "font-bold text-base tracking-tight font-heading text-foreground truncate transition-opacity duration-200",
-            isCollapsed && "lg:hidden"
+            isCollapsed && "lg:hidden",
           )}
         >
           Harvi Admin

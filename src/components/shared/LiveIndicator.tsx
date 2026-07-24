@@ -18,14 +18,11 @@ export const LiveIndicator: React.FC<LiveIndicatorProps> = ({
       )}
     >
       <div className="relative flex h-2 w-2 items-center justify-center">
-        {active && (
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-        )}
         <span
           className={cn(
             "relative inline-flex h-2 w-2 rounded-full",
-            active 
-              ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-[0_0_8px_rgba(52,211,153,0.8)] animate-[glowPulse_2s_infinite]" 
+            active
+              ? "bg-gradient-to-br from-emerald-400 to-emerald-600 shadow-[0_0_8px_rgba(52,211,153,0.25)]"
               : "bg-muted-foreground/30"
           )}
         ></span>
