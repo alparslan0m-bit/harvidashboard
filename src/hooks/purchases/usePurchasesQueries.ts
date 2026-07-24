@@ -3,7 +3,7 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import { PAGE_SIZE, STALE_TIMES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
-import { listAllAuthUsers } from "@/services/authService";
+import { useAuthUsersFetcher } from "@/hooks/useAuthUsers";
 import type { PurchaseListItem, PurchasesPageData } from "@/types/api";
 import type { Module } from "@/types/database";
 
@@ -14,13 +14,16 @@ export function usePurchases(
   toDate: string,
   searchSessionId: string,
 ) {
+  const fetchAuthUsers = useAuthUsersFetcher();
+
   const purchasesQuery = useQuery({
     queryKey: QUERY_KEYS.purchases(page, status, fromDate, toDate, searchSessionId),
+    placeholderData: (previousData) => previousData,
     queryFn: async (): Promise<PurchasesPageData> => {
       try {
         const from = (page - 1) * PAGE_SIZE;
         const to = from + PAGE_SIZE - 1;
-        const authUsers = await listAllAuthUsers("Purchases");
+        const authUsers = await fetchAuthUsers("Purchases");
         const authMap = new Map(authUsers.map((u) => [u.id, u]));
 
         let query = supabaseAdmin

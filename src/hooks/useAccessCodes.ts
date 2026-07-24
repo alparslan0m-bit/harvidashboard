@@ -3,16 +3,19 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import { STALE_TIMES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
-import { listAllAuthUsers } from "@/services/authService";
+import { useAuthUsersFetcher } from "@/hooks/useAuthUsers";
 import { toast } from "sonner";
 import type { AccessCodeWithDetails, Module } from "@/types/database";
 
 export function useAccessCodes(moduleId: string, statusFilter: string, searchBatch: string) {
+  const fetchAuthUsers = useAuthUsersFetcher();
+
   const accessCodesQuery = useQuery({
     queryKey: QUERY_KEYS.accessCodes(moduleId, statusFilter, searchBatch),
+    placeholderData: (previousData) => previousData,
     queryFn: async (): Promise<AccessCodeWithDetails[]> => {
       try {
-        const authUsers = await listAllAuthUsers("AccessCodes");
+        const authUsers = await fetchAuthUsers("AccessCodes");
         const authMap = new Map(authUsers.map((u) => [u.id, u.email]));
 
         let query = supabaseAdmin

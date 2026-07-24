@@ -3,7 +3,7 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import { PAGE_SIZE, STALE_TIMES } from "@/lib/constants";
 import { getErrorMessage } from "@/lib/errors";
-import { listAllAuthUsers } from "@/services/authService";
+import { useAuthUsersFetcher } from "@/hooks/useAuthUsers";
 import type { UserWithDetails, UserStats } from "@/types/database";
 
 const EMPTY_ID = "00000000-0000-0000-0000-000000000000";
@@ -37,13 +37,16 @@ async function applyUserFilter(filter: string) {
 }
 
 export function useUsers(page: number, search: string, filter: string) {
+  const fetchAuthUsers = useAuthUsersFetcher();
+
   const usersQuery = useQuery({
     queryKey: QUERY_KEYS.users(page, search, filter),
+    placeholderData: (previousData) => previousData,
     queryFn: async () => {
       try {
         const from = (page - 1) * PAGE_SIZE;
         const to = from + PAGE_SIZE - 1;
-        const authUsers = await listAllAuthUsers("Users");
+        const authUsers = await fetchAuthUsers("Users");
         const authMap = new Map(authUsers.map((u) => [u.id, u]));
 
         let query = supabaseAdmin

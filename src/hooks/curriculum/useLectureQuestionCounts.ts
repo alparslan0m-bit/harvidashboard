@@ -3,8 +3,10 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 import { STALE_TIMES } from "@/lib/constants";
 
 export function useLectureQuestionCounts(lectureIds: string[]) {
+  const serializedKey = lectureIds.slice().sort().join(",");
+
   const query = useQuery({
-    queryKey: ["lecture-question-counts", lectureIds],
+    queryKey: ["lecture-question-counts", serializedKey],
     queryFn: async (): Promise<Map<string, number>> => {
       if (!lectureIds.length) return new Map();
 

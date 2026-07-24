@@ -3,20 +3,23 @@ import { supabaseAdmin } from "../lib/supabaseAdmin";
 import { QUERY_KEYS } from "../lib/queryKeys";
 import { PAGE_SIZE, STALE_TIMES } from "../lib/constants";
 import { getErrorMessage } from "../lib/errors";
-import { listAllAuthUsers } from "../services/authService";
+import { useAuthUsersFetcher } from "../hooks/useAuthUsers";
 import { toast } from "sonner";
 import type { FeedbackListItem, FeedbackPageData } from "../types/api";
 import type { FeedbackStatus } from "../lib/constants";
 
 export function useFeedback(page: number, status: string) {
+  const fetchAuthUsers = useAuthUsersFetcher();
+
   const feedbackQuery = useQuery({
     queryKey: QUERY_KEYS.feedback(page, status),
+    placeholderData: (previousData) => previousData,
     queryFn: async (): Promise<FeedbackPageData> => {
       try {
         const from = (page - 1) * PAGE_SIZE;
         const to = from + PAGE_SIZE - 1;
 
-        const authUsers = await listAllAuthUsers("Feedback");
+        const authUsers = await fetchAuthUsers("Feedback");
         const authMap = new Map(authUsers.map((u) => [u.id, u]));
         let query = supabaseAdmin
           .from("feedback")

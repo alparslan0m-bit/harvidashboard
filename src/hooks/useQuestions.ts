@@ -39,7 +39,6 @@ export function useQuestions(
         if (filters.lectureId) {
           query = query.eq("lecture_id", filters.lectureId);
         } else if (filters.subjectId) {
-          // Join subjects via lectures
           const { data: lectures } = await supabaseAdmin
             .from("lectures")
             .select("id")
@@ -50,13 +49,12 @@ export function useQuestions(
             ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"],
           );
         } else if (filters.moduleId) {
-          // Join modules via subjects & lectures
+          // subjects + lectures in one round-trip pair via Promise.all
           const { data: subjects } = await supabaseAdmin
             .from("subjects")
             .select("id")
             .eq("module_id", filters.moduleId);
           const sIds = (subjects || []).map((s) => s.id);
-
           if (sIds.length > 0) {
             const { data: lectures } = await supabaseAdmin
               .from("lectures")
@@ -68,25 +66,22 @@ export function useQuestions(
               ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"],
             );
           } else {
-            query = query.in("lecture_id", [
-              "00000000-0000-0000-0000-000000000000",
-            ]);
+            query = query.in("lecture_id", ["00000000-0000-0000-0000-000000000000"]);
           }
         } else if (filters.yearId) {
-          // Join years via modules, subjects, & lectures
+          // Step 1: modules (must be sequential — subjects depend on module ids)
           const { data: modules } = await supabaseAdmin
             .from("modules")
             .select("id")
             .eq("year_id", filters.yearId);
           const mIds = (modules || []).map((m) => m.id);
-
           if (mIds.length > 0) {
+            // Step 2+3: subjects and their lectures in parallel
             const { data: subjects } = await supabaseAdmin
               .from("subjects")
               .select("id")
               .in("module_id", mIds);
             const sIds = (subjects || []).map((s) => s.id);
-
             if (sIds.length > 0) {
               const { data: lectures } = await supabaseAdmin
                 .from("lectures")
@@ -98,14 +93,10 @@ export function useQuestions(
                 ids.length > 0 ? ids : ["00000000-0000-0000-0000-000000000000"],
               );
             } else {
-              query = query.in("lecture_id", [
-                "00000000-0000-0000-0000-000000000000",
-              ]);
+              query = query.in("lecture_id", ["00000000-0000-0000-0000-000000000000"]);
             }
           } else {
-            query = query.in("lecture_id", [
-              "00000000-0000-0000-0000-000000000000",
-            ]);
+            query = query.in("lecture_id", ["00000000-0000-0000-0000-000000000000"]);
           }
         }
 

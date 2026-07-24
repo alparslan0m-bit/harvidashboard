@@ -19,6 +19,7 @@ export function useUserMutations() {
     onSuccess: (_, userId) => {
       toast.success("Admin role granted successfully");
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.userDetail(userId) });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.authUsers });
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (err: unknown) => toast.error(getErrorMessage(err, "Failed to grant admin role")),
@@ -31,6 +32,7 @@ export function useUserMutations() {
     },
     onSuccess: () => {
       toast.success("User deleted successfully");
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.authUsers });
       queryClient.invalidateQueries({ queryKey: ["users"] });
     },
     onError: (err: unknown) => toast.error(getErrorMessage(err, "Failed to delete user")),

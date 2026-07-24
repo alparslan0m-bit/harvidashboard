@@ -5,11 +5,12 @@ export const LIST_USERS_PAGE_SIZE = 10000;
 export const STALE_TIMES = {
   curriculum: 5 * 60 * 1000,
   dashboard: 30 * 1000,
-  purchases: 10 * 1000,
-  feedback: 10 * 1000,
+  purchases: 60 * 1000,
+  feedback: 60 * 1000,
   questions: 30 * 1000,
   analytics: 30 * 1000,
-  users: 10 * 1000,
+  users: 60 * 1000,
+  authUsers: 2 * 60 * 1000,
 } as const;
 
 export const PURCHASE_STATUSES = [

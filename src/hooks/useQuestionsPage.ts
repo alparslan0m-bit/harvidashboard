@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useLocation } from "react-router";
 import { useQuestions, useQuestionMutations } from "@/hooks/useQuestions";
+import { useDebounce } from "@/hooks/useDebounce";
 import { createQuestionColumns } from "@/components/pages/questions/questionsColumns";
 import type { Question } from "@/types/database";
 
@@ -10,6 +11,7 @@ export function useQuestionsPage() {
 
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [filters, setFilters] = useState({
     yearId: null as string | null,
     moduleId: null as string | null,
@@ -20,7 +22,7 @@ export function useQuestionsPage() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [deleteQuestionId, setDeleteQuestionId] = useState<string | null>(null);
 
-  const { data, isLoading, error, refetch } = useQuestions(filters, page, search);
+  const { data, isLoading, error, refetch } = useQuestions(filters, page, debouncedSearch);
   const { deleteQuestion } = useQuestionMutations();
 
   useEffect(() => {
