@@ -64,21 +64,21 @@ export const QuestionFormPreview: React.FC<QuestionFormPreviewProps> = ({
                 return (
                   <div
                     key={idx}
-                    className={`flex items-center gap-2 rounded-xl border px-3.5 py-2 text-xs transition-all duration-200 ${
+                    className={`flex items-center gap-3 rounded-full border px-4 py-3 text-sm transition-all duration-200 ${
                       isCorrect
-                        ? "border-emerald-300/60 bg-emerald-50/80 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-800/40 dark:text-emerald-400"
-                        : "border-border/50 bg-card text-muted-foreground"
+                        ? "border-emerald-200 bg-emerald-50/50 text-emerald-700 dark:bg-emerald-950/20 dark:border-emerald-800/30 dark:text-emerald-400"
+                        : "border-border/60 bg-card text-muted-foreground"
                     }`}
                   >
                     <span
-                      className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold shrink-0 ${
+                      className={`flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold shrink-0 ${
                         isCorrect
-                          ? "bg-emerald-600 text-white"
-                          : "bg-muted text-muted-foreground"
+                          ? "bg-emerald-500 text-white shadow-sm"
+                          : "bg-muted/80 text-muted-foreground/80"
                       }`}
                     >
                       {isCorrect ? (
-                        <Check className="h-2.5 w-2.5" />
+                        <Check className="h-4 w-4" />
                       ) : (
                         String.fromCharCode(65 + idx)
                       )}
