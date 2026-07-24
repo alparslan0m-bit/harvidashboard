@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { usePurchases, usePurchasesSummary, usePurchaseMutations } from "@/hooks/usePurchases";
+import { useDebounce } from "@/hooks/useDebounce";
 import { createPurchaseColumns } from "@/components/pages/purchases/purchaseColumns";
 import { DollarSign, CornerUpLeft, ShieldAlert, Hash } from "lucide-react";
 
@@ -9,6 +10,7 @@ export function usePurchasesPage() {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [searchSessionId, setSearchSessionId] = useState("");
+  const debouncedSearchSessionId = useDebounce(searchSessionId, 300);
   const [refundPurchaseId, setRefundPurchaseId] = useState<string | null>(null);
 
   const { data, isLoading, error, refetch } = usePurchases(
@@ -16,13 +18,13 @@ export function usePurchasesPage() {
     status,
     fromDate,
     toDate,
-    searchSessionId
+    debouncedSearchSessionId
   );
 
   const { summary, isLoading: isSummaryLoading } = usePurchasesSummary(
     fromDate,
     toDate,
-    searchSessionId
+    debouncedSearchSessionId
   );
 
   const { refundPurchase } = usePurchaseMutations();

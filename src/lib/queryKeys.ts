@@ -1,4 +1,5 @@
 export const QUERY_KEYS = {
+  authUsers: ["auth", "users"] as const,
   dashboardAll: ["dashboard", "all-data"],
   dashboardStats: ["dashboard", "stats"],
   dashboardRecentActivity: ["dashboard", "recent-activity"],

@@ -2,13 +2,17 @@ import { useQuery } from "@tanstack/react-query";
 import { QUERY_KEYS } from "@/lib/queryKeys";
 import { STALE_TIMES } from "@/lib/constants";
 import { fetchDashboardData } from "@/services/dashboardService";
+import { useAuthUsersFetcher } from "@/hooks/useAuthUsers";
 
 export type { DashboardStats, DashboardData, AdminAuditLog } from "@/types/dashboard";
 
 export function useDashboard() {
+  const fetchAuthUsers = useAuthUsersFetcher();
+
   const dashboardQuery = useQuery({
     queryKey: QUERY_KEYS.dashboardAll,
-    queryFn: fetchDashboardData,
+    placeholderData: (previousData) => previousData,
+    queryFn: () => fetchDashboardData(fetchAuthUsers),
     staleTime: STALE_TIMES.dashboard,
   });
 

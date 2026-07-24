@@ -1,14 +1,16 @@
 import { useState, useMemo, useCallback } from "react";
 import { useUsers } from "@/hooks/useUsers";
+import { useDebounce } from "@/hooks/useDebounce";
 import { createUserColumns } from "@/components/pages/users/userColumns";
 
 
 export function useUsersPage() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const debouncedSearch = useDebounce(search, 300);
   const [filter, setFilter] = useState("all");
 
-  const { data, isLoading, error, refetch } = useUsers(page, search, filter);
+  const { data, isLoading, error, refetch } = useUsers(page, debouncedSearch, filter);
 
   const handleSearchChange = useCallback((val: string) => {
     setSearch(val);

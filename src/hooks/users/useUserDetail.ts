@@ -9,12 +9,20 @@ export function useUserDetail(userId: string | null) {
     queryFn: async (): Promise<UserWithDetails | null> => {
       if (!userId) return null;
 
-      const { data: profile, error: profileError } = await supabaseAdmin
-        .from("profiles")
-        .select("id, full_name, avatar_url, updated_at")
-        .eq("id", userId)
-        .single();
-      if (profileError) throw new Error(`[Users.userDetailProfile] ${profileError.message}`);
+      const [profileRes, authRes] = await Promise.all([
+        supabaseAdmin
+          .from("profiles")
+          .select("id, full_name, avatar_url, updated_at")
+          .eq("id", userId)
+          .maybeSingle(),
+        supabaseAdmin.auth.admin.getUserById(userId),
+      ]);
+
+      if (profileRes.error) throw new Error(`[Users.userDetailProfile] ${profileRes.error.message}`);
+      if (authRes.error) throw new Error(`[Users.userDetailAuth] ${authRes.error.message}`);
+
+      const profile = profileRes.data;
+      const authUser = authRes.data?.user;
 
       let stats = null;
       if (profile) {
@@ -27,9 +35,6 @@ export function useUserDetail(userId: string | null) {
         stats = statsData;
       }
 
-      const { data: authData, error: authError } = await supabaseAdmin.auth.admin.getUserById(userId);
-      if (authError) throw new Error(`[Users.userDetailAuth] ${authError.message}`);
-      const authUser = authData?.user;
       if (!profile && !authUser) return null;
 
       return {

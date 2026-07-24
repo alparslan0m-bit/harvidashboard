@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export function useDashboardRealtime() {
   const queryClient = useQueryClient();
   const [isLive, setIsLive] = useState(false);
+  const throttleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const channel = supabaseAdmin
@@ -13,7 +14,12 @@ export function useDashboardRealtime() {
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "quiz_results" },
         () => {
-          queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+          if (!throttleTimerRef.current) {
+            queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+            throttleTimerRef.current = setTimeout(() => {
+              throttleTimerRef.current = null;
+            }, 15000);
+          }
         },
       )
       .subscribe((status) => {
@@ -21,6 +27,9 @@ export function useDashboardRealtime() {
       });
 
     return () => {
+      if (throttleTimerRef.current) {
+        clearTimeout(throttleTimerRef.current);
+      }
       supabaseAdmin.removeChannel(channel);
     };
   }, [queryClient]);
